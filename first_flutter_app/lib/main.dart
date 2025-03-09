@@ -7,10 +7,6 @@ void main() {
   runApp(MyApp());
 }
 
-import 'package:flutter/material.dart';
-import 'package:namer_app/main.dart';
-import 'package:provider/provider.dart';
-
 class FavoritesPage extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
