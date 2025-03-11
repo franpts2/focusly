@@ -18,3 +18,5 @@ As a student, I want to be able to categorize my flashcards and quizzes so that 
 
 As a student, I want to be able to make to-do lists so that I can stay on top of my goals.
 
+As a student, I want to be able to edit my flashcards and quizzes so that I can correct mistakes or add more content.
+
