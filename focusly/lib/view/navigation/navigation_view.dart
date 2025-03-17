@@ -19,32 +19,41 @@ class _NavigationViewState extends State<NavigationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-        child: NavigationBar(
-          selectedIndex: currentIndex,
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          destinations: [
-            NavigationDestination(
-              icon: Icon(Symbols.family_home),
-              label: "Home",
-            ),
-            NavigationDestination(
-              icon: Icon(Symbols.question_mark),
-              label: "Forum",
-            ),
-            NavigationDestination(
-              icon: Icon(Symbols.add_circle),
-              label: "Create",
-            ),
-            NavigationDestination(icon: Icon(Symbols.timer), label: "Pomodoro"),
-            NavigationDestination(icon: Icon(Symbols.person), label: "Profile"),
-          ],
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(45)),
+          child: NavigationBar(
+            selectedIndex: currentIndex,
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+            destinations: [
+              NavigationDestination(
+                icon: Icon(Symbols.family_home),
+                label: "Home",
+              ),
+              NavigationDestination(
+                icon: Icon(Symbols.question_mark),
+                label: "Forum",
+              ),
+              NavigationDestination(
+                icon: Icon(Symbols.add_circle),
+                label: "Create",
+              ),
+              NavigationDestination(
+                icon: Icon(Symbols.timer),
+                label: "Pomodoro",
+              ),
+              NavigationDestination(
+                icon: Icon(Symbols.person),
+                label: "Profile",
+              ),
+            ],
+            onDestinationSelected: (int index) {
+              setState(() {
+                currentIndex = index;
+              });
+            },
+          ),
         ),
       ),
 
