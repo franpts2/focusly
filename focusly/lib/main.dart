@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 
+
 void main() {
   runApp(const MainApp());
 }

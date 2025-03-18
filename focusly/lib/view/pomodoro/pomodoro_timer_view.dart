@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+
 
 class PomodoroTimer extends StatefulWidget {
   final int duration;
@@ -16,6 +18,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   Timer? timer;
   bool isRunning = false;
   bool isPaused = false;
+  AudioPlayer _audioPlayer = AudioPlayer();
+
 
   @override
   void initState() {
@@ -33,6 +37,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
       } else {
         timer.cancel();
         setState(() => isRunning = false);
+        _playSound();
         if (widget.onTimerEnd != null) widget.onTimerEnd!();
       }
     });
@@ -71,6 +76,11 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
       isPaused = false;
     });
   }
+
+  void _playSound() async {
+    await _audioPlayer.play(AssetSource('sound.wav'));
+  }
+
 
   String formatTime(int seconds) {
     int minutes = seconds ~/ 60;
@@ -122,7 +132,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                 foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
               ),
               child: Text("RESET"),
-            ),
+            )
           ],
         ),
       ],
