@@ -113,32 +113,16 @@ class _PomodoroTimerState extends State<PomodoroTimer> with WidgetsBindingObserv
   }
 
   void _showNotification(int remainingSeconds) async {
-    var androidDetails = AndroidNotificationDetails(
-      'timer_channel_id',
-      'Pomodoro Timer',
-      channelDescription: 'Displays timer notifications',
+    var androidDetails = AndroidNotificationDetails( 'timer_channel_id', 'Pomodoro Timer', channelDescription: 'Displays timer notifications',
       priority: Priority.high,
       importance: Importance.high,
     );
     var notificationDetails = NotificationDetails(
       android: androidDetails,
     );
-    if (remainingSeconds != 0) {
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        'Pomodoro Timer',
-        'Remaining time: ${formatTime(remainingSeconds)}',
-        notificationDetails,
-        payload: 'timer_notification',
-      );
-    } else {
-        await flutterLocalNotificationsPlugin.show(
-          0,
-          'Pomodoro Timer',
-          'Timer has ended!',
-          notificationDetails,
-          payload: 'timer_notification',
-      );
+    if (remainingSeconds == 0) {
+      await flutterLocalNotificationsPlugin.show(0, 'Pomodoro Timer', 'Timer has ended!', notificationDetails, payload: 'timer_notification',);
+      await flutterLocalNotificationsPlugin.cancel(1);
     }
   }
 
