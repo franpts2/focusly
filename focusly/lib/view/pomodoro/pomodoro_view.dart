@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:focusly/view/pomodoro/pomodoro_longbreak_view.dart';
+import 'package:focusly/view/pomodoro/pomodoro_normal_view.dart';
+import 'package:focusly/view/pomodoro/pomodoro_shortbreak_view.dart';
 
 class PomodoroView extends StatefulWidget {
   const PomodoroView({super.key});
@@ -12,7 +15,7 @@ class _PomodoroViewState extends State<PomodoroView> {
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text("Pomodoro"), centerTitle: true),
@@ -36,6 +39,9 @@ class _PomodoroViewState extends State<PomodoroView> {
                   _buildModeButton("Long Break"),
                 ],
               ),
+              if (selectedMode == 'Pomodoro') PomodoroNormalView(),
+              if (selectedMode == 'Short Break') PomodoroShortbreakView(),
+              if (selectedMode == 'Long Break') PomodoroLongbreakView(),
             ],
           ),
         ),
@@ -45,7 +51,7 @@ class _PomodoroViewState extends State<PomodoroView> {
 
   Widget _buildModeButton(String mode) {
     bool isSelected = selectedMode == mode;
-    var colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return TextButton(
       onPressed: () {
@@ -54,15 +60,23 @@ class _PomodoroViewState extends State<PomodoroView> {
         });
       },
       style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all(colorScheme.onPrimaryContainer),
+        foregroundColor: WidgetStateProperty.all(
+          colorScheme.onPrimaryContainer,
+        ),
         backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
           if (isSelected) {
-            return colorScheme.primary.withValues(alpha: 0.2); // Light purple when selected
+            return colorScheme.primary.withValues(
+              alpha: 0.2,
+            ); // Light purple when selected
           }
           return Colors.transparent; // default (no background)
         }),
-        overlayColor: WidgetStateProperty.all(colorScheme.primary.withValues(alpha: 0.3)), // Hover effect
-        padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 12, vertical: 6)),
+        overlayColor: WidgetStateProperty.all(
+          colorScheme.primary.withValues(alpha: 0.3),
+        ), // Hover effect
+        padding: WidgetStateProperty.all(
+          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
@@ -70,6 +84,4 @@ class _PomodoroViewState extends State<PomodoroView> {
       child: Text(mode),
     );
   }
-
-
 }
