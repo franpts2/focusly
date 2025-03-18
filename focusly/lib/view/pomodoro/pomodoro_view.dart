@@ -5,13 +5,12 @@ class PomodoroView extends StatefulWidget {
 
   @override
   _PomodoroViewState createState() => _PomodoroViewState();
-  
 }
 
 class _PomodoroViewState extends State<PomodoroView> {
-  String selectedMode = "Pomodoro"; //default selected mode
+  String selectedMode = "Pomodoro"; // Default selected mode
 
-   @override
+  @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
 
@@ -25,10 +24,7 @@ class _PomodoroViewState extends State<PomodoroView> {
             borderRadius: BorderRadius.circular(12),
             color: colorScheme.primaryContainer,
           ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 3,
-            vertical: 12,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 3, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -48,66 +44,32 @@ class _PomodoroViewState extends State<PomodoroView> {
   }
 
   Widget _buildModeButton(String mode) {
-    bool isSelected = selectedMode == mode; // Check if button is selected
+    bool isSelected = selectedMode == mode;
+    var colorScheme = Theme.of(context).colorScheme;
+
     return TextButton(
       onPressed: () {
         setState(() {
-          selectedMode = mode;
+          selectedMode = mode; // Update selected mode
         });
       },
-      style: TextButton.styleFrom(
-        foregroundColor: isSelected
-            ? Colors.white // Selected text color
-            : Theme.of(context).colorScheme.onPrimaryContainer,
-        backgroundColor: isSelected
-            ? Theme.of(context).colorScheme.primary // Selected background
-            : Colors.transparent, // Unselected background
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.all(colorScheme.onPrimaryContainer),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (isSelected) {
+            return colorScheme.primary.withValues(alpha: 0.2); // Light purple when selected
+          }
+          return Colors.transparent; // default (no background)
+        }),
+        overlayColor: WidgetStateProperty.all(colorScheme.primary.withValues(alpha: 0.3)), // Hover effect
+        padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 12, vertical: 6)),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
       ),
       child: Text(mode),
     );
   }
+
+
 }
-
-/*
-class PomodoroView extends StatelessWidget {
-  const PomodoroView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar: AppBar(title: Text("Pomodoro"), centerTitle: true),
-      body: Center(
-        child: Container(
-          width: 326,
-          height: 230,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: colorScheme.primaryContainer,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 3,
-            vertical: 12,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(onPressed: () {}, child: Text("Pomodoro")),
-                  TextButton(onPressed: () {}, child: Text("Short Break")),
-                  TextButton(onPressed: () {}, child: Text("Long Break")),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-*/
