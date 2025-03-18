@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 class PomodoroTimer extends StatefulWidget {
@@ -19,12 +21,27 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   bool isRunning = false;
   bool isPaused = false;
   AudioPlayer _audioPlayer = AudioPlayer();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 
 
   @override
   void initState() {
     super.initState();
     remainingSeconds = widget.duration;
+
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    _requestPermissions();
+
+  }
+
+  String formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
   }
 
   void startTimer() {
@@ -34,6 +51,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingSeconds > 0) {
         setState(() => remainingSeconds--);
+        _showNotification(remainingSeconds);
       } else {
         timer.cancel();
         setState(() => isRunning = false);
@@ -60,6 +78,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingSeconds > 0) {
         setState(() => remainingSeconds--);
+        _showNotification(remainingSeconds);
       } else {
         timer.cancel();
         setState(() => isRunning = false);
@@ -81,12 +100,32 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     await _audioPlayer.play(AssetSource('sound.wav'));
   }
 
-
-  String formatTime(int seconds) {
-    int minutes = seconds ~/ 60;
-    int secs = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+  Future<void> _requestPermissions() async {
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
   }
+
+  void _showNotification(int remainingSeconds) async {
+    var androidDetails = AndroidNotificationDetails(
+      'timer_channel_id',
+      'Pomodoro Timer',
+      channelDescription: 'Displays timer notifications',
+      priority: Priority.high,
+      importance: Importance.high,
+    );
+    var notificationDetails = NotificationDetails(
+      android: androidDetails,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Pomodoro Timer',
+      'Remaining time: ${formatTime(remainingSeconds)}',
+      notificationDetails,
+      payload: 'timer_notification',
+    );
+  }
+
 
   @override
   void dispose() {
