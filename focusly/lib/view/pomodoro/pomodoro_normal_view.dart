@@ -22,11 +22,17 @@ class _PomodoroNormalViewState extends State<PomodoroNormalView> {
           ),
           ElevatedButton(
             onPressed: () {
-              // Start the timer
+              // start timer here
             },
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(colorScheme.primary),
+              backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return colorScheme.primary.withValues(alpha: 0.7); // Slightly darker when pressed
+                }
+                return colorScheme.primary;
+              }),
               foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
+              overlayColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.2)), // Ripple effect
             ),
             child: Text("START"),
           ),
@@ -42,11 +48,17 @@ class _PomodoroNormalViewState extends State<PomodoroNormalView> {
 PAUSE BUTTON: when the timer starts, this button replaces the start button and makes the timer pause
 ElevatedButton(
   onPressed: () {
-    // Pause the timer
+    // pause timer here
   },
   style: ButtonStyle(
-    backgroundColor: WidgetStateProperty.all(colorScheme.primary),
-    foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
+  backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+    if (states.contains(WidgetState.pressed)) {
+      return colorScheme.primary.withValues(alpha: 0.7); // Slightly darker when pressed
+    }
+    return colorScheme.primary;
+  }),
+  foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
+    overlayColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.2)), // Ripple effect
   ),
   child: Text("PAUSE"),
 ),
@@ -54,11 +66,17 @@ ElevatedButton(
 RESTART BUTTON: when the timer ends, this button replaces the pause button and makes the timer reset
 ElevatedButton(
   onPressed: () {
-    // Reset the timer
+    // reset timer here
   },
   style: ButtonStyle(
-    backgroundColor: WidgetStateProperty.all(colorScheme.primary),
-    foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
+  backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+    if (states.contains(WidgetState.pressed)) {
+      return colorScheme.primary.withValues(alpha: 0.7); // Slightly darker when pressed
+    }
+    return colorScheme.primary;
+  }),
+  foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
+    overlayColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.2)), // Ripple effect
   ),
   child: Text("RESET"),
 ),

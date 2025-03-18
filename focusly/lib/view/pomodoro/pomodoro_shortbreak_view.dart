@@ -22,11 +22,17 @@ class _PomodoroShortbreakViewState extends State<PomodoroShortbreakView> {
           ),
           ElevatedButton(
             onPressed: () {
-              // Start the timer
+              // start timer here
             },
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(colorScheme.primary),
+              backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return colorScheme.primary.withValues(alpha: 0.7); // Slightly darker when pressed
+                }
+                return colorScheme.primary;
+              }),
               foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
+              overlayColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.2)), // Ripple effect
             ),
             child: Text("START"),
           ),
