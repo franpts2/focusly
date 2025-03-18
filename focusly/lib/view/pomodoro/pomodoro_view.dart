@@ -5,9 +5,20 @@ class PomodoroView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: Text("Pomodoro"), centerTitle: true),
-      body: Center(child: Text("to be implemented!"),),
+      body: Center(
+        child: Container(
+          width: 326,
+          height: 230,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: colorScheme.primaryContainer,
+          ),
+        ),
+      ),
     );
   }
 }
