@@ -17,6 +17,25 @@ class PomodoroView extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             color: colorScheme.primaryContainer,
           ),
+          padding: EdgeInsets.symmetric(
+            horizontal: 3,
+            vertical: 12,
+          ), // Padding inside the card
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(onPressed: () {}, child: Text("Pomodoro")),
+                  SizedBox(width: 8),
+                  TextButton(onPressed: () {}, child: Text("Short Break")),
+                  SizedBox(width: 8),
+                  TextButton(onPressed: () {}, child: Text("Long Break")),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
