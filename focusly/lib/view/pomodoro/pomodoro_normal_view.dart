@@ -12,7 +12,7 @@ class _PomodoroNormalViewState extends State<PomodoroNormalView> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: PomodoroTimer(duration: 5), // 25-minute Pomodoro timer
+      child: PomodoroTimer(duration: 25 * 60), // 25-minute Pomodoro timer
     );
   }
 }
