@@ -15,15 +15,14 @@ class PomodoroTimer extends StatefulWidget {
   State<PomodoroTimer> createState() => _PomodoroTimerState();
 }
 
-class _PomodoroTimerState extends State<PomodoroTimer> {
+class _PomodoroTimerState extends State<PomodoroTimer> with WidgetsBindingObserver{
   late int remainingSeconds;
   Timer? timer;
   bool isRunning = false;
   bool isPaused = false;
   AudioPlayer _audioPlayer = AudioPlayer();
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-
+  AppLifecycleState _appLifecycleState = AppLifecycleState.resumed;
 
   @override
   void initState() {
@@ -34,6 +33,9 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    WidgetsBinding.instance.addObserver(this);
+
     _requestPermissions();
 
   }
@@ -51,11 +53,13 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingSeconds > 0) {
         setState(() => remainingSeconds--);
-        _showNotification(remainingSeconds);
       } else {
+        _playSound();
+        if (_appLifecycleState != AppLifecycleState.resumed) {
+          _showNotification(remainingSeconds);
+        }
         timer.cancel();
         setState(() => isRunning = false);
-        _playSound();
         if (widget.onTimerEnd != null) widget.onTimerEnd!();
       }
     });
@@ -78,8 +82,10 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingSeconds > 0) {
         setState(() => remainingSeconds--);
-        _showNotification(remainingSeconds);
       } else {
+        if (_appLifecycleState != AppLifecycleState.resumed) {
+          _showNotification(remainingSeconds);
+        }
         timer.cancel();
         setState(() => isRunning = false);
         if (widget.onTimerEnd != null) widget.onTimerEnd!();
@@ -117,19 +123,35 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     var notificationDetails = NotificationDetails(
       android: androidDetails,
     );
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Pomodoro Timer',
-      'Remaining time: ${formatTime(remainingSeconds)}',
-      notificationDetails,
-      payload: 'timer_notification',
-    );
+    if (remainingSeconds != 0) {
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        'Pomodoro Timer',
+        'Remaining time: ${formatTime(remainingSeconds)}',
+        notificationDetails,
+        payload: 'timer_notification',
+      );
+    } else {
+        await flutterLocalNotificationsPlugin.show(
+          0,
+          'Pomodoro Timer',
+          'Timer has ended!',
+          notificationDetails,
+          payload: 'timer_notification',
+      );
+    }
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    _appLifecycleState = state;
+  }
 
   @override
   void dispose() {
     timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
