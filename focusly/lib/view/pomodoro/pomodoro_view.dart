@@ -7,10 +7,10 @@ class PomodoroView extends StatefulWidget {
   const PomodoroView({super.key});
 
   @override
-  _PomodoroViewState createState() => _PomodoroViewState();
+  PomodoroViewState createState() => PomodoroViewState();
 }
 
-class _PomodoroViewState extends State<PomodoroView> {
+class PomodoroViewState extends State<PomodoroView> {
   String selectedMode = "Pomodoro"; // Default selected mode
 
   @override

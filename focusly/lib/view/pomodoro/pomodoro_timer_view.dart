@@ -20,7 +20,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> with WidgetsBindingObserv
   Timer? timer;
   bool isRunning = false;
   bool isPaused = false;
-  AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   AppLifecycleState _appLifecycleState = AppLifecycleState.resumed;
 
