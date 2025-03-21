@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
   material_symbols_icons: ^4.2810.1
+  audioplayers: ^6.4.0
+  flutter_local_notifications: ^19.0.0
+  permission_handler: ^11.4.0
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +21,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/sound.wav
