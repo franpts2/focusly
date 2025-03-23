@@ -4,7 +4,9 @@ import 'package:focusly/view/pomodoro/pomodoro_normal_view.dart';
 import 'package:focusly/view/pomodoro/pomodoro_shortbreak_view.dart';
 
 class PomodoroView extends StatefulWidget {
-  const PomodoroView({super.key});
+  final bool skipNotifications;
+
+  const PomodoroView({super.key, required this.skipNotifications});
 
   @override
   PomodoroViewState createState() => PomodoroViewState();
@@ -39,9 +41,9 @@ class PomodoroViewState extends State<PomodoroView> {
                   Flexible(child: _buildModeButton("Long Break")),
                 ],
               ),
-              if (selectedMode == 'Pomodoro') PomodoroNormalView(),
-              if (selectedMode == 'Short Break') PomodoroShortbreakView(),
-              if (selectedMode == 'Long Break') PomodoroLongbreakView(),
+              if (selectedMode == 'Pomodoro') PomodoroNormalView(skipNotifications: widget.skipNotifications,),
+              if (selectedMode == 'Short Break') PomodoroShortbreakView(skipNotifications: widget.skipNotifications,),
+              if (selectedMode == 'Long Break') PomodoroLongbreakView(skipNotifications: widget.skipNotifications,),
             ],
           ),
         ),
