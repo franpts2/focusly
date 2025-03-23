@@ -34,9 +34,9 @@ class PomodoroViewState extends State<PomodoroView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildModeButton("Pomodoro"),
-                  _buildModeButton("Short Break"),
-                  _buildModeButton("Long Break"),
+                  Flexible(child: _buildModeButton("Pomodoro")),
+                  Flexible(child: _buildModeButton("Short Break")),
+                  Flexible(child: _buildModeButton("Long Break")),
                 ],
               ),
               if (selectedMode == 'Pomodoro') PomodoroNormalView(),
