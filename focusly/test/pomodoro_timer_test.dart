@@ -163,4 +163,30 @@ void main() {
     );
   });
 
+  testWidgets('Test Case 11: Ensure UI Matches Mockups', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: PomodoroView(skipNotifications: true), // Skip notifications
+    ));
+
+    // Verify the layout matches the mockups
+    expect(find.byType(AppBar), findsOneWidget); // Check for the AppBar
+
+    // Use a more specific finder for the "Pomodoro" text
+    expect(find.descendant(
+      of: find.byType(AppBar),
+      matching: find.text("Pomodoro"),
+    ), findsOneWidget); // Check for the title in the AppBar
+
+    expect(find.byType(TextButton), findsNWidgets(3)); // Check for 3 mode buttons
+    expect(find.text("START"), findsOneWidget); // Check for the Start button
+    expect(find.text("RESET"), findsOneWidget); // Check for the Reset button
+
+    // Verify the colors match the mockups
+    final colorScheme = Theme.of(tester.element(find.byType(PomodoroView))).colorScheme;
+    expect(
+      tester.widget<TextButton>(find.widgetWithText(TextButton, "Pomodoro")).style?.backgroundColor?.resolve({}),
+      colorScheme.primary.withOpacity(0.2), // Check the highlight color
+    );
+  });
+
 }
