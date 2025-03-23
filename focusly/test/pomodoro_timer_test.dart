@@ -1,24 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
-import 'package:focusly/view/pomodoro/pomodoro_timer_view.dart';
 import 'package:focusly/view/pomodoro/pomodoro_view.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:mockito/mockito.dart';
-
-class MockFlutterLocalNotificationsPlugin extends Mock
-    implements FlutterLocalNotificationsPlugin {}
-
 
 void main() {
-
-  late MockFlutterLocalNotificationsPlugin mockNotifications;
-
-  setUp(() {
-    mockNotifications = MockFlutterLocalNotificationsPlugin();
-  });
-
   testWidgets('Test Case 1: Start Pomodoro Timer', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: PomodoroView(skipNotifications: true), // Pass the flag
@@ -226,7 +212,7 @@ void main() {
     );
   });
 
-  testWidgets('Test Case 9: Ensure UI Matches Mockups', (WidgetTester tester) async {
+  testWidgets('Test Case 8: Ensure UI Matches Mockups', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: PomodoroView(skipNotifications: true), // Skip notifications
     ));
