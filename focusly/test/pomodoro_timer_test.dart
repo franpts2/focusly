@@ -110,4 +110,57 @@ void main() {
     // Verify the timer resets to the initial value (25:00)
     expect(find.text("25:00"), findsOneWidget);
   });
+
+  testWidgets('Test Case 7: Display Correct Active Mode', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: PomodoroView(skipNotifications: true), // Skip notifications
+    ));
+
+    // Get the color scheme from the theme
+    final colorScheme = Theme.of(tester.element(find.byType(PomodoroView))).colorScheme;
+
+    // Verify the Pomodoro mode is visually highlighted by default
+    final pomodoroButton = tester.widget<TextButton>(find.widgetWithText(TextButton, "Pomodoro"));
+    expect(
+      pomodoroButton.style?.backgroundColor?.resolve({}),
+      colorScheme.primary.withOpacity(0.2), // Check the highlight color
+    );
+
+    // Verify the Short Break mode is not highlighted
+    final shortBreakButton = tester.widget<TextButton>(find.widgetWithText(TextButton, "Short Break"));
+    expect(
+      shortBreakButton.style?.backgroundColor?.resolve({}),
+      Colors.transparent, // Check that the background is transparent
+    );
+
+    // Verify the Long Break mode is not highlighted
+    final longBreakButton = tester.widget<TextButton>(find.widgetWithText(TextButton, "Long Break"));
+    expect(
+      longBreakButton.style?.backgroundColor?.resolve({}),
+      Colors.transparent, // Check that the background is transparent
+    );
+
+    // Tap the Short Break mode button
+    await tester.tap(find.widgetWithText(TextButton, "Short Break"));
+    await tester.pump();
+
+    // Verify the Short Break mode is now highlighted
+    expect(
+      tester.widget<TextButton>(find.widgetWithText(TextButton, "Short Break")).style?.backgroundColor?.resolve({}),
+      colorScheme.primary.withOpacity(0.2), // Check the highlight color
+    );
+
+    // Verify the Pomodoro mode is no longer highlighted
+    expect(
+      tester.widget<TextButton>(find.widgetWithText(TextButton, "Pomodoro")).style?.backgroundColor?.resolve({}),
+      Colors.transparent, // Check that the background is transparent
+    );
+
+    // Verify the Long Break mode is still not highlighted
+    expect(
+      tester.widget<TextButton>(find.widgetWithText(TextButton, "Long Break")).style?.backgroundColor?.resolve({}),
+      Colors.transparent, // Check that the background is transparent
+    );
+  });
+
 }
