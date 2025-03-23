@@ -8,19 +8,6 @@ class MockFlutterLocalNotificationsPlugin extends Mock
     implements FlutterLocalNotificationsPlugin {}
 
 void main() {
-  late MockFlutterLocalNotificationsPlugin mockNotifications;
-
-  setUp(() {
-    mockNotifications = MockFlutterLocalNotificationsPlugin();
-    // Mock the initialization method
-    final initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-    );
-
-    when(mockNotifications.initialize(initializationSettings))
-      .thenAnswer((_) async => true);
-  });
-
   testWidgets('Test Case 1: Start Pomodoro Timer', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: PomodoroTimer(
