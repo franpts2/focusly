@@ -1,58 +1,83 @@
-
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:focusly/view/pomodoro/pomodoro_view.dart';
+import 'package:focusly/view/pomodoro/pomodoro_timer_view.dart';
+import 'package:mockito/mockito.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+class MockFlutterLocalNotificationsPlugin extends Mock
+    implements FlutterLocalNotificationsPlugin {}
 
 void main() {
-  group('Pomodoro Timer Acceptance Tests', () {
+  late MockFlutterLocalNotificationsPlugin mockNotifications;
 
-    testWidgets('Test Case 1: Start Pomodoro Timer', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: PomodoroView()));
+  setUp(() {
+    mockNotifications = MockFlutterLocalNotificationsPlugin();
+    // Mock the initialization method
+    final initializationSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    );
 
-      //tap the Pomodoro Mode button (already selected by default)
-      await tester.tap(find.text('Pomodoro'));
-      await tester.pump();
+    when(mockNotifications.initialize(initializationSettings))
+      .thenAnswer((_) async => true);
+  });
 
-      //tap the Start button
-      await tester.tap(find.text('START'));
-      await tester.pump();
+  testWidgets('Test Case 1: Start Pomodoro Timer', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: PomodoroTimer(
+        duration: 25 * 60,
+        skipNotifications: true, // Skip notifications in tests
+      ),
+    ));
 
-      //verify that the timer starts counting down from 25:00
-      expect(find.text('25:00'), findsOneWidget);
-    });
+    // Tap the Pomodoro mode button (already selected by default)
+    await tester.tap(find.widgetWithText(TextButton, "Pomodoro"));
+    await tester.pump();
 
-    testWidgets('Test Case 2: Start Short Break Timer', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: PomodoroView()));
+    // Tap the Start button
+    await tester.tap(find.text("START"));
+    await tester.pump();
 
-      //tap the Short Break Mode button
-      await tester.tap(find.text('Short Break'));
-      await tester.pump();
+    // Verify the timer starts counting down from 25:00
+    expect(find.text("25:00"), findsOneWidget);
+  });
 
-      //tap the Start button
-      await tester.tap(find.text('START'));
-      await tester.pump();
+  testWidgets('Test Case 2: Start Short Break Timer', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: PomodoroTimer(
+        duration: 5 * 60,
+        skipNotifications: true, // Skip notifications in tests
+      ),
+    ));
 
-      //verify that the timer starts counting down from 5:00
-      expect(find.text('5:00'), findsOneWidget);
-    });
+    // Tap the Short Break mode button
+    await tester.tap(find.widgetWithText(TextButton, "Short Break"));
+    await tester.pump();
 
-    testWidgets('Test Case 3: Start Long Break Timer', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: PomodoroView()));
+    // Tap the Start button
+    await tester.tap(find.text("START"));
+    await tester.pump();
 
-      //tap the Long Break Mode button
-      await tester.tap(find.text('Long Break'));
-      await tester.pump();
+    // Verify the timer starts counting down from 5:00
+    expect(find.text("05:00"), findsOneWidget);
+  });
 
-      //tap the Start button
-      await tester.tap(find.text('START'));
-      await tester.pump();
+  testWidgets('Test Case 3: Start Long Break Timer', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: PomodoroTimer(
+        duration: 15 * 60,
+        skipNotifications: true, // Skip notifications in tests
+      ),
+    ));
 
-      //verify that the timer starts counting down from 15:00
-      expect(find.text('15:00'), findsOneWidget);
-    });
+    // Tap the Long Break mode button
+    await tester.tap(find.widgetWithText(TextButton, "Long Break"));
+    await tester.pump();
 
+    // Tap the Start button
+    await tester.tap(find.text("START"));
+    await tester.pump();
+
+    // Verify the timer starts counting down from 15:00
+    expect(find.text("15:00"), findsOneWidget);
   });
 }
