@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:focusly/view/navigation/navigation_view.dart';
+import 'package:focusly/view/pomodoro/pomodoro_timer_view.dart';
 import 'package:focusly/view/pomodoro/pomodoro_view.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:mockito/mockito.dart';
+
+class MockFlutterLocalNotificationsPlugin extends Mock
+    implements FlutterLocalNotificationsPlugin {}
+
 
 void main() {
+
+  late MockFlutterLocalNotificationsPlugin mockNotifications;
+
+  setUp(() {
+    mockNotifications = MockFlutterLocalNotificationsPlugin();
+  });
+
   testWidgets('Test Case 1: Start Pomodoro Timer', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: PomodoroView(skipNotifications: true), // Pass the flag
@@ -111,6 +127,53 @@ void main() {
     expect(find.text("25:00"), findsOneWidget);
   });
 
+  testWidgets("Test Case 6: Ensure Timer Doesn't Skip or Freeze", (WidgetTester tester) async {
+    // Start at PomodoroView with skipNotifications: true
+    await tester.pumpWidget(MaterialApp(
+      home: PomodoroView(skipNotifications: true), // Skip notifications
+    ));
+
+    // Wait for the UI to fully load
+    await tester.pumpAndSettle();
+
+    // Verify the Pomodoro screen is displayed by checking the AppBar title
+    expect(find.descendant(
+      of: find.byType(AppBar),
+      matching: find.text("Pomodoro"),
+    ), findsOneWidget);
+
+    // Tap the Pomodoro mode button (already selected by default)
+    await tester.tap(find.widgetWithText(TextButton, "Pomodoro"));
+    await tester.pump();
+
+    // Tap the Start button
+    await tester.tap(find.text("START"));
+    await tester.pump();
+
+    // Verify the timer starts counting down from 25:00
+    expect(find.text("25:00"), findsOneWidget);
+
+    // Now, navigate to the NavigationView to switch tabs
+    await tester.pumpWidget(MaterialApp(
+      home: NavigationView(), // Switch to NavigationView
+    ));
+    await tester.pumpAndSettle();
+
+    // Tap the Home icon to switch to the Home tab
+    await tester.tap(find.byIcon(Symbols.family_home));
+    await tester.pumpAndSettle();
+
+    // Simulate time passing (e.g., 10 seconds)
+    await tester.pump(Duration(seconds: 10));
+
+    // Navigate back to the Pomodoro screen
+    await tester.tap(find.byIcon(Symbols.timer));
+    await tester.pumpAndSettle();
+
+    // Verify the timer is still running and shows the correct remaining time (25:00 - 10 seconds = 24:50)
+    expect(find.text("24:50"), findsOneWidget);
+  });
+
   testWidgets('Test Case 7: Display Correct Active Mode', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: PomodoroView(skipNotifications: true), // Skip notifications
@@ -163,7 +226,7 @@ void main() {
     );
   });
 
-  testWidgets('Test Case 11: Ensure UI Matches Mockups', (WidgetTester tester) async {
+  testWidgets('Test Case 9: Ensure UI Matches Mockups', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: PomodoroView(skipNotifications: true), // Skip notifications
     ));
