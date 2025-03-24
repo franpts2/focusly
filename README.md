@@ -599,7 +599,28 @@ In this subsection please describe which feature, or part of it, you have implem
 
 At this phase, instead of a complete user story, you can simply implement a small part of a feature that demonstrates thay you can use the technology, for example, show a screen with the app credits (name and authors).
 -->
+For the vertical prototype, we implemented the Pomodoro Timer feature, ensuring the core functionality works as expected. 
+
+The implementation allows users to switch between Pomodoro, Short Break, and Long Break modes, start and reset timers, and visually see the active mode.
+
+Implemented Features
+- **Pomodoro Timer**: Users can start a 25-minute work session.
+- **Short Break Timer**: A 5-minute break timer is available.
+- **Long Break Timer**: A 15-minute break session can be initiated.
+- **Start, Pause, and Reset Functionality**: Users can start, pause, and reset the countdown timer.
+- **Sound Alert**: A sound plays when the timer reaches zero, notifying the user that the session has ended.
+- **Push Notification**: If the user is outside the app when the timer ends, a notification is sent to bring them back.
+- **UI Consistency**: The interface matches the provided mockups, including tab navigation, mode selection, and button placement.
+- **Mode Highlighting**g: The selected mode is visibly highlighted to indicate the active session.
+<br><br>
+
+**UI Snapshot**
+
 ![alt text](images/vertical%20prototype/verticalprototype_pomodoro.gif)
+
+![alt text](images/vertical%20prototype/pomodoro_notification.jpeg)
+
+This vertical prototype ensures a functional and user-friendly Pomodoro timer experience as an integral part of the study app.
 
 ## Project management
 <!--
