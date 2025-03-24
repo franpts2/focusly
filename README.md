@@ -616,9 +616,13 @@ Implemented Features
 
 **UI Snapshot**
 
-![alt text](images/vertical%20prototype/verticalprototype_pomodoro.gif)
+<div style="text-align: center;">
+    <img src="images/vertical%20prototype/verticalprototype_pomodoro.gif" alt="Pomodoro Timer" width="200"/>
+</div>
 
-![alt text](images/vertical%20prototype/pomodoro_notification.jpeg)
+<div style="text-align: center">
+    <img src="images/vertical%20prototype/pomodoro_notification.jpeg" width="250"/>
+</div>
 
 This vertical prototype ensures a functional and user-friendly Pomodoro timer experience as an integral part of the study app.
 
