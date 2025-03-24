@@ -83,7 +83,7 @@ At the end, it is good to add a rough indication of the value of the user story 
 -->
 
 ### Domain model
-![alt text](image-7.png)
+![alt text](images/image-7.png)
 
 ## Architecture and Design
 <!--
@@ -99,10 +99,10 @@ In this section you should start by briefly describing the components of the pro
 
 ### Logical architecture
 
-![alt text](image-5.png)
+![alt text](images/image-5.png)
 
 ### Physical architecture
-![alt text](image-6.png)
+![alt text](images/image-6.png)
 
 
 ### Vertical prototype
