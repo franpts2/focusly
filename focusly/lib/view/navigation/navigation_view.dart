@@ -62,7 +62,7 @@ class _NavigationViewState extends State<NavigationView> {
             HomeView(),
             ForumView(),
             CreateView(),
-            PomodoroView(),
+            PomodoroView(skipNotifications: false,),
             ProfileView(),
           ][currentIndex],
     );

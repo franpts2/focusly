@@ -8,8 +8,9 @@ import 'package:permission_handler/permission_handler.dart';
 class PomodoroTimer extends StatefulWidget {
   final int duration;
   final VoidCallback? onTimerEnd;
+  final bool skipNotifications;
 
-  const PomodoroTimer({super.key, required this.duration, this.onTimerEnd});
+  const PomodoroTimer({super.key, required this.duration, this.onTimerEnd, this.skipNotifications = false});
 
   @override
   State<PomodoroTimer> createState() => _PomodoroTimerState();
@@ -29,11 +30,13 @@ class _PomodoroTimerState extends State<PomodoroTimer> with WidgetsBindingObserv
     super.initState();
     remainingSeconds = widget.duration;
 
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
+    if(!widget.skipNotifications) {
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+      var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+      var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+      flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    }
+    
     WidgetsBinding.instance.addObserver(this);
 
     _requestPermissions();
