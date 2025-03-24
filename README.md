@@ -121,7 +121,7 @@ Take a look at the following links to learn some techniques:
 
 **Value and effort**
 
-Value: 
+Value: <span style="color:red">Must-have</span>
 
 Effort: 55
 
@@ -207,7 +207,7 @@ Effort: 55
 
 **Value and effort**
 
-Value: 
+Value: <span style="color:red">Must-have</span>
 
 Effort: 55
 
@@ -287,7 +287,7 @@ Effort: 55
 
 **Value and effort**
 
-Value: 
+Value: <span style="color:red">Must-have</span>
 
 Effort: 21
 
@@ -403,7 +403,7 @@ Effort: 21
 
 **Value and effort**
 
-Value: 
+Value: <span style="color:red">Must-have</span>
 
 Effort: 89
 
@@ -456,7 +456,7 @@ Effort: 89
 
 **Value and effort**
 
-Value: 
+Value: <span style="color:yellow">Should-have</span>
 
 Effort: 34
 
@@ -551,7 +551,7 @@ Effort: 34
 
 **Value and effort**
 
-Value: 
+Value: <span style="color:yellow">Should-have</span>
 
 Effort: 89
 
