@@ -599,6 +599,7 @@ In this subsection please describe which feature, or part of it, you have implem
 
 At this phase, instead of a complete user story, you can simply implement a small part of a feature that demonstrates thay you can use the technology, for example, show a screen with the app credits (name and authors).
 -->
+![alt text](images/vertical%20prototype/verticalprototype_pomodoro.gif)
 
 ## Project management
 <!--
