@@ -121,7 +121,7 @@ Take a look at the following links to learn some techniques:
 
 **Value and effort**
 
-Value: <span style="color:red">Must-have</span>
+Value: Must-have
 
 Effort: 55
 
@@ -207,7 +207,7 @@ Effort: 55
 
 **Value and effort**
 
-Value: <span style="color:red">Must-have</span>
+Value: Must-have
 
 Effort: 55
 
@@ -287,7 +287,7 @@ Effort: 55
 
 **Value and effort**
 
-Value: <span style="color:red">Must-have</span>
+Value: Must-have
 
 Effort: 21
 
@@ -403,7 +403,7 @@ Effort: 21
 
 **Value and effort**
 
-Value: <span style="color:red">Must-have</span>
+Value: Must-have
 
 Effort: 89
 
@@ -456,7 +456,7 @@ Effort: 89
 
 **Value and effort**
 
-Value: <span style="color:yellow">Should-have</span>
+Value: Should-have
 
 Effort: 34
 
@@ -551,7 +551,7 @@ Effort: 34
 
 **Value and effort**
 
-Value: <span style="color:yellow">Should-have</span>
+Value: Should-have
 
 Effort: 89
 
@@ -623,6 +623,12 @@ You can find below information and references related with the project managemen
 -->
 
 ### Sprint 0
+
+**Beginning**
+![alt text](beggining_scrumboard_sprint0.png)
+
+**End**
+![alt text](end_scrumboardd_sprint0.png)
 
 ### Sprint 1
 
