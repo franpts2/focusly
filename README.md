@@ -50,7 +50,10 @@ From creating quizzes and flashcards to having a Pomodoro timer, Focusly is an a
 - Categorization – Organize your flashcards and quizzes by subject or topic for easy access
 
 ### Elevator Pitch
-Focusly transforms the way you study by combining essential tools into one seamless experience. Create personalized quizzes and flashcards, boost focus with a built-in Pomodoro timer, and collaborate with peers through an interactive forum. Whether you're preparing for exams or just reviewing concepts, our app makes studying smarter, not harder. Join a community of learners and take your productivity to the next level!
+Focusly transforms the way you study by combining essential tools into one seamless experience. 
+Create personalized quizzes and flashcards, boost focus with a built-in Pomodoro timer, and collaborate with peers through an interactive forum. 
+
+Whether you're preparing for exams or just reviewing concepts, our app makes studying smarter, not harder. Join a community of learners and take your productivity to the next level!
 <!-- 
 Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
 
@@ -63,8 +66,60 @@ Take a look at the following links to learn some techniques:
 ## Requirements
 
 ### User Stories
-- As a student, I want to be able to authenticate so that all my data is saved permanently and I can access it everywhere.
-- As a student, I want to be able to submit questions so that I can understand more concepts.
+
+As a student, I want to be able to authenticate so that all my data is saved permanently and I can access it everywhere.
+
+**User interface mockups**
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/mockups/initial screen.png" alt="Image 1" width="24%" />
+  <img src="images/mockups/initial screen pt2.png" alt="Image 2" width="24%" />
+  <img src="images/mockups/sign in page.png" alt="Image 3" width="24%" />
+  <img src="images/mockups/sign up page.png" alt="Image 4" width="24%" />
+</div>
+<br>
+
+**Acceptance tests**
+
+<h5>Test Case 1: Successful Sign In</h5>
+<p>
+    <em>Given</em> the user is on the Sign In screen,<br>
+    <em>When</em> they enter valid credentials and press "Sign In",<br>
+    <em>Then</em> they should be successfully logged in.
+</p>
+
+
+<h5>Test Case 2: Failed Sign In - Incorrect Password</h5>
+<p>
+    <em>Given</em> the user enters an incorrect password,<br>
+    <em>When</em> they try to sign in,<br>
+    <em>Then</em> an error message should be displayed.
+</p>
+
+<h5>Test Case 3: Successful Sign Up</h5>
+<p>
+    <em>Given</em> the user is on the Sign Up screen,<br>
+    <em>When</em> they enter valid details and press "Sign Up",<br>
+    <em>Then</em> their account should be created, and they should be redirected to the Sign In screen.
+</p>
+
+<h5>Test Case 4: Failed Sign Up - Username Already Exists</h5>
+<p>
+    <em>Given</em> the user tries to sign up with an already existing username,<br>
+    <em>When</em> they attempt to create an account,<br>
+    <em>Then</em> an error message should be displayed indicating the username is taken.
+</p>
+
+<h5>Test Case 6: Failed Sign Up - Missing Fields</h5>
+<p>
+    <em>Given</em>the user doesn’t fill in all required fields,<br>
+    <em>When</em> they attempt to sign up,<br>
+    <em>Then</em> an error message should prompt them to complete the form.
+</p>
+
+--- 
+
+As a student, I want to be able to submit questions so that I can understand more concepts.
+
 - As a student, I want to be able to create a pomodoro timer so that I can focus better while I study.
 - As a student, I want to be able to create flashcards and quizzes so that I can review the contents I studied previously.
 - As a student, I want to be able to categorize my flashcards and quizzes so that I can find them easily and keep my studies organized.
@@ -83,7 +138,7 @@ At the end, it is good to add a rough indication of the value of the user story 
 -->
 
 ### Domain model
-![alt text](images/image-7.png)
+<img src="images/umls/image-7.png">
 
 ## Architecture and Design
 <!--
@@ -98,11 +153,10 @@ In this section you should start by briefly describing the components of the pro
 
 
 ### Logical architecture
-
-![alt text](images/image-5.png)
+<img src="images/umls/image-5.png">
 
 ### Physical architecture
-![alt text](images/image-6.png)
+<img src="images/umls/image-6.png">
 
 
 ### Vertical prototype
