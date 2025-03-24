@@ -625,10 +625,10 @@ You can find below information and references related with the project managemen
 ### Sprint 0
 
 **Beginning**
-![alt text](beggining_scrumboard_sprint0.png)
+<img src="images/scrumboard/beggining_scrumboard_sprint0.png">
 
 **End**
-![alt text](end_scrumboardd_sprint0.png)
+<img src="images/scrumboard/end_scrumboardd_sprint0.png">
 
 ### Sprint 1
 
