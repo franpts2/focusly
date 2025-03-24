@@ -44,13 +44,13 @@ Business modeling in software development involves defining the product's vision
 From creating quizzes and flashcards to having a Pomodoro timer, Focusly is an all-in-one app for an organized and productive study. 
 
 ### Features and Assumptions
-- Creating Flashcards
-- Creating Quizzes
-- Posting questions in a Forum
-- Pomodoro timer
-- Categorizing flashcards and quizzes
+- Quizzes & Flashcards – Create, customize, and review quizzes and flashcards to reinforce learning
+- Collaborative Forum – Post questions, get answers, and engage in discussions with fellow students
+- Pomodoro Timer – Stay focused with an integrated Pomodoro timer for structured study sessions
+- Categorization – Organize your flashcards and quizzes by subject or topic for easy access
 
 ### Elevator Pitch
+Focusly transforms the way you study by combining essential tools into one seamless experience. Create personalized quizzes and flashcards, boost focus with a built-in Pomodoro timer, and collaborate with peers through an interactive forum. Whether you're preparing for exams or just reviewing concepts, our app makes studying smarter, not harder. Join a community of learners and take your productivity to the next level!
 <!-- 
 Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
 
