@@ -67,7 +67,8 @@ Take a look at the following links to learn some techniques:
 
 ### User Stories
 
-As a student, I want to be able to authenticate so that all my data is saved permanently and I can access it everywhere.
+- As a student, I want to be able to authenticate so that all my data is saved permanently and I can access it everywhere.
+<br><br>
 
 **User interface mockups**
 <div style="display: flex; justify-content: space-between;">
@@ -76,7 +77,7 @@ As a student, I want to be able to authenticate so that all my data is saved per
   <img src="images/mockups/sign in page.png" alt="Image 3" width="24%" />
   <img src="images/mockups/sign up page.png" alt="Image 4" width="24%" />
 </div>
-<br>
+<br><br>
 
 **Acceptance tests**
 
@@ -111,19 +112,449 @@ As a student, I want to be able to authenticate so that all my data is saved per
 
 <h5>Test Case 6: Failed Sign Up - Missing Fields</h5>
 <p>
-    <em>Given</em>the user doesn’t fill in all required fields,<br>
+    <em>Given</em> the user doesn’t fill in all required fields,<br>
     <em>When</em> they attempt to sign up,<br>
     <em>Then</em> an error message should prompt them to complete the form.
 </p>
 
---- 
+<br>
 
-As a student, I want to be able to submit questions so that I can understand more concepts.
+**Value and effort**
+
+Value: 
+
+Effort: 55
+
+--- 
+<br>
+
+- As a student, I want to be able to submit questions so that I can understand more concepts.<br><br>
+
+**User interface mockups**
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/mockups/forum page - new.png" alt="Image 1" width="24%" />
+  <img src="images/mockups/question - all details.png" alt="Image 2" width="24%" />
+  <img src="images/mockups/add a question.png" alt="Image 3" width="24%" />
+  <img src="images/mockups/answer.png" alt="Image 4" width="24%" />
+</div>
+<br><br>
+
+**Acceptance tests**
+<h5>Test Case 1: Successfully Posting a Question</h5>
+<p>
+    <em>Given</em> the student is on the forum page,<br>
+    <em>When</em> they tap the “+” button and enter a title and description for their question, then press “Publish,”<br>
+    <em>Then</em>  the question should appear in the list of questions in the forum.
+</p>
+
+<h5>Test Case 2: Attempting to Post a Question Without a Title</h5>
+<p>
+    <em>Given</em> the student is on the forum page,<br>
+    <em>When</em> they try to submit a question without entering a title,<br>
+    <em>Then</em> an error message should be displayed indicating that the title is required.
+</p>
+
+<h5>Test Case 3: Attempting to Post a Question Without a Description</h5>
+<p>
+    <em>Given</em> the student is on the forum page,<br>
+    <em>When</em> they try to submit a question without entering a description,<br>
+    <em>Then</em> an error message should be displayed indicating that the description is required.
+</p>
+
+<h5>Test Case 4: Viewing a Posted Question</h5>
+<p>
+    <em>Given</em> the student is on the forum page,<br>
+    <em>When</em> they tap on a question from the list,<br>
+    <em>Then</em> they should be taken to a page displaying the full question along with any answers.
+</p>
+
+<h5>Test Case 5: Searching for a Question</h5>
+<p>
+    <em>Given</em> the student is on the forum page,<br>
+    <em>When</em> they enter a keyword in the search bar,<br>
+    <em>Then</em> only questions matching the keyword should be displayed in the list.
+</p>
+
+<h5>Test Case 6: Successfully Posting an Answer</h5>
+<p>
+    <em>Given</em> the student is viewing a question,<br>
+    <em>When</em> they tap the “Post your answer” button, enter their answer, and press “Publish,”<br>
+    <em>Then</em> their answer should appear under the question in the list of answers.
+</p>
+
+<h5>Test Case 7: Attempting to Post an Empty Answer</h5>
+<p>
+    <em>Given</em> the student is viewing a question,<br>
+    <em>When</em> they tap the “Post your answer” button, enter their answer, and press “Publish,they try to submit an answer without entering any text,<br>
+    <em>Then</em> an error message should be displayed indicating that the answer cannot be empty.
+</p>
+
+<h5>Test Case 8: Newly Posted Question Appears in the 'New' Section</h5>
+<p>
+    <em>Given</em> the student submits a new question,<br>
+    <em>When</em> they navigate to the "New" section,<br>
+    <em>Then</em> their question should appear at the top of the list, ordered by posting time (most recent first).
+</p>
+
+<h5>Test Case 9: Student’s Questions Appear in 'My Questions' Section</h5>
+<p>
+    <em>Given</em> the student has posted multiple questions,<br>
+    <em>When</em> they navigate to the "My Questions" section,<br>
+    <em>Then</em> only their questions should be displayed in descending order of posting time
+</p>
+
+<br>
+
+**Value and effort**
+
+Value: 
+
+Effort: 55
+
+---
+<br>
 
 - As a student, I want to be able to create a pomodoro timer so that I can focus better while I study.
+
+<br><br>
+
+**User interface mockups**
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/mockups/pomodoro page - pomodoro.png" alt="Image 1" width="32%" />
+  <img src="images/mockups/pomodoro page - short break.png" alt="Image 2" width="32%" />
+  <img src="images/mockups/pomodoro page - long break.png" alt="Image 3" width="32%" />
+</div>
+<br><br>
+
+**Acceptance tests**
+<h5>Test Case 1: Start Pomodoro Timer</h5>
+<p>
+    <em>Given</em> the user is on the Pomodoro timer screen,<br>
+    <em>When</em> the user selects "Pomodoro" mode and clicks the Start button,<br>
+    <em>Then</em> the timer should begin counting down from 25:00.
+</p>
+
+<h5>Test Case 2: Start Short Break Timer</h5>
+<p>
+    <em>Given</em> the user is on the Pomodoro timer screen,<br>
+    <em>When</em> the user selects "Short Break" mode and clicks the Start button,<br>
+    <em>Then</em> the timer should begin counting down from 5:00.
+</p>
+
+<h5>Test Case 3: Start Long Break Timer</h5>
+<p>
+    <em>Given</em> the user is on the Pomodoro timer screen,<br>
+    <em>When</em> the user selects "Long Break" mode and clicks the Start button,<br>
+    <em>Then</em> the timer should begin counting down from 15:00.
+</p>
+
+<h5>Test Case 4: Pause the Timer</h5>
+<p>
+    <em>Given</em> a timer is running,<br>
+    <em>When</em> the user clicks the Pause button,<br>
+    <em>Then</em> the countdown should stop and remain at the current time.
+</p>
+
+<h5>Test Case 5: Reset the Timer</h5>
+<p>
+    <em>Given</em> a timer is running or paused,<br>
+    <em>When</em> the user clicks the Reset button,<br>
+    <em>Then</em> the timer should reset to the initial value (25:00 for Pomodoro, 5:00 for Short Break, 15:00 for Long Break).
+</p>
+
+<h5>Test Case 6: Ensure Timer Doesn’t Skip or Freeze</h5>
+<p>
+    <em>Given</em> the timer is running,<br>
+    <em>When</em> the user switches pages in the app,<br>
+    <em>Then</em> the timer should continue running without skipping or freezing.
+</p>
+
+<h5>Test Case 7: Display Correct Active Mode</h5>
+<p>
+    <em>Given</em> the user switches between different modes (Pomodoro, Short Break, Long Break),<br>
+    <em>When</em> a mode is selected,<br>
+    <em>Then</em> the selected mode should be visually highlighted in the UI.
+</p>
+
+<h5>Test Case 8: Ensure UI Matches Mockups</h5>
+<p>
+    <em>Given</em> the user opens the app,<br>
+    <em>When</em> the Pomodoro timer screen loads,<br>
+    <em>Then</em> the UI should match the provided mockups in terms of layout, buttons, and colors.
+</p>
+
+<br>
+
+**Value and effort**
+
+Value: 
+
+Effort: 21
+
+---
+<br>
+
 - As a student, I want to be able to create flashcards and quizzes so that I can review the contents I studied previously.
+
+<br><br>
+
+**User interface mockups**
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/mockups/home page.png" alt="Image 1" width="24%" />
+  <img src="images/mockups/create page.png" alt="Image 2" width="24%" />
+  <img src="images/mockups/add flashcard.png" alt="Image 3" width="24%" />
+  <img src="images/mockups/add quiz.png" alt="Image 3" width="24%" />
+</div> <br>
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/mockups/flashcard example.png" alt="Image 2" width="24%" />
+  <img src="images/mockups/quiz example.png" alt="Image 3" width="24%" />
+  <img src="images/mockups/quiz results good.png" alt="Image 3" width="24%" />
+  <img src="images/mockups/quiz results bad.png" alt="Image 3" width="24%" />
+</div>
+<br><br>
+
+
+**Acceptance tests**
+<h5>Test Case 1: Successfully Creating a Flashcard Deck</h5>
+<p>
+    <em>Given</em> the student is on the "Create" screen,<br>
+    <em>When</em> they select "Flashcards," enter a title and category, add flashcards with front and back content, and press "Done,"<br>
+    <em>Then</em> the new flashcard deck should appear under "My Flashcards."
+</p>
+
+<h5>Test Case 2: Prevent Creating a Flashcard Deck Without a Title</h5>
+<p>
+    <em>Given</em> the student is on the "Create" screen,<br>
+    <em>When</em> they attempt to create a flashcard deck without entering a title,<br>
+    <em>Then</em> an error message should be displayed indicating that a title is required.
+</p>
+
+<h5>Test Case 3: Successfully Creating a Quiz</h5>
+<p>
+    <em>Given</em> the student is on the "Create" screen,<br>
+    <em>When</em> they select "Quiz," enter a title and category, add questions with multiple-choice options, select correct answers, and press "Done,"<br>
+    <em>Then</em> the new quiz should appear under "My Quizzes."
+</p>
+
+<h5>Test Case 4: Prevent Creating a Quiz Without a Title</h5>
+<p>
+    <em>Given</em> the student is on the "Create" screen,<br>
+    <em>When</em> they attempt to create a quiz without entering a title,<br>
+    <em>Then</em> an error message should be displayed indicating that a title is required.
+</p>
+
+<h5>Test Case 5: Viewing a Flashcard Deck</h5>
+<p>
+    <em>Given</em> the student has created a flashcard deck,<br>
+    <em>When</em> they select the deck from the "Flashcards" section,<br>
+    <em>Then</em> they should see flashcards one at a time, with options to navigate forward and backward.
+</p>
+
+<h5>Test Case 6: Taking a Quiz</h5>
+<p>
+    <em>Given</em> the student has created a quiz,<br>
+    <em>When</em> they select the quiz from the "Quizzes" section and submit their answers,<br>
+    <em>Then</em> they should receive feedback on their score.
+</p>
+
+<h5>Test Case 7: Displaying Continue Learning Section</h5>
+<p>
+    <em>Given</em> the student has previously accessed flashcards or quizzes,<br>
+    <em>When</em> they navigate to the Home screen,<br>
+    <em>Then</em> the "Continue Learning" section should display the most recently accessed flashcards and quizzes.
+</p>
+
+<h5>Test Case 8: Displaying Available Quizzes</h5>
+<p>
+    <em>Given</em> the student has created or has access to quizzes,<br>
+    <em>When</em> they navigate to the Home screen,<br>
+    <em>Then</em> the "Quizzes" section should list all available quizzes.
+</p>
+
+<h5>Test Case 9: Displaying Available Flashcard Decks</h5>
+<p>
+    <em>Given</em> the student has created or has access to flashcard decks,<br>
+    <em>When</em> they navigate to the Home screen,<br>
+    <em>Then</em> the "Flashcards" section should list all available flashcard decks.
+</p>
+
+<h5>Test Case 10: Accessing a Flashcard Deck from Home</h5>
+<p>
+    <em>Given</em> the student is on the Home screen,<br>
+    <em>When</em> they click on a flashcard deck,<br>
+    <em>Then</em> they should be taken to the flashcard review screen.
+</p>
+
+<h5>Test Case 11: Accessing a Quiz from Home</h5>
+<p>
+    <em>Given</em> the student is on the Home screen,<br>
+    <em>When</em> they click on a quiz,<br>
+    <em>Then</em> they should be taken to the quiz-taking screen.
+</p>
+
+<h5>Test Case 12: Home Screen Updates After Creating Flashcards or Quizzes</h5>
+<p>
+    <em>Given</em> the student creates a new flashcard deck or quiz,<br>
+    <em>When</em> they return to the Home screen,<br>
+    <em>Then</em> the new flashcard deck or quiz should be displayed in the respective section.
+</p>
+
+<br>
+
+**Value and effort**
+
+Value: 
+
+Effort: 89
+
+---
+<br>
+
 - As a student, I want to be able to categorize my flashcards and quizzes so that I can find them easily and keep my studies organized.
+
+<br><br>
+
+**User interface mockups**
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/mockups/user profile page.png" alt="Image 2" width="32%" />
+  <img src="images/mockups/add category.png" alt="Image 3" width="32%" />
+  <img src="images/mockups/category ex - esof - flashcards.png" alt="Image 3" width="32%" />
+</div>
+<br><br>
+
+**Acceptance tests**
+<h5>Test Case 1: Creating a New Category</h5>
+<p>
+    <em>Given</em> the student is on the Profile screen,<br>
+    <em>When</em> they click the "Add Category" button,<br>
+    <em>Then</em> a modal should appear allowing them to enter a category title, select an icon, and choose a color.<br>
+    <em>And</em> after clicking "Add," the new category should be displayed in the "Your Categories" section.
+</p>
+
+<h5>Test Case 2: Viewing Flashcards and Quizzes by Category</h5>
+<p>
+    <em>Given</em> the student has categorized flashcards and quizzes,<br>
+    <em>When</em> they select a category from the Profile screen,<br>
+    <em>Then</em> they should see a list of all flashcards and quizzes associated with that category.
+</p>
+
+<h5>Test Case 3: Preventing Duplicate Category Names</h5>
+<p>
+    <em>Given</em> the student tries to create a category,<br>
+    <em>When</em> they enter a name that already exists,<br>
+    <em>Then</em> an error message should be displayed preventing duplicate categories.
+</p>
+
+<h5>Test Case 4: Visual Differentiation of Categories</h5>
+<p>
+    <em>Given</em> the student has multiple categories,<br>
+    <em>When</em> they view the Profile screen,<br>
+    <em>Then</em> each category should be displayed with its chosen color and icon for easy recognition.
+</p>
+
+<br>
+
+**Value and effort**
+
+Value: 
+
+Effort: 34
+
+---
+<br>
+
 - As a student, I want to be able to edit my flashcards and quizzes so that I can correct mistakes or add more content.
+
+<br><br>
+
+**User interface mockups**
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/mockups/edit flashcard.png" alt="Image 1" width="49%" />
+  <img src="images/mockups/edit quiz.png" alt="Image 2" width="49%" />
+</div>
+<br><br>
+
+**Acceptance tests**
+<h5>Test Case 1: Editing a Flashcard Deck Title</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Flashcard Deck" screen,<br>
+    <em>When</em> they click the pencil icon next to the title,<br>
+    <em>Then</em> they should be able to modify the deck's title,<br>
+    <em>And</em> the updated title should be saved and displayed after clicking "done."
+</p>
+
+<h5>Test Case 2: Editing a Flashcard</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Flashcard Deck" screen,<br>
+    <em>When</em> they click the pencil icon on a flashcard,<br>
+    <em>Then</em> they should be able to modify both the front and back text of the flashcard,<br>
+    <em>And</em> the changes should be saved and displayed after clicking "done."
+</p>
+
+<h5>Test Case 3: Deleting a Flashcard</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Flashcard Deck" screen,<br>
+    <em>When</em> they click the trash bin icon on a flashcard,<br>
+    <em>Then</em> the flashcard should be removed from the deck,<br>
+    <em>And</em> the change should persist after clicking "done."
+</p>
+
+<h5>Test Case 4: Adding a Flashcard</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Flashcard Deck" screen,<br>
+    <em>When</em> they click the "+" button,<br>
+    <em>Then</em> a new blank flashcard should appear for input,<br>
+    <em>And</em> after entering the front and back text, it should be added to the deck upon saving.
+</p>
+
+<h5>Test Case 5: Editing a Quiz Title</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Quiz" screen,<br>
+    <em>When</em> they click the pencil icon next to the quiz title,<br>
+    <em>Then</em> they should be able to modify the title,<br>
+    <em>And</em> the updated title should be saved after clicking "done."
+</p>
+
+<h5>Test Case 6: Editing a Quiz Question</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Quiz" screen,<br>
+    <em>When</em> they click the pencil icon on a question,<br>
+    <em>Then</em> they should be able to edit the question text and its options,<br>
+    <em>And</em> the changes should be saved and displayed after clicking "done."
+</p>
+
+<h5>Test Case 7: Deleting a Quiz Question</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Quiz" screen,<br>
+    <em>When</em> they click the trash bin icon on a question,<br>
+    <em>Then</em> the question should be removed from the quiz,<br>
+    <em>And</em> the change should persist after clicking "done."
+</p>
+
+<h5>Test Case 8: Adding a New Quiz Question</h5>
+<p>
+    <em>Given</em> the student is on the "Edit Quiz" screen,<br>
+    <em>When</em> they click the "+" button,<br>
+    <em>Then</em> a new blank question should appear for input,<br>
+    <em>And</em> after entering the question and its options, it should be added to the quiz upon saving.
+</p>
+
+<h5>Test Case 9: Category Updates Reflect in Edits</h5>
+<p>
+    <em>Given</em> the student is editing a flashcard deck or quiz,<br>
+    <em>When</em> they modify the category,<br>
+    <em>Then</em> the deck or quiz should be moved to the new category,<br>
+    <em>And</em> the change should be reflected on the home and profile screens.
+</p>
+
+<br>
+
+**Value and effort**
+
+Value: 
+
+Effort: 89
+
 
 <!-- 
 **User interface mockups**.
@@ -136,6 +567,7 @@ For each user story you should write also the acceptance tests (textually in [Gh
 At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using points in a kind-of-a Fibonnacci scale (1,2,3,5,8,13,20,40, no idea).
 
 -->
+---
 
 ### Domain model
 <img src="images/umls/image-7.png">
