@@ -611,7 +611,7 @@ Implemented Features
 - **Sound Alert**: A sound plays when the timer reaches zero, notifying the user that the session has ended.
 - **Push Notification**: If the user is outside the app when the timer ends, a notification is sent to bring them back.
 - **UI Consistency**: The interface matches the provided mockups, including tab navigation, mode selection, and button placement.
-- **Mode Highlighting**g: The selected mode is visibly highlighted to indicate the active session.
+- **Mode Highlighting**: The selected mode is visibly highlighted to indicate the active session.
 <br><br>
 
 **UI Snapshot**
@@ -651,6 +651,17 @@ You can find below information and references related with the project managemen
 
 **End**
 <img src="images/scrumboard/end_scrumboardd_sprint0.png">
+
+**Did well**: Great task division, team work efficiency and good communication
+
+**Do differently**: Have a higher effort value in a single sprint
+
+**Puzzles**: None
+
+
+Improvements to implement next Sprint:
+- Do at least two user stories to maximize efficiency
+- Handle documentation early on
 
 ### Sprint 1
 
