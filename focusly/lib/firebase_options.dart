@@ -48,17 +48,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDwQ3uhmZTutlByErElIk-Jd4NoYjFRueY',
-    appId: '1:898779811017:web:f2370971ad459d42e65118',
+    appId: '1:898779811017:web:9619442fc8d584ece65118',
     messagingSenderId: '898779811017',
     projectId: 'focusly-76449',
     authDomain: 'focusly-76449.firebaseapp.com',
     storageBucket: 'focusly-76449.firebasestorage.app',
-    measurementId: 'G-3DZ2KVV0JK',
+    measurementId: 'G-LCJ9CYW2FF',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB901F-dVenV4KD13ORIGv7HOk2l4N_6jU',
-    appId: '1:898779811017:android:a25dcbfb2b7bea34e65118',
+    appId: '1:898779811017:android:d2e595ea873882e1e65118',
     messagingSenderId: '898779811017',
     projectId: 'focusly-76449',
     storageBucket: 'focusly-76449.firebasestorage.app',
@@ -66,11 +66,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyACbGxZu12Qd-JaD0Bzts0v2LwuJDjmo38',
-    appId: '1:898779811017:ios:635040759570245fe65118',
+    appId: '1:898779811017:ios:bfbb92004b705b9be65118',
     messagingSenderId: '898779811017',
     projectId: 'focusly-76449',
     storageBucket: 'focusly-76449.firebasestorage.app',
-    iosClientId: '898779811017-qhpr2p0qo3tgmm6db8la2r1mc477at34.apps.googleusercontent.com',
-    iosBundleId: 'com.example.focusly',
+    androidClientId: '898779811017-vlubqiecjqqpd9ufkp395ch7lein6m54.apps.googleusercontent.com',
+    iosClientId: '898779811017-6ep6do9ittl44ids3o8g0riuf3q5p0pb.apps.googleusercontent.com',
+    iosBundleId: 'com.esof.focusly',
   );
+
 }

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:898779811017:android:a25dcbfb2b7bea34e65118",
+        "mobilesdk_app_id": "1:898779811017:android:d2e595ea873882e1e65118",
         "android_client_info": {
-          "package_name": "com.example.focusly"
+          "package_name": "com.esof.focusly"
         }
       },
       "oauth_client": [
