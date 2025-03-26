@@ -26,24 +26,52 @@ class CreateView extends StatelessWidget {
               children: [
                 Flexible(
                   child: Container(
+                    padding: const EdgeInsets.all(10.0),
                     margin: const EdgeInsets.all(10.0),
                     width: 170,
                     height: 170,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: colorScheme.primaryContainer,
-                    )
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Row (
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Icon(Symbols.add_box),
+                              Text(' Flashcards', style: TextStyle(fontSize: 20)),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                   )
                 ),
                 Flexible(
                     child: Container(
+                        padding: const EdgeInsets.all(10.0),
                         margin: const EdgeInsets.all(10.0),
                         width: 170,
                         height: 170,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           color: colorScheme.primaryContainer,
-                        )
+                        ),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Row (
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Icon(Symbols.add_box),
+                                  Text(' Quiz', style: TextStyle(fontSize: 20)),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                     )
                 ),
               ],
@@ -60,12 +88,25 @@ class CreateView extends StatelessWidget {
               children: [
                 Flexible(
                     child: Container(
+                        padding: const EdgeInsets.all(10.0),
                         margin: const EdgeInsets.all(10.0),
                         height: 190,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           color: colorScheme.primaryContainer,
-                        )
+                        ),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Row (
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(' My Flashcards', style: TextStyle(fontSize: 20)),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                     )
                 )
               ],
@@ -75,12 +116,25 @@ class CreateView extends StatelessWidget {
               children: [
                 Flexible(
                     child: Container(
+                        padding: const EdgeInsets.all(10.0),
                         margin: const EdgeInsets.all(10.0),
                         height: 190,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           color: colorScheme.primaryContainer,
-                        )
+                        ),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Row (
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(' My Quizzes', style: TextStyle(fontSize: 20)),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                     )
                 )
               ],
