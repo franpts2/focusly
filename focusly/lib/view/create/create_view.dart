@@ -26,28 +26,39 @@ class CreateView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
-                  child: Container(
-                    padding: const EdgeInsets.all(10.0),
-                    margin: const EdgeInsets.all(10.0),
-                    width: 170,
-                    height: 170,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: colorScheme.primaryContainer,
-                    ),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Row (
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Icon(Symbols.add_box),
-                              Text(' Flashcards', style: TextStyle(fontSize: 20)),
-                            ],
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            // change this to a create flashcards page
+                            builder: (context) => const CreateViewAddQuiz(),
                           ),
-                          SizedBox(height: 18),
-                          Text('Boost your memory with cards', textAlign: TextAlign.center, style: TextStyle(color: Colors.black54, fontSize: 19),),
-                        ],
+                        );
+                      },
+                    child: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      margin: const EdgeInsets.all(10.0),
+                      width: 170,
+                      height: 170,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: colorScheme.primaryContainer,
+                      ),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Row (
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(Symbols.library_add),
+                                Text(' Flashcards', style: TextStyle(fontSize: 20)),
+                              ],
+                            ),
+                            SizedBox(height: 18),
+                            Text('Boost your memory with cards', textAlign: TextAlign.center, style: TextStyle(color: Colors.black54, fontSize: 19),),
+                          ],
+                        ),
                       ),
                     ),
                   )
@@ -77,7 +88,7 @@ class CreateView extends StatelessWidget {
                                 Row (
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    const Icon(Symbols.add_box),
+                                    const Icon(Symbols.quiz),
                                     Text(' Quiz', style: TextStyle(fontSize: 20)),
                                   ],
                                 ),
