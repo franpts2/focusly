@@ -51,9 +51,19 @@ class CreateViewAddQuiz extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 36),
               const Divider(thickness: 1, height: 1, color: Colors.grey),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('  questions', style: TextStyle(fontSize: 17)),
+                  IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Symbols.add_circle_rounded, size: 32,),
+                  )
+                ],
+              ),
             ],
           ),
         ),
