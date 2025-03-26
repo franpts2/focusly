@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "898779811017",
+    "project_id": "focusly-76449",
+    "storage_bucket": "focusly-76449.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898779811017:android:a25dcbfb2b7bea34e65118",
+        "android_client_info": {
+          "package_name": "com.example.focusly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898779811017-5l46t42fjpv06mn835oukfabc38uittr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB901F-dVenV4KD13ORIGv7HOk2l4N_6jU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898779811017-5l46t42fjpv06mn835oukfabc38uittr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "898779811017-qhpr2p0qo3tgmm6db8la2r1mc477at34.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.focusly"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

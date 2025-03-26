@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>898779811017-qhpr2p0qo3tgmm6db8la2r1mc477at34.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.898779811017-qhpr2p0qo3tgmm6db8la2r1mc477at34</string>
+	<key>API_KEY</key>
+	<string>AIzaSyACbGxZu12Qd-JaD0Bzts0v2LwuJDjmo38</string>
+	<key>GCM_SENDER_ID</key>
+	<string>898779811017</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.focusly</string>
+	<key>PROJECT_ID</key>
+	<string>focusly-76449</string>
+	<key>STORAGE_BUCKET</key>
+	<string>focusly-76449.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:898779811017:ios:635040759570245fe65118</string>
+</dict>
+</plist>
