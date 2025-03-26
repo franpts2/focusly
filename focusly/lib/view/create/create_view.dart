@@ -47,6 +47,43 @@ class CreateView extends StatelessWidget {
                     )
                 ),
               ],
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Icon(Symbols.edit), // Your icon
+                  Text(' Edit', style: TextStyle(fontSize: 22)),
+                ]
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                    child: Container(
+                        margin: const EdgeInsets.all(10.0),
+                        height: 190,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: colorScheme.primaryContainer,
+                        )
+                    )
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                    child: Container(
+                        margin: const EdgeInsets.all(10.0),
+                        height: 190,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: colorScheme.primaryContainer,
+                        )
+                    )
+                )
+              ],
             )
           ],
         ),
