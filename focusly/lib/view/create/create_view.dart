@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'create_view_add_quiz.dart';
 
 class CreateView extends StatelessWidget {
   const CreateView({super.key});
@@ -50,29 +51,39 @@ class CreateView extends StatelessWidget {
                   )
                 ),
                 Flexible(
-                    child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        margin: const EdgeInsets.all(10.0),
-                        width: 170,
-                        height: 170,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: colorScheme.primaryContainer,
-                        ),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Row (
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Icon(Symbols.add_box),
-                                  Text(' Quiz', style: TextStyle(fontSize: 20)),
-                                ],
-                              )
-                            ],
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CreateViewAddQuiz(),
                           ),
-                        ),
-                    )
+                        );
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          margin: const EdgeInsets.all(10.0),
+                          width: 170,
+                          height: 170,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: colorScheme.primaryContainer,
+                          ),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Row (
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Icon(Symbols.add_box),
+                                    Text(' Quiz', style: TextStyle(fontSize: 20)),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                      )
+                  )
                 ),
               ],
             ),
@@ -87,26 +98,26 @@ class CreateView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
-                    child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        margin: const EdgeInsets.all(10.0),
-                        height: 190,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: colorScheme.primaryContainer,
-                        ),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Row (
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(' My Flashcards', style: TextStyle(fontSize: 20)),
-                                ],
-                              )
-                            ],
+                      child: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          margin: const EdgeInsets.all(10.0),
+                          height: 190,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: colorScheme.primaryContainer,
                           ),
-                        ),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Row (
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(' My Flashcards', style: TextStyle(fontSize: 20)),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                     )
                 )
               ],
