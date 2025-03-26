@@ -44,7 +44,9 @@ class CreateView extends StatelessWidget {
                               const Icon(Symbols.add_box),
                               Text(' Flashcards', style: TextStyle(fontSize: 20)),
                             ],
-                          )
+                          ),
+                          SizedBox(height: 18),
+                          Text('Boost your memory with cards', textAlign: TextAlign.center, style: TextStyle(color: Colors.black54, fontSize: 19),),
                         ],
                       ),
                     ),
@@ -78,7 +80,9 @@ class CreateView extends StatelessWidget {
                                     const Icon(Symbols.add_box),
                                     Text(' Quiz', style: TextStyle(fontSize: 20)),
                                   ],
-                                )
+                                ),
+                                SizedBox(height: 18),
+                                Text('Test your knowledge with a quiz', textAlign: TextAlign.center, style: TextStyle(color: Colors.black54, fontSize: 19),),
                               ],
                             ),
                           ),

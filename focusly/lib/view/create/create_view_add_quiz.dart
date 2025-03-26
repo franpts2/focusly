@@ -52,15 +52,8 @@ class CreateViewAddQuiz extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Divider(
-                  thickness: 1, // Line thickness
-                  height: 1, // Space the divider takes
-                  color: Colors.grey, // Line color
-                ),
-              ),
+              const Divider(thickness: 1, height: 1, color: Colors.grey),
+              const SizedBox(height: 16),
             ],
           ),
         ),
