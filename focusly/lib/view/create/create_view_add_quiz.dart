@@ -1,8 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-class CreateViewAddQuiz extends StatelessWidget {
+class CreateViewAddQuiz extends StatefulWidget {
   const CreateViewAddQuiz({super.key});
+
+  @override
+  State<CreateViewAddQuiz> createState() => _CreateAddQuizState();
+}
+
+class _CreateAddQuizState extends State<CreateViewAddQuiz> {
+  final _titleController = TextEditingController();
+  final _categoryController = TextEditingController();
+  final List<QuizQuestion> _questions = [];
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _categoryController.dispose();
+    super.dispose();
+  }
+
+  void _addQuestion() {
+    setState(() {
+      _questions.add(QuizQuestion(
+        question: 'New Question',
+        options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+        correctIndex: 0,
+      ));
+    });
+  }
+
+  void _saveQuiz() {
+    if (_titleController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a quiz title')),
+      );
+      return;
+    }
+
+    if (_questions.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add at least one question')),
+      );
+      return;
+    }
+
+    //firebase logic here
+    print('Quiz saved!');
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,72 +57,241 @@ class CreateViewAddQuiz extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Add Quiz'),
         centerTitle: true,
+        actions: [TextButton(onPressed: _saveQuiz, child: Text('Done')),],
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded( flex: 7,
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Title',
-                        hintText: 'Name your quiz here',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a title';
-                        }
-                        return null;
-                      },
-                    ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(labelText: 'Title', hintText: 'Name your quiz here', border: OutlineInputBorder(),),
                   ),
-                  const SizedBox(width: 16), // Space between fields
-                  Expanded( flex: 3,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Category',
-                        border: OutlineInputBorder( borderRadius: BorderRadius.circular(20)),
-                        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                      ),
-                    ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 1,
+                  child: TextField(
+                    controller: _categoryController,
+                    decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder(),),
                   ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('${_questions.length} questions', style: Theme.of(context).textTheme.titleMedium,),
+                IconButton(onPressed: _addQuestion, icon: const Icon(Symbols.add_circle),),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Questions List
+            Expanded(
+              child: ListView.builder(
+                itemCount: _questions.length,
+                itemBuilder: (context, index) {
+                  return _buildQuestionCard(_questions[index], index);
+                },
               ),
-              const SizedBox(height: 36),
-              const Divider(thickness: 1, height: 1, color: Colors.grey),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Text('questions', style: TextStyle(fontSize: 17)),
+            ),
+
+            // Centered Done button at bottom
+            Center(
+              child: SizedBox(
+                child: ElevatedButton(
+                  onPressed: _saveQuiz,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple, padding: const EdgeInsets.symmetric(vertical: 16),),
+                  child: const Text('Done', style: TextStyle(color: Colors.white, fontSize: 16,),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        Container(
-                          height: 120,
-                          width: 120,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            //color: colorScheme.primaryContainer,
-                            color: Colors.purple,
-                          ),
-                        );
-                      },
-                      icon: const Icon(Symbols.add_circle_rounded, size: 32,),
-                  )
-                ],
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  Widget _buildQuestionCard(QuizQuestion question, int questionIndex) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      color: colorScheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(child: Text('${questionIndex + 1}. ${question.question}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
+                IconButton(icon: const Icon(Symbols.edit, size: 20), onPressed: () => _editQuestion(questionIndex),),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ...List.generate(question.options.length, (optionIndex) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    Radio<int>(
+                      value: optionIndex,
+                      groupValue: question.correctIndex,
+                      onChanged: (value) {
+                        setState(() {
+                          _questions[questionIndex].correctIndex = value!;
+                        });
+                      },
+                    ),
+                    Expanded(child: Text(question.options[optionIndex]),),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _editQuestion(int index) {
+    showDialog(
+      context: context,
+      builder: (context) => EditQuestionDialog(
+        question: _questions[index],
+        onSave: (updatedQuestion) {
+          setState(() {
+            _questions[index] = updatedQuestion;
+          });
+        },
+        onDelete: () {
+          setState(() {
+            _questions.removeAt(index);
+          });
+          Navigator.pop(context); // Close dialog after deletion
+        },
+      ),
+    );
+  }
+}
+
+class EditQuestionDialog extends StatefulWidget {
+  final QuizQuestion question;
+  final Function(QuizQuestion) onSave;
+  final VoidCallback onDelete;
+
+  const EditQuestionDialog({
+    super.key,
+    required this.question,
+    required this.onSave,
+    required this.onDelete,
+  });
+
+  @override
+  State<EditQuestionDialog> createState() => _EditQuestionDialogState();
+}
+
+class _EditQuestionDialogState extends State<EditQuestionDialog> {
+  late TextEditingController _questionController;
+  late List<TextEditingController> _optionControllers;
+  late int _correctIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _questionController = TextEditingController(text: widget.question.question);
+    _optionControllers = widget.question.options
+        .map((option) => TextEditingController(text: option))
+        .toList();
+    _correctIndex = widget.question.correctIndex;
+  }
+
+  @override
+  void dispose() {
+    _questionController.dispose();
+    for (var controller in _optionControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return AlertDialog(
+      backgroundColor: colorScheme.primaryContainer,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _questionController,
+              decoration: const InputDecoration(labelText: 'Question', border: OutlineInputBorder(),),
+            ),
+            const SizedBox(height: 16),
+            ...List.generate(_optionControllers.length, (index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  children: [
+                    Radio<int>(
+                      value: index,
+                      groupValue: _correctIndex,
+                      onChanged: (value) {
+                        setState(() {
+                          _correctIndex = value!;
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _optionControllers[index],
+                        decoration: InputDecoration(labelText: 'Option ${index + 1}', border: const OutlineInputBorder(),),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+      actions: [
+        IconButton(onPressed: () {widget.onDelete();}, icon: Icon(Symbols.delete),),
+        ElevatedButton(
+          onPressed: () {
+            final updatedQuestion = QuizQuestion(
+              question: _questionController.text,
+              options: _optionControllers.map((c) => c.text).toList(),
+              correctIndex: _correctIndex,
+            );
+            widget.onSave(updatedQuestion);
+            Navigator.pop(context);
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+}
+
+class QuizQuestion {
+  String question;
+  List<String> options;
+  int correctIndex;
+
+  QuizQuestion({
+    required this.question,
+    required this.options,
+    required this.correctIndex,
+  });
 }
