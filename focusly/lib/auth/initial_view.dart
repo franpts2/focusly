@@ -50,17 +50,21 @@ class InitialPageView extends StatelessWidget {
                 backgroundColor: primaryColor,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.horizontal(
-                    right: Radius.circular(30),
+                    right: Radius.circular(60),
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 20,
+                  horizontal: 70,
+                  vertical: 30,
                 ),
               ),
               child: const Text(
                 "Sign In",
-                style: TextStyle(fontSize: 36, color: Colors.white),
+                style: TextStyle(
+                  fontSize: 36,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),
@@ -68,7 +72,7 @@ class InitialPageView extends StatelessWidget {
           // Sign Up button (right, slightly lower)
           Positioned(
             top: 600, // Adjust the vertical position
-            right: 0, // Partially cut by the screen
+            right: -20, // Partially cut by the screen
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -80,17 +84,21 @@ class InitialPageView extends StatelessWidget {
                 backgroundColor: tertiaryColor,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.horizontal(
-                    left: Radius.circular(30),
+                    left: Radius.circular(60),
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 20,
+                  horizontal: 70,
+                  vertical: 30,
                 ),
               ),
               child: const Text(
                 "Sign Up",
-                style: TextStyle(fontSize: 36, color: Colors.white),
+                style: TextStyle(
+                  fontSize: 36,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),
