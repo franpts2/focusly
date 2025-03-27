@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:focusly/auth/signin_view.dart';
+import 'package:focusly/auth/signup_view.dart';
+
+class InitialPageView extends StatelessWidget {
+  const InitialPageView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final primaryColor =
+        Theme.of(context).primaryColor; // Primary color from the theme
+    final tertiaryColor =
+        Theme.of(context).colorScheme.tertiary; // Tertiary color from the theme
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          // Welcome text
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 80),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 100),
+                Text(
+                  "Start organizing\nyour study now",
+                  style: const TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Sign In button (left, slightly higher)
+          Positioned(
+            top: 400, // Adjust the vertical position
+            left: 0, // Partially cut by the screen
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SignInView()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.horizontal(
+                    right: Radius.circular(30),
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 20,
+                ),
+              ),
+              child: const Text(
+                "Sign In",
+                style: TextStyle(fontSize: 36, color: Colors.white),
+              ),
+            ),
+          ),
+
+          // Sign Up button (right, slightly lower)
+          Positioned(
+            top: 600, // Adjust the vertical position
+            right: 0, // Partially cut by the screen
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SignUpView()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: tertiaryColor,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.horizontal(
+                    left: Radius.circular(30),
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 20,
+                ),
+              ),
+              child: const Text(
+                "Sign Up",
+                style: TextStyle(fontSize: 36, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
