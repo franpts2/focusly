@@ -21,13 +21,15 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
   }
 
   void _addQuestion() {
-    setState(() {
-      _questions.add(QuizQuestion(
-        question: 'New Question',
-        options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+    // Show the edit dialog immediately when adding a new question
+    _showQuestionDialog(
+      question: QuizQuestion(
+        question: '',
+        options: ['', '', '', ''],
         correctIndex: 0,
-      ));
-    });
+      ),
+      isNew: true,
+    );
   }
 
   void _saveQuiz() {
@@ -45,16 +47,50 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
       return;
     }
 
-    //firebase logic here
+    // firebase logic here
     print('Quiz saved!');
     Navigator.pop(context);
+  }
+
+  void _showQuestionDialog({required QuizQuestion question, bool isNew = false}) {
+    showDialog(
+      context: context,
+      builder: (context) => QuestionEditDialog(
+        question: question,
+        onSave: (updatedQuestion) {
+          setState(() {
+            if (isNew) {
+              _questions.add(updatedQuestion);
+            } else {
+              // Find and update the existing question
+              final index = _questions.indexWhere(
+                      (q) => q.question == question.question);
+              if (index != -1) {
+                _questions[index] = updatedQuestion;
+              }
+            }
+          });
+        },
+        onDelete: isNew
+            ? null // No delete for new questions
+            : () {
+          setState(() {
+            _questions.removeWhere((q) => q.question == question.question);
+          });
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Quiz'), centerTitle: true,),
+      appBar: AppBar(
+        title: const Text('Add Quiz'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -90,7 +126,6 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
             ),
             const SizedBox(height: 8),
 
-            // Questions List
             Expanded(
               child: ListView.builder(
                 itemCount: _questions.length,
@@ -100,14 +135,13 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
               ),
             ),
 
-            // Centered Done button at bottom
             Center(
               child: SizedBox(
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _saveQuiz,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple, padding: const EdgeInsets.symmetric(vertical: 16),),
-                  child: const Text('Done', style: TextStyle(color: Colors.white, fontSize: 16,),
-                  ),
+                  style: ElevatedButton.styleFrom( backgroundColor: Colors.deepPurple, padding: const EdgeInsets.symmetric(vertical: 16),),
+                  child: const Text('Done', style: TextStyle(color: Colors.white, fontSize: 16),),
                 ),
               ),
             ),
@@ -129,8 +163,15 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
           children: [
             Row(
               children: [
-                Expanded(child: Text('${questionIndex + 1}. ${question.question}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),),
-                IconButton(icon: const Icon(Symbols.edit, size: 20), onPressed: () => _editQuestion(questionIndex),),
+                Expanded(child: Text('${questionIndex + 1}. ${question.question}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),),
+                IconButton(
+                  icon: const Icon(Symbols.delete, size: 20),
+                  onPressed: () {
+                    setState(() {
+                      _questions.removeAt(questionIndex);
+                    });
+                  },
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -158,45 +199,25 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
       ),
     );
   }
-
-  void _editQuestion(int index) {
-    showDialog(
-      context: context,
-      builder: (context) => EditQuestionDialog(
-        question: _questions[index],
-        onSave: (updatedQuestion) {
-          setState(() {
-            _questions[index] = updatedQuestion;
-          });
-        },
-        onDelete: () {
-          setState(() {
-            _questions.removeAt(index);
-          });
-          Navigator.pop(context); // Close dialog after deletion
-        },
-      ),
-    );
-  }
 }
 
-class EditQuestionDialog extends StatefulWidget {
+class QuestionEditDialog extends StatefulWidget {
   final QuizQuestion question;
   final Function(QuizQuestion) onSave;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
 
-  const EditQuestionDialog({
+  const QuestionEditDialog({
     super.key,
     required this.question,
     required this.onSave,
-    required this.onDelete,
+    this.onDelete,
   });
 
   @override
-  State<EditQuestionDialog> createState() => _EditQuestionDialogState();
+  State<QuestionEditDialog> createState() => _QuestionEditDialogState();
 }
 
-class _EditQuestionDialogState extends State<EditQuestionDialog> {
+class _QuestionEditDialogState extends State<QuestionEditDialog> {
   late TextEditingController _questionController;
   late List<TextEditingController> _optionControllers;
   late int _correctIndex;
@@ -262,18 +283,20 @@ class _EditQuestionDialogState extends State<EditQuestionDialog> {
         ),
       ),
       actions: [
-        IconButton(onPressed: () {widget.onDelete();}, icon: Icon(Symbols.delete),),
-        ElevatedButton(
-          onPressed: () {
-            final updatedQuestion = QuizQuestion(
-              question: _questionController.text,
-              options: _optionControllers.map((c) => c.text).toList(),
-              correctIndex: _correctIndex,
-            );
-            widget.onSave(updatedQuestion);
-            Navigator.pop(context);
-          },
-          child: const Text('Save'),
+        Align(
+          alignment: Alignment.center,
+          child: ElevatedButton(
+            onPressed: () {
+              final updatedQuestion = QuizQuestion(
+                question: _questionController.text,
+                options: _optionControllers.map((c) => c.text).toList(),
+                correctIndex: _correctIndex,
+              );
+              widget.onSave(updatedQuestion);
+              Navigator.pop(context);
+            },
+            child: const Text('SAVE'),
+          ),
         ),
       ],
     );
