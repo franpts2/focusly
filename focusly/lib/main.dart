@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:focusly/auth/initial_view.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class MainApp extends StatelessWidget {
           } else if (snapshot.hasData) {
             return NavigationView();
           } else {
-            return SignInView();
+            return InitialPageView();
           }
         },
       ),

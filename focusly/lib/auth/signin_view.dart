@@ -8,7 +8,7 @@ class SignInView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor =
-        Theme.of(context).primaryColor; // Get the primary color from the theme
+        Theme.of(context).primaryColor; // primary color from the theme
     final secondaryColor =
         Theme.of(
           context,
@@ -16,7 +16,7 @@ class SignInView extends StatelessWidget {
     final tertiaryColor =
         Theme.of(
           context,
-        ).colorScheme.tertiary; // Background color from the theme
+        ).colorScheme.tertiary; // tertiary color from the theme
 
     return Scaffold(
       body: Stack(
