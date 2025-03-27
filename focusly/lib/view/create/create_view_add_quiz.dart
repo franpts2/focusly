@@ -20,8 +20,7 @@ class CreateViewAddQuiz extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    flex: 7,
+                  Expanded( flex: 7,
                     child: TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Title',
@@ -37,14 +36,11 @@ class CreateViewAddQuiz extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16), // Space between fields
-                  Expanded(
-                    flex: 3,
+                  Expanded( flex: 3,
                     child: TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Category',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                        ),
+                        border: OutlineInputBorder( borderRadius: BorderRadius.circular(20)),
                         contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                       ),
                     ),
@@ -57,9 +53,22 @@ class CreateViewAddQuiz extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('  questions', style: TextStyle(fontSize: 17)),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Text('questions', style: TextStyle(fontSize: 17)),
+                  ),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Container(
+                          height: 120,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            //color: colorScheme.primaryContainer,
+                            color: Colors.purple,
+                          ),
+                        );
+                      },
                       icon: const Icon(Symbols.add_circle_rounded, size: 32,),
                   )
                 ],
