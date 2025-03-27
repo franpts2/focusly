@@ -9,55 +9,105 @@ class SignInView extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor =
         Theme.of(context).primaryColor; // Get the primary color from the theme
+    final secondaryColor =
+        Theme.of(
+          context,
+        ).colorScheme.secondary; // Secondary color from the theme
+    final tertiaryColor =
+        Theme.of(
+          context,
+        ).colorScheme.tertiary; // Background color from the theme
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Align children to the start (left)
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 250,
-              left: 20,
-            ), // Adjust position of the text
-            child: RichText(
-              textAlign: TextAlign.left, // Align text to the left
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Welcome\n",
-                    style: TextStyle(
-                      fontSize: 57,
-                      fontWeight: FontWeight.w400,
-                      color: primaryColor, // Use the primary color
-                    ),
-                  ),
-                  TextSpan(
-                    text: "Back",
-                    style: TextStyle(
-                      fontSize: 57,
-                      fontWeight: FontWeight.w400,
-                      color: primaryColor, // Use the primary color
-                    ),
-                  ),
-                ],
+          // Ellipses at the top
+          Positioned(
+            top: -80,
+            left: -10,
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                color: primaryColor,
+                shape: BoxShape.circle,
               ),
             ),
           ),
-          const Spacer(), // Pushes the button to the bottom
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                final authService = Provider.of<AuthenticationService>(
-                  context,
-                  listen: false,
-                );
-                await authService.signIn();
-              },
-              child: const Text('Sign in with Google'),
+          Positioned(
+            top: -70,
+            right: -60,
+            child: Container(
+              width: 250,
+              height: 300,
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                shape: BoxShape.circle,
+              ),
             ),
           ),
-          const SizedBox(height: 50), // Add spacing at the bottom
+          Positioned(
+            top: 75,
+            left: -60,
+            child: Container(
+              width: 160,
+              height: 160,
+              decoration: BoxDecoration(
+                color: tertiaryColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+
+          // Main content
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 250,
+                  left: 40,
+                ), // Adjust position of the text
+                child: RichText(
+                  textAlign: TextAlign.left, // Align text to the left
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Welcome\n",
+                        style: TextStyle(
+                          fontSize: 57,
+                          fontWeight: FontWeight.w400,
+                          color: primaryColor, // Use the primary color
+                        ),
+                      ),
+                      TextSpan(
+                        text: "Back",
+                        style: TextStyle(
+                          fontSize: 57,
+                          fontWeight: FontWeight.w400,
+                          color: primaryColor, // Use the primary color
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Spacer(), // Pushes the button to the bottom
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final authService = Provider.of<AuthenticationService>(
+                      context,
+                      listen: false,
+                    );
+                    await authService.signIn();
+                  },
+                  child: const Text('Sign in with Google'),
+                ),
+              ),
+              const SizedBox(height: 50), // Add spacing at the bottom
+            ],
+          ),
         ],
       ),
     );
