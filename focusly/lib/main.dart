@@ -31,7 +31,7 @@ class MainApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               snapshot.connectionState == ConnectionState.none) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
             return NavigationView();
           } else {
