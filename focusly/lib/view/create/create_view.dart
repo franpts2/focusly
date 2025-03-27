@@ -24,42 +24,38 @@ class CreateView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: 200, // Prevent vertical overflow
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildCreationCard(
-                      icon: Symbols.library_add,
-                      title: 'Flashcards',
-                      description: 'Boost your memory with cards',
-                      color: colorScheme.primaryContainer,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CreateViewAddQuiz(), // Change to flashcards page
-                        ),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildCreationCard(
+                    icon: Symbols.library_add,
+                    title: 'Flashcards',
+                    description: 'Boost your memory with cards',
+                    color: colorScheme.primaryContainer,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateViewAddQuiz(),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    _buildCreationCard(
-                      icon: Symbols.quiz,
-                      title: 'Quiz',
-                      description: 'Test your knowledge',
-                      color: colorScheme.primaryContainer,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CreateViewAddQuiz(),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildCreationCard(
+                    icon: Symbols.quiz,
+                    title: 'Quiz',
+                    description: 'Test your knowledge',
+                    color: colorScheme.primaryContainer,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateViewAddQuiz(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
 
@@ -98,25 +94,23 @@ class CreateView extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return SizedBox(
-      width: 170,
-      height: 170,
+      height: 170, // Fixed height for consistency
       child: GestureDetector(
         onTap: onTap,
         child: Card(
           color: color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Icon(icon),
                     const SizedBox(width: 8),
-                    Flexible(  // Prevents text overflow
+                    Flexible(
                       child: Text(
                         title,
                         style: const TextStyle(fontSize: 18),
@@ -125,7 +119,7 @@ class CreateView extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 Flexible(
                   child: Text(
                     description,
@@ -133,7 +127,6 @@ class CreateView extends StatelessWidget {
                       color: Colors.black54,
                       fontSize: 14,
                     ),
-                    maxLines: 2,  // Limits to 2 lines
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -141,8 +134,7 @@ class CreateView extends StatelessWidget {
             ),
           ),
         ),
-      )
-
+      ),
     );
   }
 
@@ -156,18 +148,13 @@ class CreateView extends StatelessWidget {
       height: height,
       child: Card(
         color: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 18),
-              ),
+              Text(title, style: const TextStyle(fontSize: 18),),
               // add content here
             ],
           ),
