@@ -123,10 +123,9 @@ class CreateView extends StatelessWidget {
                 Flexible(
                   child: Text(
                     description,
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                    ),
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.black54, fontSize: 14,),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
