@@ -108,10 +108,15 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,
-                  child: TextField(
+                  child: Container(
+                    decoration: BoxDecoration(border: Border.all(color: Colors.grey, width: 1.0), borderRadius: BorderRadius.circular(26.0)),
+                    child: TextButton(onPressed: () {}, child: Text('Category')),
+                  )
+                  /*child: TextField(
+                   TextButton(onPressed: () {}, child: Text('Category'))
                     controller: _categoryController,
                     decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder(),),
-                  ),
+                  ),*/
                 ),
               ],
             ),
