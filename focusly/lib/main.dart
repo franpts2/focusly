@@ -4,7 +4,6 @@ import 'package:focusly/auth/initial_view.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:focusly/auth/signin_view.dart';
 import 'package:focusly/services/authentication_service.dart';
 
 void main() async {

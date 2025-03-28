@@ -18,7 +18,7 @@ class InitialPageView extends StatelessWidget {
         children: [
           // Welcome text
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 80),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 120),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -37,7 +37,7 @@ class InitialPageView extends StatelessWidget {
 
           // Sign In button (left, slightly higher)
           Positioned(
-            top: 400, // Adjust the vertical position
+            top: 450, // Adjust the vertical position
             left: 0, // Partially cut by the screen
             child: ElevatedButton(
               onPressed: () {
@@ -57,6 +57,7 @@ class InitialPageView extends StatelessWidget {
                   horizontal: 70,
                   vertical: 30,
                 ),
+                alignment: Alignment.center,
               ),
               child: const Text(
                 "Sign In",
@@ -71,8 +72,8 @@ class InitialPageView extends StatelessWidget {
 
           // Sign Up button (right, slightly lower)
           Positioned(
-            top: 600, // Adjust the vertical position
-            right: -20, // Partially cut by the screen
+            top: 580, // Adjust the vertical position
+            right: 0, // Partially cut by the screen
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
