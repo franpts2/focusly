@@ -6,6 +6,7 @@ import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/services/authentication_service.dart';
+import 'package:focusly/viewmodel/quiz_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthenticationService()),
+        ChangeNotifierProvider(create: (_) => QuizViewModel()),
         // add other providers here if needed
       ],
       child: const MainApp(),

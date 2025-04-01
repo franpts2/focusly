@@ -1,0 +1,42 @@
+class QuizViewModel extends ChangeNotifier {
+    final List<Quiz> _quizzes = [];
+    late DatabaseReference _databaseReference;
+
+    List<Quiz> get quizzes => _devices;
+
+    QuizViewModel({DatabaseReference? databaseReference}) {
+        _databaseReference = databaseReference ?? FirebaseDatabase.instance.ref();
+        _initialize();
+    }
+
+    Furure<void> _initialize() async {
+        final user = FirebaseAuth.instace.currentUser;
+        if (user != null) {
+            _databaseReference = _databaseReference.child(user.uid).child('quizzes');
+            loadQuizzes();
+        }
+    }
+
+    Future<void> addQuiz(Quiz quiz) async {
+        final newQuizRef = _databaseReference.push();
+        final quizID = newQuizRef.key!;
+        final quizWithID = quiz.copyWith(id: quizID);
+        await newQuizRef.set(deviceWithID.toJson());
+    }
+
+    Future<void> _loadQuizzes() async {
+        final event = await _databaseReference.once();
+        final data = event.snapshot.value as Map<dynamic,dynamic>?;
+        if (data != null) {
+            _quizzes.clear();
+            data.forEach((key, value) {
+                final quizData = Map<String, dynamic>.from(value);
+                if (quizData['id'] == null){
+                    quizData['id'] = key;
+                }
+                _quizzes.add(Quiz.fromJson(quizData));
+            });
+            notifyListeners();
+        }
+    }
+}
