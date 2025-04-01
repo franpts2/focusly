@@ -40,8 +40,10 @@ Thank you!
 Business modeling in software development involves defining the product's vision, understanding market needs, aligning features with user expectations, and setting the groundwork for strategic planning and execution.
 
 ### Product Vision
-
-From creating quizzes and flashcards to having a Pomodoro timer, Focusly is an all-in-one app for an organized and productive study. 
+<!--
+From creating quizzes and flashcards to having a Pomodoro timer, Focusly is an all-in-one study app for an organized and productive study.
+-->
+Focusly is an all-in-one study app that helps students master topics faster by combining active recall tools (quizzes, flashcards), a collaborative forum, and focus-boosting timers (pomodoro) in one seamless app. Designed for learners of all levels, it turns scattered study methods into a productive, social, and well-organized learning environment.
 
 ### Features and Assumptions
 - Quizzes & Flashcards – Create, customize, and review quizzes and flashcards to reinforce learning
