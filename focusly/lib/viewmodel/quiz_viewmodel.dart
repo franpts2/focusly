@@ -5,27 +5,50 @@ import 'package:focusly/model/quiz_model.dart';
 
 class QuizViewModel extends ChangeNotifier {
   final List<Quiz> _quizzes = [];
-  late DatabaseReference _databaseReference;
+  DatabaseReference? _databaseReference;
+  bool _isInitialized = false;
 
   List<Quiz> get quizzes => _quizzes;
 
-  QuizViewModel({DatabaseReference? databaseReference}) {
-    _databaseReference = databaseReference ?? FirebaseDatabase.instance.ref();
+  QuizViewModel() {
     _initialize();
   }
 
   Future<void> _initialize() async {
+    if (_isInitialized) return;
+
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      _databaseReference = _databaseReference.child(user.uid).child('quizzes');
-      _loadQuizzes();
+      // Create a fresh reference directly to users/{uid}/quizzes
+      // Using absolute path instead of child() method to avoid nesting issues
+      _databaseReference = FirebaseDatabase.instance
+          .ref()
+          .child("users")
+          .child(user.uid)
+          .child("quizzes");
+      print("Database path: ${_databaseReference!.path}");
+      await _loadQuizzes();
+      _isInitialized = true;
     }
   }
 
   Future<void> addQuiz(Quiz quiz) async {
-    final newQuizRef = _databaseReference.push();
+    // Make sure we're initialized
+    if (!_isInitialized) {
+      await _initialize();
+    }
+
+    // Check if we're still not initialized (user might not be logged in)
+    if (!_isInitialized || _databaseReference == null) {
+      throw Exception('Cannot add quiz: User not authenticated');
+    }
+
+    // Use the push() method on the direct quizzes reference
+    final newQuizRef = _databaseReference!.push();
     final quizID = newQuizRef.key!;
     final quizWithID = quiz.copyWith(id: quizID);
+
+    // Save quiz data without nesting the user ID again
     await newQuizRef.set(quizWithID.toJson());
 
     // Add to local list
@@ -34,11 +57,19 @@ class QuizViewModel extends ChangeNotifier {
   }
 
   Future<void> updateQuiz(Quiz quiz) async {
+    if (!_isInitialized) {
+      await _initialize();
+    }
+
+    if (_databaseReference == null) {
+      throw Exception('Cannot update quiz: Database reference not initialized');
+    }
+
     if (quiz.id == null) {
       throw Exception('Cannot update quiz without an ID');
     }
 
-    await _databaseReference.child(quiz.id!).update(quiz.toJson());
+    await _databaseReference!.child(quiz.id!).update(quiz.toJson());
 
     // Update local list
     final index = _quizzes.indexWhere((q) => q.id == quiz.id);
@@ -49,7 +80,15 @@ class QuizViewModel extends ChangeNotifier {
   }
 
   Future<void> deleteQuiz(String quizId) async {
-    await _databaseReference.child(quizId).remove();
+    if (!_isInitialized) {
+      await _initialize();
+    }
+
+    if (_databaseReference == null) {
+      throw Exception('Cannot delete quiz: Database reference not initialized');
+    }
+
+    await _databaseReference!.child(quizId).remove();
 
     // Remove from local list
     _quizzes.removeWhere((quiz) => quiz.id == quizId);
@@ -58,7 +97,12 @@ class QuizViewModel extends ChangeNotifier {
 
   Future<void> _loadQuizzes() async {
     try {
-      final event = await _databaseReference.once();
+      if (_databaseReference == null) {
+        print('Cannot load quizzes: Database reference not initialized');
+        return;
+      }
+
+      final event = await _databaseReference!.once();
       final data = event.snapshot.value as Map<dynamic, dynamic>?;
 
       if (data != null) {
@@ -78,6 +122,12 @@ class QuizViewModel extends ChangeNotifier {
   }
 
   Future<void> refreshQuizzes() async {
-    await _loadQuizzes();
+    // Complete reset of initialization state and database reference
+    _isInitialized = false;
+    _databaseReference = null;
+    _quizzes.clear();
+
+    // Re-initialize from scratch
+    await _initialize();
   }
 }
