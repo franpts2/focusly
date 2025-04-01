@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:focusly/view/navigation/navigation_view.dart';
+import 'package:focusly/auth/initial_view.dart';
 
 class AuthenticationService with ChangeNotifier {
   GoogleSignInAccount? _currentUser;
@@ -35,7 +37,7 @@ class AuthenticationService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signIn() async {
+  Future<void> signIn({BuildContext? context}) async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
@@ -57,18 +59,34 @@ class AuthenticationService with ChangeNotifier {
 
       _currentUser = googleUser;
       notifyListeners();
+
+      // If context is provided, navigate directly to NavigationView
+      if (context != null && context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false, // This removes all previous routes
+        );
+      }
     } catch (error) {
-      // Handle error
+      print("Sign-in error: $error");
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut({BuildContext? context}) async {
     await _googleSignIn.signOut();
     await _auth.signOut();
     _currentUser = null;
     _cachedAvatarUrl = null;
     _removeUserAvatar();
     notifyListeners();
+
+    // If context is provided, navigate back to InitialPageView
+    if (context != null && context.mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const InitialPageView()),
+        (route) => false, // This removes all previous routes
+      );
+    }
   }
 
   Future<void> _saveUserAvatar(String? photoURL) async {
