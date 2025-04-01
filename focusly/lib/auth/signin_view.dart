@@ -7,6 +7,8 @@ class SignInView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthenticationService>(context);
+
     final primaryColor =
         Theme.of(context).primaryColor; // primary color from the theme
     final secondaryColor =
@@ -14,9 +16,7 @@ class SignInView extends StatelessWidget {
           context,
         ).colorScheme.secondary; // Secondary color from the theme
     final tertiaryColor =
-        Theme.of(
-          context,
-        ).colorScheme.tertiary; // tertiary color from the theme
+        Theme.of(context).colorScheme.tertiary; // tertiary color from the theme
 
     return Scaffold(
       body: Stack(
@@ -95,13 +95,7 @@ class SignInView extends StatelessWidget {
               const Spacer(), // Pushes the button to the bottom
               Center(
                 child: ElevatedButton(
-                  onPressed: () async {
-                    final authService = Provider.of<AuthenticationService>(
-                      context,
-                      listen: false,
-                    );
-                    await authService.signIn();
-                  },
+                  onPressed: () => authService.signIn(context: context),
                   child: const Text('Sign in with Google'),
                 ),
               ),
