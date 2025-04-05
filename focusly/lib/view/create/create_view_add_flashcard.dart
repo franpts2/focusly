@@ -11,6 +11,7 @@ class CreateViewAddFlashcard extends StatefulWidget {
 class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcard> {
   final _titleController = TextEditingController();
   final _categoryController = TextEditingController();
+  final List<Flashcard> _flashcards = [];
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  ' flashcards',
+                  '${_flashcards.length} flashcards',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 IconButton(
@@ -73,15 +74,15 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcard> {
             ),
             const SizedBox(height: 8),
 
-            /*
+            
             Expanded(
               child: ListView.builder(
-                itemCount: _questions.length,
+                itemCount: _flashcards.length,
                 itemBuilder: (context, index) {
-                  return _buildQuestionCard(_questions[index], index);
+                  return _buildFlashcardCard(_flashcards[index], index);
                 },
               ),
-            ),*/
+            ),
 
             Center(
               child: SizedBox(
@@ -104,4 +105,28 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcard> {
       ),
     );
   }
+
+  Widget _buildFlashcardCard(Flashcard flashcard, int index) {
+    return Card(
+      child: ListTile(
+        title: Text(flashcard.front),
+        subtitle: Text(flashcard.back),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            setState(() {
+              _flashcards.removeAt(index);
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Flashcard {
+  String front;
+  String back;
+
+  Flashcard({required this.front, required this.back});
 }
