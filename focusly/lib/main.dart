@@ -4,6 +4,7 @@ import 'package:focusly/auth/initial_view.dart';
 import 'package:focusly/firebase_options.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
@@ -16,6 +17,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthenticationService()),
         ChangeNotifierProvider(create: (_) => QuizViewModel()),
+        ChangeNotifierProvider(create: (_) => FlashcardDeckViewModel()),
         // add other providers here if needed
       ],
       child: const MainApp(),
