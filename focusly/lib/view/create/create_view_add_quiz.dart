@@ -132,7 +132,7 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    //final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: const Text('Add Quiz'), centerTitle: true),
       body: Padding(
