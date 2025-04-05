@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:focusly/model/flashcard_deck_model.dart';
+import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:provider/provider.dart';
 
 class CreateViewAddFlashcardDeck extends StatefulWidget {
   const CreateViewAddFlashcardDeck({super.key});
@@ -11,7 +14,7 @@ class CreateViewAddFlashcardDeck extends StatefulWidget {
 class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
   final _titleController = TextEditingController();
   final _categoryController = TextEditingController();
-  final List<Flashcard> _flashcards = [];
+  final List<FlashcardUI> _flashcards = [];
 
   @override
   void dispose() {
@@ -23,13 +26,13 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
   void _addFlashcard() {
     // Show edit dialog for a new flashcard
     _showFlashcardDialog(
-      flashcard: Flashcard(front: '', back: ''),
+      flashcard: FlashcardUI(front: '', back: ''),
       isNew: true,
     );
   }
 
   void _showFlashcardDialog({
-    required Flashcard flashcard,
+    required FlashcardUI flashcard,
     bool isNew = false,
   }) {
     showDialog(
@@ -63,6 +66,54 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
             },
       ),
     );
+  }
+
+  void _saveDeck() async {
+    if (_titleController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a deck title')),
+      );
+      return;
+    }
+
+    if (_flashcards.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add at least one flashcard')),
+      );
+      return;
+    }
+
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(context, listen: false);
+
+    // Convert FlashcardUI to Flashcard
+    final modelFlashcards = _flashcards.map((flashcard) {
+      return Flashcard(
+        front: flashcard.front,
+        back: flashcard.back,
+      );
+    }).toList();
+
+
+    // Create Deck object
+    final deck = FlashcardDeck(
+      title: _titleController.text,
+      category: _categoryController.text.isEmpty 
+          ? 'General' 
+          : _categoryController.text,
+      flashcards: modelFlashcards,
+    );
+
+    try {
+      await flashcardViewModel.addDeck(deck);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Deck saved successfully')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving deck: $e')),
+      );
+    }
   }
 
   @override
@@ -140,9 +191,9 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:() {},
+                  onPressed: _saveDeck,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const Text(
@@ -158,7 +209,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
     );
   }
 
-  Widget _buildFlashcardCard(Flashcard flashcard, int flashcardIndex) {
+  Widget _buildFlashcardCard(FlashcardUI flashcard, int flashcardIndex) {
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
@@ -228,8 +279,8 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
 }
 
 class FlashcardEditDialog extends StatefulWidget {
-  final Flashcard flashcard;
-  final Function(Flashcard) onSave;
+  final FlashcardUI flashcard;
+  final Function(FlashcardUI) onSave;
   final VoidCallback? onDelete;
 
   const FlashcardEditDialog({
@@ -291,7 +342,7 @@ class _FlashcardEditDialogState extends State<FlashcardEditDialog> {
           alignment: Alignment.center,
           child: ElevatedButton(
             onPressed: () {
-              final updatedFlashcard = Flashcard(
+              final updatedFlashcard = FlashcardUI(
                 front: _frontController.text,
                 back: _backController.text,
               );
@@ -306,9 +357,9 @@ class _FlashcardEditDialogState extends State<FlashcardEditDialog> {
   }
 }
 
-class Flashcard {
+class FlashcardUI {
   String front;
   String back;
 
-  Flashcard({required this.front, required this.back});
+  FlashcardUI({required this.front, required this.back});
 }
