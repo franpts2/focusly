@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "898779811017",
+    "firebase_url": "https://focusly-76449-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "focusly-76449",
     "storage_bucket": "focusly-76449.firebasestorage.app"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "898779811017-k55o347jjna9adojtci7016k9pmjs298.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "ffb80cfef6df21d07a4c5be8f56a2f413eae807e"
+          }
+        },
         {
           "client_id": "898779811017-5l46t42fjpv06mn835oukfabc38uittr.apps.googleusercontent.com",
           "client_type": 3
@@ -31,10 +40,10 @@
               "client_type": 3
             },
             {
-              "client_id": "898779811017-qhpr2p0qo3tgmm6db8la2r1mc477at34.apps.googleusercontent.com",
+              "client_id": "898779811017-6ep6do9ittl44ids3o8g0riuf3q5p0pb.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.focusly"
+                "bundle_id": "com.esof.focusly"
               }
             }
           ]
