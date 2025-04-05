@@ -110,7 +110,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
               ],
             ),
             const SizedBox(height: 24),
-
+            Divider(color: Colors.grey[300]),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -118,13 +118,13 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                   '${_flashcards.length} flashcards',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                IconButton(
+                IconButton.outlined(
                   onPressed: _addFlashcard,
-                  icon: const Icon(Symbols.add_circle),
+                  icon: const Icon(Symbols.add, size: 24),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
 
             
             Expanded(
@@ -159,10 +159,10 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
   }
 
   Widget _buildFlashcardCard(Flashcard flashcard, int flashcardIndex) {
-  final colorScheme = Theme.of(context).colorScheme;
-  return Padding(
-    padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
-    child: Card(
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
+      child: Card(
         margin: const EdgeInsets.only(bottom: 16),
         color: colorScheme.primaryContainer, 
         child:Stack(
@@ -223,7 +223,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
           ],
         ),
       ),
-  );
+    );
   }
 }
 
