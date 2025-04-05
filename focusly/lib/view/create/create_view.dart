@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focusly/view/create/create_view_add_flashcard.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'create_view_add_quiz.dart';
 
@@ -35,7 +36,7 @@ class CreateView extends StatelessWidget {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CreateViewAddQuiz(),
+                        builder: (context) => const CreateViewAddFlashcard(),
                       ),
                     ),
                   ),
