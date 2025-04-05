@@ -19,14 +19,11 @@ class QuizViewModel extends ChangeNotifier {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Create a fresh reference directly to users/{uid}/quizzes
-      // Using absolute path instead of child() method to avoid nesting issues
+     
       _databaseReference = FirebaseDatabase.instance
           .ref()
-          .child("users")
           .child(user.uid)
           .child("quizzes");
-      print("Database path: ${_databaseReference!.path}");
       await _loadQuizzes();
       _isInitialized = true;
     }
