@@ -42,7 +42,7 @@ class MainApp extends StatelessWidget {
           } else if (snapshot.hasData) {
             return NavigationView();
           } else {
-            return NavigationView(); //return InitialPageView()
+            return InitialPageView(); 
           }
         },
       ),
