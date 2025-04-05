@@ -212,8 +212,9 @@ class _FlashcardEditDialogState extends State<FlashcardEditDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      title: const Text('Edit Flashcard'),
+      backgroundColor: colorScheme.primaryContainer,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -235,20 +236,19 @@ class _FlashcardEditDialogState extends State<FlashcardEditDialog> {
         ],
       ),
       actions: [
-        if (widget.onDelete != null)
-          TextButton(
-            onPressed: widget.onDelete,
-            child: const Text('DELETE'),
+        Align(
+          alignment: Alignment.center,
+          child: ElevatedButton(
+            onPressed: () {
+              final updatedFlashcard = Flashcard(
+                front: _frontController.text,
+                back: _backController.text,
+              );
+              widget.onSave(updatedFlashcard);
+              Navigator.pop(context);
+            },
+            child: const Text('SAVE'),
           ),
-        TextButton(
-          onPressed: () {
-            widget.onSave(Flashcard(
-              front: _frontController.text,
-              back: _backController.text,
-            ));
-            Navigator.pop(context);
-          },
-          child: const Text('SAVE'),
         ),
       ],
     );
