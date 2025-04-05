@@ -158,21 +158,72 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
     );
   }
 
-  Widget _buildFlashcardCard(Flashcard flashcard, int index) {
-    return Card(
-      child: ListTile(
-        title: Text(flashcard.front),
-        subtitle: Text(flashcard.back),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: () {
-            setState(() {
-              _flashcards.removeAt(index);
-            });
-          },
+  Widget _buildFlashcardCard(Flashcard flashcard, int flashcardIndex) {
+  final colorScheme = Theme.of(context).colorScheme;
+  return Padding(
+    padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
+    child: Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        color: colorScheme.primaryContainer, 
+        child:Stack(
+            children: [ 
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Card(
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0), 
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min, // Important for centering
+                          crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to take full width
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                flashcard.front,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Divider(color: Colors.grey[300]),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                flashcard.back,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 15.0, // Adjust position relative to the outer card's padding
+                right: 15.0, // Adjust position relative to the outer card's padding
+                child: IconButton.filled(
+                icon: Icon(Symbols.delete, size: 20),
+                color: colorScheme.onPrimary,
+                onPressed: () {
+                    setState(() {
+                      _flashcards.removeAt(flashcardIndex);
+                  });
+                },
+              ),
+            ),
+          ],
         ),
       ),
-    );
+  );
   }
 }
 
