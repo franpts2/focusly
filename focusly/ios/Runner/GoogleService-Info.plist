@@ -7,7 +7,7 @@
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.898779811017-6ep6do9ittl44ids3o8g0riuf3q5p0pb</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>898779811017-vlubqiecjqqpd9ufkp395ch7lein6m54.apps.googleusercontent.com</string>
+	<string>898779811017-k55o347jjna9adojtci7016k9pmjs298.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyACbGxZu12Qd-JaD0Bzts0v2LwuJDjmo38</string>
 	<key>GCM_SENDER_ID</key>
@@ -32,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:898779811017:ios:bfbb92004b705b9be65118</string>
+	<key>DATABASE_URL</key>
+	<string>https://focusly-76449-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>
