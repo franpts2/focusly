@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 class FlashcardDeckView extends StatefulWidget {
@@ -18,11 +19,80 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
     });
   }
 
+  Widget _transitionBuilder(Widget widget, Animation<double> animation) {
+    final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
+    return AnimatedBuilder(
+      animation: rotateAnim,
+      child: widget,
+      builder: (context, widget) {
+        final isUnder = (ValueKey(_isFront) != widget?.key);
+        var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
+        tilt *= isUnder ? -1.0 : 1.0;
+        final value =
+            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+        return Transform(
+          transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
+          alignment: Alignment.center,
+          child: widget,
+        );
+      },
+    );
+  }
+
+  Widget _buildFront(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Card(
+      key: const ValueKey<bool>(true), // Unique key for the front
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      color: colorScheme.surfaceContainer,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            _frontText,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBack(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Card(
+      key: const ValueKey<bool>(false), // Unique key for the rear
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      color: colorScheme.surfaceContainer, 
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            _backText,
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
-    final cardWidth = screenWidth * 0.8; // 80% of screen width
+    final cardWidth = screenWidth * 0.8;
     final cardHeight = cardWidth / (345 / 246);
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -42,31 +112,17 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                 width: cardWidth,
                 height: cardHeight,
                 child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300), // Adjust the duration as needed
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: child,
+                  duration: const Duration(milliseconds: 1000),
+                  transitionBuilder: _transitionBuilder,
+                  layoutBuilder: (currentChild, previousChildren) {
+                    return Stack(
+                      children: <Widget>[
+                        if (previousChildren.isNotEmpty) previousChildren.first,
+                        if (currentChild != null) currentChild,
+                      ],
                     );
                   },
-                  child: Card(
-                    key: ValueKey<bool>(_isFront),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    color: colorScheme.surfaceContainer,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          _isFront ? _frontText : _backText,
-                          style: TextStyle(fontSize: 24),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: _isFront ? _buildFront(context) : _buildBack(context),
                 ),
               ),
             ),
@@ -81,7 +137,7 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                   IconButton.filled(
                     icon: Icon(Icons.arrow_back, color: colorScheme.onPrimary),
                     onPressed: () {
-                      // Handle left arrow button press
+                      // Handle left arrow button press (previous card)
                     },
                   ),
                   IconButton.filled(
@@ -90,7 +146,7 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                       color: colorScheme.onPrimary,
                     ),
                     onPressed: () {
-                      // Handle right arrow button press
+                      // Handle right arrow button press (next card)
                     },
                   ),
                 ],
