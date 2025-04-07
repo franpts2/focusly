@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "898779811017-0kiml4v5optalilji3dk20mqinsn592p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "dd136acd963b9eac641efbe9f06d3681789d8943"
+          }
+        },
+        {
           "client_id": "898779811017-12jnre3rrf12mdlhq5b2h3k0dasnl3vp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -44,6 +52,14 @@
           "android_info": {
             "package_name": "com.esof.focusly",
             "certificate_hash": "ffb80cfef6df21d07a4c5be8f56a2f413eae807e"
+          }
+        },
+        {
+          "client_id": "898779811017-tu6rd9u20ht1dhespfvefvk5cdiru0s6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "36366772d6209424ed0b5043e5a17d63e7661f6f"
           }
         },
         {
