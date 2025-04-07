@@ -8,6 +8,16 @@ class FlashcardDeckView extends StatefulWidget {
 }
 
 class _FlashcardDeckViewState extends State<FlashcardDeckView> {
+  bool _isFront = true;
+  String _frontText = 'Question';
+  String _backText = 'Answer';
+
+  void _flipCard() {
+    setState(() {
+      _isFront = !_isFront;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -26,22 +36,25 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: cardWidth,
-              height: cardHeight,
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                color: colorScheme.surfaceContainer,
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Example',
-                      style: TextStyle(fontSize: 24),
-                      textAlign: TextAlign.center,
+            GestureDetector(
+              onTap: _flipCard,
+              child: SizedBox(
+                width: cardWidth,
+                height: cardHeight,
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  color: colorScheme.surfaceContainer,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        _isFront ? _frontText : _backText,
+                        style: TextStyle(fontSize: 24),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
