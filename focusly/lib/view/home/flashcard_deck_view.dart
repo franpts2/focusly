@@ -56,12 +56,15 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
         final isUnder = (ValueKey(_isFront) != widget?.key);
         var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
         tilt *= isUnder ? -1.0 : 1.0;
-        final value =
-            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+        final value = isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+      
+        // Only show the widget when it's mostly facing the viewer
+        final shouldShow = value.abs() < pi/2;
+      
         return Transform(
           transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
           alignment: Alignment.center,
-          child: widget,
+          child: shouldShow ? widget : null,
         );
       },
     );
@@ -136,20 +139,20 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                 width: cardWidth,
                 height: cardHeight,
                 child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 1000),
+                  duration: const Duration(milliseconds: 700),
+                  switchInCurve: Curves.easeIn,  // Add this line
                   transitionBuilder: _transitionBuilder,
                   layoutBuilder: (currentChild, previousChildren) {
                     return Stack(
                       children: <Widget>[
-                        if (previousChildren.isNotEmpty) previousChildren.first,
+                        ...previousChildren,
                         if (currentChild != null) currentChild,
                       ],
                     );
                   },
-                  child:
-                      _isFront
-                          ? _buildFront(context, currentCard.front)
-                          : _buildBack(context, currentCard.back),
+                child: _isFront
+                  ? _buildFront(context, currentCard.front)
+                  : _buildBack(context, currentCard.back),
                 ),
               ),
             ),
