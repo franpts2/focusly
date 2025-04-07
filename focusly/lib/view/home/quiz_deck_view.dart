@@ -24,8 +24,9 @@ class _QuizDeckViewState extends State<QuizDeckView> {
     setState(() {
       _selectedAnswers = List.filled(widget.quizDeck.questions.length, null);
     });
-    Navigator.pop(context); // Close the dialog
+    Navigator.pop(context);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class _QuizDeckViewState extends State<QuizDeckView> {
           },
         ),
       ),
-      body: SingleChildScrollView( // Make the questions scrollable
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -88,7 +89,7 @@ class _QuizDeckViewState extends State<QuizDeckView> {
             },
           );
         }),
-        const SizedBox(height: 16), // Add space between questions
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -104,12 +105,19 @@ class _QuizDeckViewState extends State<QuizDeckView> {
     showDialog(
       context: context,
       builder: (context) {
+        Color scoreBackgroundColor = Colors.white;
+        if (isScore100(score, widget.quizDeck.questions.length)) {
+          scoreBackgroundColor = Colors.green.shade100;
+        } else if (isScoreZero(score, widget.quizDeck.questions.length)) {
+          scoreBackgroundColor = Colors.red.shade100;
+        }
         return AlertDialog(
-          title: const Text('Quiz Completed!'),
+          title: const Text('Quiz Completed!', textAlign: TextAlign.center,),
+          backgroundColor: scoreBackgroundColor,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${_getScoreMessage(score, widget.quizDeck.questions.length)}'),
+              Text(_getScoreMessage(score, widget.quizDeck.questions.length)),
               Text('Your score: $score / ${widget.quizDeck.questions.length}'),
             ],
           ),
@@ -130,18 +138,35 @@ class _QuizDeckViewState extends State<QuizDeckView> {
       },
     );
   }
-}
 
-String _getScoreMessage(int score, int totalQuestions) {
-  double percentage = (score / totalQuestions) * 100;
+  String _getScoreMessage(int score, int totalQuestions) {
+    double percentage = (score / totalQuestions) * 100;
 
-  if (percentage == 100) {
-    return "Wow! Perfect score!";
-  } else if (percentage >= 80) {
-    return "Great job! You did really well.";
-  } else if (percentage >= 60) {
-    return "Not bad! You passed.";
-  } else {
-    return "You can do better next time!";
+    if (percentage == 100) {
+      return "Wow! Perfect score!";
+    } else if (percentage >= 80) {
+      return "Great job! You did really well.";
+    } else if (percentage >= 60) {
+      return "Not bad! You passed.";
+    } else {
+      return "You can do better next time!";
+    }
+  }
+
+  bool isScore100(int score, int totalQuestions) {
+    double percentage = (score / totalQuestions) * 100;
+    if (percentage == 100) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isScoreZero(int score, int totalQuestions) {
+    double percentage = (score / totalQuestions) * 100;
+    if (percentage == 0) {
+      return true;
+    }
+    return false;
   }
 }
+
