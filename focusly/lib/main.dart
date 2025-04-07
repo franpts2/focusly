@@ -41,9 +41,9 @@ class MainApp extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasData) {
-            return FlashcardDeckView(); //NavigationView()
+            return NavigationView();
           } else {
-            return FlashcardDeckView(); //InitialPageView()
+            return InitialPageView(); 
           }
         },
       ),
