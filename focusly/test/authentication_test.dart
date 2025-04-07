@@ -48,6 +48,7 @@ void main() {
     expect(find.text("Sign Up"), findsOneWidget);
   });
 
+
   testWidgets('Acceptance Test 2: SignIn button navigates to SignInView', (WidgetTester tester) async {
     final authService = TestAuthService();
 
