@@ -79,7 +79,7 @@ class HomeView extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '${quizDeck.questions.length} quizzes',
+                              '${quizDeck.questions.length} questions',
                               style: Theme.of(context).textTheme.bodySmall,
                               textAlign: TextAlign.center,
                             ),
