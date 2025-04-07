@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:focusly/model/flashcard_deck_model.dart';
 
 class FlashcardDeckView extends StatefulWidget {
   const FlashcardDeckView({super.key});
@@ -9,13 +10,35 @@ class FlashcardDeckView extends StatefulWidget {
 }
 
 class _FlashcardDeckViewState extends State<FlashcardDeckView> {
+  int _currentCardIndex = 0;
+  List<Flashcard> _cards = [
+    Flashcard(front: 'Question 1', back: 'Answer 1'),
+    Flashcard(front: 'Question 2', back: 'Answer 2'),
+  ];
+  //^ temp list
   bool _isFront = true;
-  String _frontText = 'Question';
-  String _backText = 'Answer';
 
   void _flipCard() {
     setState(() {
       _isFront = !_isFront;
+    });
+  }
+
+  void _nextCard() {
+    setState(() {
+      if (_currentCardIndex < _cards.length - 1) {
+        _currentCardIndex++;
+        _isFront = true; // Reset to front when moving to a new card
+      }
+    });
+  }
+
+  void _previousCard() {
+    setState(() {
+      if (_currentCardIndex > 0) {
+        _currentCardIndex--;
+        _isFront = true; // Reset to front when moving to a new card
+      }
     });
   }
 
@@ -39,24 +62,19 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
     );
   }
 
-  Widget _buildFront(BuildContext context) {
+  Widget _buildFront(BuildContext context, String text) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       key: const ValueKey<bool>(true), // Unique key for the front
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       color: colorScheme.surfaceContainer,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            _frontText,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            text,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
         ),
@@ -64,24 +82,19 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
     );
   }
 
-  Widget _buildBack(BuildContext context) {
+  Widget _buildBack(BuildContext context, String text) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      key: const ValueKey<bool>(false), // Unique key for the rear
+      key: const ValueKey<bool>(false), // Unique key for the back
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      color: colorScheme.surfaceContainer, 
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      color: colorScheme.surfaceContainer,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            _backText,
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.grey[600],
-            ),
+            text,
+            style: TextStyle(fontSize: 24, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ),
@@ -95,12 +108,16 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
     final cardWidth = screenWidth * 0.8;
     final cardHeight = cardWidth / (345 / 246);
     final colorScheme = Theme.of(context).colorScheme;
+    final currentCard = _cards[_currentCardIndex];
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Deck Name'),
         centerTitle: true,
-        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {}),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {},
+        ),
       ),
       body: Center(
         child: Column(
@@ -122,7 +139,10 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                       ],
                     );
                   },
-                  child: _isFront ? _buildFront(context) : _buildBack(context),
+                  child:
+                      _isFront
+                          ? _buildFront(context, currentCard.front)
+                          : _buildBack(context, currentCard.back),
                 ),
               ),
             ),
@@ -136,18 +156,19 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                 children: [
                   IconButton.filled(
                     icon: Icon(Icons.arrow_back, color: colorScheme.onPrimary),
-                    onPressed: () {
-                      // Handle left arrow button press (previous card)
-                    },
+                    onPressed: _currentCardIndex > 0 ? _previousCard : null,
+                    disabledColor: colorScheme.tertiary,
                   ),
                   IconButton.filled(
                     icon: Icon(
                       Icons.arrow_forward,
                       color: colorScheme.onPrimary,
                     ),
-                    onPressed: () {
-                      // Handle right arrow button press (next card)
-                    },
+                    onPressed:
+                        _currentCardIndex < _cards.length - 1
+                            ? _nextCard
+                            : null,
+                    disabledColor: colorScheme.tertiary,
                   ),
                 ],
               ),
