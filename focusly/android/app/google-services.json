@@ -63,6 +63,14 @@
           }
         },
         {
+          "client_id": "898779811017-uruikasq0pf71e5p3nc7697j5v22ebub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "085c4878f42231f8fe3235e1590f611cf5b92038"
+          }
+        },
+        {
           "client_id": "898779811017-5l46t42fjpv06mn835oukfabc38uittr.apps.googleusercontent.com",
           "client_type": 3
         }
