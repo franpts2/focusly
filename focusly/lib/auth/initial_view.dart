@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/auth/signin_view.dart';
-import 'package:focusly/auth/signup_view.dart';
+//import 'package:focusly/auth/signup_view.dart';
 
 class InitialPageView extends StatelessWidget {
   const InitialPageView({super.key});
@@ -77,34 +77,34 @@ class InitialPageView extends StatelessWidget {
             right: 0, // Partially cut by the screen
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder:
-                        (context, animation, secondaryAnimation) =>
-                            const SignUpView(),
-                    transitionsBuilder: (
-                      context,
-                      animation,
-                      secondaryAnimation,
-                      child,
-                    ) {
-                      const begin = Offset(1.0, 0.0);
-                      const end = Offset.zero;
-                      const curve = Curves.easeInOut;
+                // Navigator.of(context).push(
+                //   PageRouteBuilder(
+                //     pageBuilder:
+                //         (context, animation, secondaryAnimation) =>
+                //             const SignUpView(),
+                //     transitionsBuilder: (
+                //       context,
+                //       animation,
+                //       secondaryAnimation,
+                //       child,
+                //     ) {
+                //       const begin = Offset(1.0, 0.0);
+                //       const end = Offset.zero;
+                //       const curve = Curves.easeInOut;
 
-                      var tween = Tween(
-                        begin: begin,
-                        end: end,
-                      ).chain(CurveTween(curve: curve));
-                      var offsetAnimation = animation.drive(tween);
+                //       var tween = Tween(
+                //         begin: begin,
+                //         end: end,
+                //       ).chain(CurveTween(curve: curve));
+                //       var offsetAnimation = animation.drive(tween);
 
-                      return SlideTransition(
-                        position: offsetAnimation,
-                        child: child,
-                      );
-                    },
-                  ),
-                );
+                //       return SlideTransition(
+                //         position: offsetAnimation,
+                //         child: child,
+                //       );
+                //     },
+                //   ),
+                // );
               },
 
               style: ElevatedButton.styleFrom(
