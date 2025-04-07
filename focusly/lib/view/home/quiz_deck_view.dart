@@ -12,6 +12,20 @@ class QuizDeckView extends StatefulWidget {
 }
 
 class _QuizDeckViewState extends State<QuizDeckView> {
+  List<String?> _selectedAnswers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedAnswers = List.filled(widget.quizDeck.questions.length, null);
+  }
+
+  void _restartQuiz() {
+    setState(() {
+      _selectedAnswers = List.filled(widget.quizDeck.questions.length, null);
+    });
+    Navigator.pop(context); // Close the dialog
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +40,108 @@ class _QuizDeckViewState extends State<QuizDeckView> {
           },
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-
-            ),
-          ],
+      body: SingleChildScrollView( // Make the questions scrollable
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...List.generate(widget.quizDeck.questions.length, (index) {
+                return _buildQuestion(widget.quizDeck.questions[index], index);
+              }),
+              const SizedBox(height: 16),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submitQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  child: const Text('Submit', style: TextStyle(color: Colors.white, fontSize: 16)),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  Widget _buildQuestion(Question question, int questionIndex) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${questionIndex + 1}. ${question.questionText}',
+          style: const TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 16),
+        ...List.generate(question.options.length, (optionIndex) {
+          return RadioListTile<String>(
+            title: Text(question.options[optionIndex]),
+            value: question.options[optionIndex],
+            groupValue: _selectedAnswers[questionIndex],
+            onChanged: (value) {
+              setState(() {
+                _selectedAnswers[questionIndex] = value;
+              });
+            },
+          );
+        }),
+        const SizedBox(height: 16), // Add space between questions
+      ],
+    );
+  }
+
+  void _submitQuiz() {
+    int score = 0;
+    for (int i = 0; i < widget.quizDeck.questions.length; i++) {
+      if (_selectedAnswers[i] == widget.quizDeck.questions[i].correctAnswer) {
+        score++;
+      }
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Quiz Completed!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('${_getScoreMessage(score, widget.quizDeck.questions.length)}'),
+              Text('Your score: $score / ${widget.quizDeck.questions.length}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+            TextButton(
+              onPressed: _restartQuiz,
+              child: const Text('Restart'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+String _getScoreMessage(int score, int totalQuestions) {
+  double percentage = (score / totalQuestions) * 100;
+
+  if (percentage == 100) {
+    return "Wow! Perfect score!";
+  } else if (percentage >= 80) {
+    return "Great job! You did really well.";
+  } else if (percentage >= 60) {
+    return "Not bad! You passed.";
+  } else {
+    return "You can do better next time!";
+  }
 }
