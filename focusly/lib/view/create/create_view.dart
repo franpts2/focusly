@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:focusly/view/create/create_view_add_flashcard_deck.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'create_view_add_quiz.dart';
+import 'package:provider/provider.dart';
+import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 
 class CreateView extends StatelessWidget {
   const CreateView({super.key});
@@ -143,23 +145,77 @@ class CreateView extends StatelessWidget {
     required double height,
     required Color color,
   }) {
-    return SizedBox(
-      width: double.infinity,
-      height: height,
-      child: Card(
-        color: color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(fontSize: 18),),
-              // add content here
-            ],
+    return Consumer<FlashcardDeckViewModel>(
+      builder: (context, viewModel, child) {
+        final decks = viewModel.decks;
+
+        return SizedBox(
+          width: double.infinity,
+          height: height,
+          child: Card(
+            color: color,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontSize: 18)),
+                  const SizedBox(height: 12),
+                  if (decks.isEmpty)
+                    const Expanded(
+                      child: Center(child: Text('No decks available')),
+                    )
+                  else
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: decks.length,
+                        itemBuilder: (context, index) {
+                          final deck = decks[index];
+                          return Container(
+                            width: 140, // You can tweak this
+                            margin: const EdgeInsets.only(right: 12),
+                            child: GestureDetector(
+                              onTap: () {
+                                // TODO: Navigate to deck view
+                              },
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        deck.title,
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '${deck.flashcards.length} flashcards',
+                                        style: Theme.of(context).textTheme.bodySmall,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
