@@ -15,11 +15,51 @@
       },
       "oauth_client": [
         {
+          "client_id": "898779811017-0kiml4v5optalilji3dk20mqinsn592p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "dd136acd963b9eac641efbe9f06d3681789d8943"
+          }
+        },
+        {
+          "client_id": "898779811017-12jnre3rrf12mdlhq5b2h3k0dasnl3vp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "ceb6b2091e5a6ee6e2e683a82280a5272b0488cd"
+          }
+        },
+        {
+          "client_id": "898779811017-9qb3ga94hbgo5ab6n41jttn78qbiui59.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "784a408dd2a59ac8c1dadff2e81ffc66f9323bdf"
+          }
+        },
+        {
+          "client_id": "898779811017-g7e9o4u7vjs90dq7hed6cmcdqsmue2b3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "039583f19df00b7001f9fd77750bfdc82cb3f5e7"
+          }
+        },
+        {
           "client_id": "898779811017-k55o347jjna9adojtci7016k9pmjs298.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.esof.focusly",
             "certificate_hash": "ffb80cfef6df21d07a4c5be8f56a2f413eae807e"
+          }
+        },
+        {
+          "client_id": "898779811017-tu6rd9u20ht1dhespfvefvk5cdiru0s6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.focusly",
+            "certificate_hash": "36366772d6209424ed0b5043e5a17d63e7661f6f"
           }
         },
         {
