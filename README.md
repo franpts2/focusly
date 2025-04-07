@@ -671,6 +671,22 @@ Improvements to implement next Sprint:
 
 ### Sprint 1
 
+**Beginning**
+<img src="images/scrumboard/sprint1_beginning.jpg">
+
+**End**
+<img src="images/scrumboard/sprint1_end.jpg">
+
+**Did well**: Successfully implemented core features within the sprint timeline, good communication
+
+**Do differently**: Do the acceptance tests foreach feature immediately after its implementation is complete
+
+**Puzzles**: Integrating the authentication system was trickier than expected
+
+
+Improvements to implement next Sprint:
+- Study better the topic we are about to implement so that we can divide the tasks more appropriately
+
 ### Sprint 2
 
 ### Sprint 3
