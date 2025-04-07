@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/auth/signin_view.dart';
-import 'package:focusly/auth/signup_view.dart';
+//import 'package:focusly/auth/signup_view.dart';
 
 class InitialPageView extends StatelessWidget {
   const InitialPageView({super.key});

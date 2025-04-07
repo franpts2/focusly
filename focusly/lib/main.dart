@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:focusly/auth/initial_view.dart';
 import 'package:focusly/firebase_options.dart';
-import 'package:focusly/view/home/flashcard_deck_view.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
