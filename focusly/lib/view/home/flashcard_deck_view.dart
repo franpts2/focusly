@@ -41,19 +41,29 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
               child: SizedBox(
                 width: cardWidth,
                 height: cardHeight,
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  color: colorScheme.surfaceContainer,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        _isFront ? _frontText : _backText,
-                        style: TextStyle(fontSize: 24),
-                        textAlign: TextAlign.center,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300), // Adjust the duration as needed
+                  transitionBuilder: (Widget child, Animation<double> animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  },
+                  child: Card(
+                    key: ValueKey<bool>(_isFront),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    color: colorScheme.surfaceContainer,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          _isFront ? _frontText : _backText,
+                          style: TextStyle(fontSize: 24),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
