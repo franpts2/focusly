@@ -601,19 +601,27 @@ In this subsection please describe which feature, or part of it, you have implem
 
 At this phase, instead of a complete user story, you can simply implement a small part of a feature that demonstrates thay you can use the technology, for example, show a screen with the app credits (name and authors).
 -->
-For the vertical prototype, we implemented the Pomodoro Timer feature, ensuring the core functionality works as expected. 
-
-The implementation allows users to switch between Pomodoro, Short Break, and Long Break modes, start and reset timers, and visually see the active mode.
+For the vertical prototype, we expanded the implementation to include additional core features beyond the Pomodoro Timer, ensuring seamless integration and functionality across the app.
 
 Implemented Features
-- **Pomodoro Timer**: Users can start a 25-minute work session.
-- **Short Break Timer**: A 5-minute break timer is available.
-- **Long Break Timer**: A 15-minute break session can be initiated.
-- **Start, Pause, and Reset Functionality**: Users can start, pause, and reset the countdown timer.
-- **Sound Alert**: A sound plays when the timer reaches zero, notifying the user that the session has ended.
-- **Push Notification**: If the user is outside the app when the timer ends, a notification is sent to bring them back.
-- **UI Consistency**: The interface matches the provided mockups, including tab navigation, mode selection, and button placement.
-- **Mode Highlighting**: The selected mode is visibly highlighted to indicate the active session.
+- **Pomodoro Timer** (Sprint 0)
+    - Users can switch between Pomodoro (25-minute), Short Break (5-minute), and Long Break (15-minute) modes.
+
+    - Start, pause, and reset functionality with sound alerts and push notifications.
+
+    - UI consistency with mockups and active mode highlighting.
+
+- **User Authentication** (Sprint 1)
+
+    - Sign in with Google and Sign Out functionality.
+
+    - Secure user data storage and retrieval.
+
+- **Quiz and Flashcard System** (Sprint 1)
+
+    - Creation of quizzes and flashcard decks, linked to the database.
+
+    - Visualization of quizzes and flashcards for review.
 <br><br>
 
 **UI Snapshot**
@@ -626,7 +634,14 @@ Implemented Features
     <img src="images/vertical%20prototype/pomodoro_notification.jpeg" width="250"/>
 </div>
 
-This vertical prototype ensures a functional and user-friendly Pomodoro timer experience as an integral part of the study app.
+---
+
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/vertical prototype/sign_in.gif" alt="Image 1" width="32%" />
+  <img src="images/vertical prototype/flashcard.gif" alt="Image 2" width="32%" />
+  <img src="images/vertical prototype/quiz.gif" alt="Image 3" width="32%" />
+</div>
+<br><br>
 
 ## Project management
 <!--
