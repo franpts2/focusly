@@ -79,16 +79,29 @@ class FlashcardDeckViewModel extends ChangeNotifier {
       }
 
       final event = await _databaseReference!.once();
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+      final data = event.snapshot.value;
 
       if (data != null) {
         _decks.clear();
-        data.forEach((key, value) {
-          final deckData = Map<String, dynamic>.from(value);
-          if (deckData['id'] == null) {
-            deckData['id'] = key;
+        final decksMap = Map<String, dynamic>.from(data as Map);
+      
+        decksMap.forEach((key, value) {
+          try {
+            if (value is Map) {
+              final deckData = Map<String, dynamic>.from(value);
+              // Convert flashcards if they exist
+              if (deckData['flashcards'] != null) {
+                final flashcardsList = List<Map<String, dynamic>>.from(
+                  deckData['flashcards'].map((f) => Map<String, dynamic>.from(f))
+                );
+                deckData['flashcards'] = flashcardsList;
+              }
+              deckData['id'] = key; // Ensure the ID is set
+              _decks.add(FlashcardDeck.fromJson(deckData));
+            }
+          } catch (e) {
+            print('Error parsing deck $key: $e');
           }
-          _decks.add(FlashcardDeck.fromJson(deckData));
         });
       }
       notifyListeners();
