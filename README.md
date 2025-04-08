@@ -637,11 +637,12 @@ Implemented Features
 ---
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="images/vertical prototype/sign_in.gif" alt="Image 1" width="32%" />
-  <img src="images/vertical prototype/flashcard.gif" alt="Image 2" width="32%" />
-  <img src="images/vertical prototype/quiz.gif" alt="Image 3" width="32%" />
+  <img src="images/vertical prototype/sprint1_sign_in.gif" alt="Image 1" width="32%" />
+  <img src="images/vertical prototype/sprint1_flashcards.gif" alt="Image 2" width="32%" />
+  <img src="images/vertical prototype/sprint1_quiz.gif" alt="Image 3" width="32%" />
 </div>
 <br><br>
+
 
 ## Project management
 <!--
