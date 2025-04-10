@@ -101,6 +101,12 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
           (context) => QuestionEditDialog(
             question: question,
             onSave: (updatedQuestion) {
+              if (_hasDuplicateOptions(updatedQuestion.options)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Options cannot have the same value')),
+                );
+                return;
+              }
               setState(() {
                 if (isNew) {
                   _questions.add(updatedQuestion);
@@ -128,6 +134,17 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
                     },
           ),
     );
+  }
+
+  bool _hasDuplicateOptions(List<String> options) {
+    final seenOptions = <String>{};
+    for (final option in options) {
+      if (seenOptions.contains(option.trim())) {
+        return true;
+      }
+      seenOptions.add(option.trim());
+    }
+    return false;
   }
 
   @override
