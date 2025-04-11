@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'forum_add_question.dart';
 import 'package:focusly/viewmodel/forum_question_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'forum_question_detail.dart';
 
 class ForumView extends StatefulWidget {
   const ForumView({super.key});
@@ -56,21 +57,26 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
               return Column(
                 children: [
                   ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ForumQuestionDetail(
+                            question: question,
+                            userName: user?.displayName,
+                            photoUrl: user?.photoURL,
+                          ),
+                        ),
+                      );
+                    },
                     leading: CircleAvatar(
-                      backgroundImage: user?.photoURL != null
-                          ? NetworkImage(user!.photoURL!)
-                          : null,
+                      backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
                       backgroundColor: Colors.deepPurple.shade100,
-                      child: user?.photoURL == null
-                          ? const Icon(Icons.person, color: Colors.white)
-                          : null,
+                      child: user?.photoURL == null ? const Icon(Icons.person, color: Colors.white) : null,
                     ),
                     title: Text(
                       question.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
