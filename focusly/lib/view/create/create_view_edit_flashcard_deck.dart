@@ -9,7 +9,8 @@ class CreateViewEditFlashcardDeck extends StatefulWidget {
   const CreateViewEditFlashcardDeck({super.key, required this.deck});
 
   @override
-  State<CreateViewEditFlashcardDeck> createState() => _CreateViewEditFlashcardState();
+  State<CreateViewEditFlashcardDeck> createState() =>
+      _CreateViewEditFlashcardState();
 }
 
 class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
@@ -22,10 +23,10 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
     super.initState();
     _titleController = TextEditingController(text: widget.deck.title);
     _categoryController = TextEditingController(text: widget.deck.category);
-    _flashcards = widget.deck.flashcards.map((f) => FlashcardUI(
-      front: f.front,
-      back: f.back,
-    )).toList();
+    _flashcards =
+        widget.deck.flashcards
+            .map((f) => FlashcardUI(front: f.front, back: f.back))
+            .toList();
   }
 
   @override
@@ -48,33 +49,38 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
   }) {
     showDialog(
       context: context,
-      builder: (context) => FlashcardEditDialog(
-        flashcard: flashcard,
-        onSave: (updatedFlashcard) {
-          setState(() {
-            if (isNew) {
-              _flashcards.add(updatedFlashcard);
-            } else {
-              final index = _flashcards.indexWhere(
-                (f) => f.front == flashcard.front && f.back == flashcard.back
-              );
-              if (index != -1) {
-                _flashcards[index] = updatedFlashcard;
-              }
-            }
-          });
-        },
-        onDelete: isNew
-          ? null 
-          : () {
+      builder:
+          (context) => FlashcardEditDialog(
+            flashcard: flashcard,
+            onSave: (updatedFlashcard) {
               setState(() {
-                _flashcards.removeWhere(
-                  (f) => f.front == flashcard.front && f.back == flashcard.back
-                );
+                if (isNew) {
+                  _flashcards.add(updatedFlashcard);
+                } else {
+                  final index = _flashcards.indexWhere(
+                    (f) =>
+                        f.front == flashcard.front && f.back == flashcard.back,
+                  );
+                  if (index != -1) {
+                    _flashcards[index] = updatedFlashcard;
+                  }
+                }
               });
-              Navigator.pop(context);
             },
-      ),
+            onDelete:
+                isNew
+                    ? null
+                    : () {
+                      setState(() {
+                        _flashcards.removeWhere(
+                          (f) =>
+                              f.front == flashcard.front &&
+                              f.back == flashcard.back,
+                        );
+                      });
+                      Navigator.pop(context);
+                    },
+          ),
     );
   }
 
@@ -93,22 +99,23 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
       return;
     }
 
-    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(context, listen: false);
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
+      context,
+      listen: false,
+    );
 
-    final modelFlashcards = _flashcards.map((flashcard) {
-      return Flashcard(
-        front: flashcard.front,
-        back: flashcard.back,
-      );
-    }).toList();
-
+    final modelFlashcards =
+        _flashcards.map((flashcard) {
+          return Flashcard(front: flashcard.front, back: flashcard.back);
+        }).toList();
 
     final updatedDeck = FlashcardDeck(
       id: widget.deck.id,
       title: _titleController.text,
-      category: _categoryController.text.isEmpty 
-          ? 'General' 
-          : _categoryController.text,
+      category:
+          _categoryController.text.isEmpty
+              ? 'General'
+              : _categoryController.text,
       flashcards: modelFlashcards,
     );
 
@@ -119,9 +126,9 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
       );
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating deck: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error updating deck: $e')));
     }
   }
 
@@ -129,26 +136,44 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
     // Show confirmation dialog
     final shouldDelete = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Deck'),
-        content: const Text('Are you sure you want to delete this deck? This action cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+      builder:
+          (context) => AlertDialog(
+            title: Row(
+              children: [
+                Icon(Icons.warning_amber_rounded, color: Colors.red),
+                const SizedBox(width: 12),
+                const Text(
+                  'Delete Deck',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            content: const Text(
+              'Are you sure you want to delete this deck? \nThis action cannot be undone!',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
     );
 
     if (shouldDelete != true) return;
 
-    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(context, listen: false);
-    
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
+      context,
+      listen: false,
+    );
+
     try {
       await flashcardViewModel.deleteDeck(widget.deck.id as String);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -156,9 +181,9 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
       );
       Navigator.pop(context); // Go back after deletion
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting deck: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error deleting deck: $e')));
     }
   }
 
@@ -166,7 +191,10 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Flashcard Deck'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Edit Flashcard Deck'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -223,7 +251,6 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
             ),
             const SizedBox(height: 16),
 
-            
             Expanded(
               child: ListView.builder(
                 itemCount: _flashcards.length,
@@ -237,9 +264,9 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 1, 
+                    flex: 1,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0), 
+                      padding: const EdgeInsets.only(right: 8.0),
                       child: ElevatedButton(
                         onPressed: _saveDeck,
                         style: ElevatedButton.styleFrom(
@@ -254,9 +281,9 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
                     ),
                   ),
                   Expanded(
-                    flex: 1, 
+                    flex: 1,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0), 
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: ElevatedButton(
                         onPressed: _deleteDeck,
                         style: ElevatedButton.styleFrom(
@@ -273,7 +300,7 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
                 ],
               ),
             ),
-          ]
+          ],
         ),
       ),
     );
@@ -285,58 +312,60 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
       padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
-        color: colorScheme.primaryContainer, 
-        child:Stack(
-            children: [ 
-              Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Card(
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0), 
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min, // Important for centering
-                          crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to take full width
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                flashcard.front,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+        color: colorScheme.primaryContainer,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Card(
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize:
+                            MainAxisSize.min, // Important for centering
+                        crossAxisAlignment:
+                            CrossAxisAlignment
+                                .stretch, // Stretch to take full width
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              flashcard.front,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Divider(color: Colors.grey[300]),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                flashcard.back,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                ),
-                              ),
+                          ),
+                          Divider(color: Colors.grey[300]),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              flashcard.back,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.grey[600]),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              Positioned(
-                top: 15.0, // Adjust position relative to the outer card's padding
-                right: 15.0, // Adjust position relative to the outer card's padding
-                child: IconButton.filled(
+            ),
+            Positioned(
+              top: 15.0, // Adjust position relative to the outer card's padding
+              right:
+                  15.0, // Adjust position relative to the outer card's padding
+              child: IconButton.filled(
                 icon: Icon(Symbols.delete, size: 20),
                 color: colorScheme.onPrimary,
                 onPressed: () {
-                    setState(() {
-                      _flashcards.removeAt(flashcardIndex);
+                  setState(() {
+                    _flashcards.removeAt(flashcardIndex);
                   });
                 },
               ),
