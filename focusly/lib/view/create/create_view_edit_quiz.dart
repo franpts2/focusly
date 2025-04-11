@@ -3,28 +3,38 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/quiz_model.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
+import 'package:focusly/view/create/create_view_add_quiz.dart';
 
-class CreateViewAddQuiz extends StatefulWidget {
-  const CreateViewAddQuiz({super.key});
+class CreateViewEditQuiz extends StatefulWidget {
+  final Quiz quiz;
+  CreateViewEditQuiz({super.key, required this.quiz});
 
   @override
-  State<CreateViewAddQuiz> createState() => _CreateAddQuizState();
+  State<CreateViewEditQuiz> createState() => _CreateEditQuizState();
 }
 
-class _CreateAddQuizState extends State<CreateViewAddQuiz> {
-  final _titleController = TextEditingController();
-  final _categoryController = TextEditingController();
+class _CreateEditQuizState extends State<CreateViewEditQuiz> {
+  late TextEditingController _titleController;
   final List<QuizQuestion> _questions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.quiz.title);
+    _questions.addAll(widget.quiz.questions.map((q) => QuizQuestion(
+      question: q.questionText,
+      options: List<String>.from(q.options),
+      correctIndex: q.options.indexOf(q.correctAnswer),
+    )));
+  }
 
   @override
   void dispose() {
     _titleController.dispose();
-    _categoryController.dispose();
     super.dispose();
   }
 
   void _addQuestion() {
-    // Show the edit dialog immediately when adding a new question
     _showQuestionDialog(
       question: QuizQuestion(
         question: '',
@@ -35,7 +45,6 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
     );
   }
 
-  // Convert UI QuizQuestion to database Question model
   Question _convertToQuestion(QuizQuestion quizQuestion) {
     return Question(
       questionText: quizQuestion.question,
@@ -58,38 +67,30 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
       );
       return;
     }
-
     final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
+    final List<Question> updatedQuestions =
+    _questions.map(_convertToQuestion).toList();
 
-    // Convert UI questions to database model questions
-    final List<Question> modelQuestions =
-        _questions.map(_convertToQuestion).toList();
-
-    // Create Quiz object
-    final quiz = Quiz(
+    final updatedQuiz = Quiz(
+      id: widget.quiz.id,
       title: _titleController.text,
-      category:
-          _categoryController.text.isEmpty
-              ? 'General'
-              : _categoryController.text,
-      questions: modelQuestions,
+      category: widget.quiz.category, // Keep the original category for now
+      questions: updatedQuestions,
     );
 
     try {
-      // Save to Firebase
-      await quizViewModel.addQuiz(quiz);
-
+      await quizViewModel.updateQuiz(updatedQuiz);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Quiz saved successfully')));
-
-      Navigator.pop(context);
+      ).showSnackBar(const SnackBar(content: Text('Quiz updated successfully')));
+      Navigator.pop(context); // Go back to the previous screen
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Error saving quiz: $e')));
+      ).showSnackBar(SnackBar(content: Text('Error updating quiz: $e')));
     }
   }
+
 
   void _showQuestionDialog({
     required QuizQuestion question,
@@ -97,42 +98,40 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
   }) {
     showDialog(
       context: context,
-      builder:
-          (context) => QuestionEditDialog(
-            question: question,
-            onSave: (updatedQuestion) {
-              if (_hasDuplicateOptions(updatedQuestion.options)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Options cannot have the same value')),
-                );
-                return;
-              }
-              setState(() {
-                if (isNew) {
-                  _questions.add(updatedQuestion);
-                } else {
-                  // Find and update the existing question
-                  final index = _questions.indexWhere(
+      builder: (context) => QuestionEditDialog(
+        question: question,
+        onSave: (updatedQuestion) {
+          if (_hasDuplicateOptions(updatedQuestion.options)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Options cannot have the same value')),
+            );
+            return;
+          }
+          setState(() {
+            if (isNew) {
+              _questions.add(updatedQuestion);
+            } else {
+              final index = _questions.indexWhere(
                     (q) => q.question == question.question,
-                  );
-                  if (index != -1) {
-                    _questions[index] = updatedQuestion;
-                  }
-                }
-              });
-            },
-            onDelete:
-                isNew
-                    ? null // No delete for new questions
-                    : () {
-                      setState(() {
-                        _questions.removeWhere(
-                          (q) => q.question == question.question,
-                        );
-                      });
-                      Navigator.pop(context);
-                    },
-          ),
+              );
+              if (index != -1) {
+                _questions[index] = updatedQuestion;
+              }
+            }
+          });
+        },
+        onDelete: isNew
+            ? null
+            : () {
+          setState(() {
+            _questions.removeWhere(
+                  (q) => q.question == question.question,
+            );
+          });
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
@@ -147,11 +146,74 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
     return false;
   }
 
+  Widget _buildQuestionCard(QuizQuestion question, int questionIndex) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      color: colorScheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${questionIndex + 1}. ${question.question}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Symbols.edit, size: 20),
+                  onPressed: () {
+                    _showQuestionDialog(question: question);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Symbols.delete, size: 20),
+                  onPressed: () {
+                    setState(() {
+                      _questions.removeAt(questionIndex);
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ...List.generate(question.options.length, (optionIndex) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    Radio<int>(
+                      value: optionIndex,
+                      groupValue: question.correctIndex,
+                      onChanged: (value) {
+                        setState(() {
+                          _questions[questionIndex].correctIndex = value!;
+                        });
+                      },
+                    ),
+                    Expanded(child: Text(question.options[optionIndex])),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    //final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Quiz'), centerTitle: true),
+      appBar: AppBar(title: const Text('Edit Quiz'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -233,63 +295,6 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuestionCard(QuizQuestion question, int questionIndex) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      color: colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '${questionIndex + 1}. ${question.question}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Symbols.delete, size: 20),
-                  onPressed: () {
-                    setState(() {
-                      _questions.removeAt(questionIndex);
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ...List.generate(question.options.length, (optionIndex) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Row(
-                  children: [
-                    Radio<int>(
-                      value: optionIndex,
-                      groupValue: question.correctIndex,
-                      onChanged: (value) {
-                        setState(() {
-                          _questions[questionIndex].correctIndex = value!;
-                        });
-                      },
-                    ),
-                    Expanded(child: Text(question.options[optionIndex])),
-                  ],
-                ),
-              );
-            }),
           ],
         ),
       ),

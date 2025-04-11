@@ -5,6 +5,8 @@ import 'create_view_add_quiz.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
+import 'package:focusly/view/create/create_view_edit_quiz.dart';
+
 
 class CreateView extends StatelessWidget {
   const CreateView({super.key});
@@ -184,7 +186,11 @@ class CreateView extends StatelessWidget {
                         margin: const EdgeInsets.only(right: 12),
                         child: GestureDetector(
                           onTap: () {
-                            // TODO: Navigate to the appropriate view based on itemType
+                            itemType == 'quizzes'
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => CreateViewEditQuiz(quiz: item),),)
+                            : ();
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
