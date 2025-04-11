@@ -266,23 +266,6 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
                   Expanded(
                     flex: 1,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: ElevatedButton(
-                        onPressed: _saveDeck,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                        child: const Text(
-                          'Done',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: ElevatedButton(
                         onPressed: _deleteDeck,
@@ -292,6 +275,24 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
                         ),
                         child: const Text(
                           'Delete',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: ElevatedButton(
+                        onPressed: _saveDeck,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.primary,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text(
+                          'Done',
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
