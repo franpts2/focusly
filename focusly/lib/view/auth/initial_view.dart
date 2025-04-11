@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focusly/auth/signin_view.dart';
+import 'package:focusly/view/auth/signin_view.dart';
 //import 'package:focusly/auth/signup_view.dart';
 
 class InitialPageView extends StatelessWidget {
