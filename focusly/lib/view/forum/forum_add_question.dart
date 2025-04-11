@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:focusly/model/forum_question_model.dart';
+import 'package:focusly/viewmodel/forum_question_viewmodel.dart';
 
 class ForumAddQuestion extends StatelessWidget {
   const ForumAddQuestion({super.key});
@@ -50,7 +53,15 @@ class ForumAddQuestion extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    final question = ForumQuestion(
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      createdAt: DateTime.now(),
+                      answerCount: 0,
+                    );
+                    final questionViewModel = Provider.of<ForumQuestionViewModel>(context, listen: false);
+                    await questionViewModel.addQuestion(question);
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
