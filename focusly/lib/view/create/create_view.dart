@@ -195,7 +195,7 @@ class CreateView extends StatelessWidget {
                             itemType == 'flashcards'
                               ? Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => CreateViewEditFlashcardDeck(),),)
+                                  MaterialPageRoute(builder: (context) => CreateViewEditFlashcardDeck(deck: item),),)
                             : ();
                           },
                           child: Card(
