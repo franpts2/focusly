@@ -89,14 +89,13 @@ class FlashcardDeckViewModel extends ChangeNotifier {
           try {
             if (value is Map) {
               final deckData = Map<String, dynamic>.from(value);
-              // Convert flashcards if they exist
               if (deckData['flashcards'] != null) {
                 final flashcardsList = List<Map<String, dynamic>>.from(
                   deckData['flashcards'].map((f) => Map<String, dynamic>.from(f))
                 );
                 deckData['flashcards'] = flashcardsList;
               }
-              deckData['id'] = key; // Ensure the ID is set
+              deckData['id'] = key;
               _decks.add(FlashcardDeck.fromJson(deckData));
             }
           } catch (e) {
