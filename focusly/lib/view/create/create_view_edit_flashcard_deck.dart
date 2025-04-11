@@ -125,6 +125,43 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
     }
   }
 
+  Future<void> _deleteDeck() async {
+    // Show confirmation dialog
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Deck'),
+        content: const Text('Are you sure you want to delete this deck? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete != true) return;
+
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(context, listen: false);
+    
+    try {
+      await flashcardViewModel.deleteDeck(widget.deck.id as String);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Deck deleted successfully')),
+      );
+      Navigator.pop(context); // Go back after deletion
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting deck: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -197,19 +234,43 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
             ),
 
             Center(
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _saveDeck,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1, 
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0), 
+                      child: ElevatedButton(
+                        onPressed: _saveDeck,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.primary,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text(
+                          'Done',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
                   ),
-                  child: const Text(
-                    'Done',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  Expanded(
+                    flex: 1, 
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0), 
+                      child: ElevatedButton(
+                        onPressed: _deleteDeck,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.tertiary,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ]
