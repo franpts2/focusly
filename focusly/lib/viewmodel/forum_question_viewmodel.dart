@@ -28,16 +28,25 @@ class ForumQuestionViewModel extends ChangeNotifier {
   }
 
   Future<void> addQuestion(ForumQuestion question) async {
-    if (!_isInitialized) await _initialize();
-    if (_databaseReference == null) {
-      throw Exception('Cannot add question: User not authenticated');
-    }
-    final newQuestionRef = _databaseReference!.push();
+    final ref = FirebaseDatabase.instance.ref().child("forum_questions");
+    final newQuestionRef = ref.push();
     final questionID = newQuestionRef.key!;
     final questionWithID = question.copyWith(id: questionID);
-    print('Adding question: ${questionWithID.toJson()}');
+
     await newQuestionRef.set(questionWithID.toJson());
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userRef = FirebaseDatabase.instance
+          .ref()
+          .child(user.uid)
+          .child("forum_questions")
+          .child(questionID);
+      await userRef.set(questionWithID.toJson());
+    }
+
     _questions.add(questionWithID);
+    _allQuestions.insert(0, questionWithID);
     notifyListeners();
   }
 
@@ -83,6 +92,35 @@ class ForumQuestionViewModel extends ChangeNotifier {
         answerCount: _questions[index].answerCount + 1,
       );
       notifyListeners();
+    }
+  }
+
+  final List<ForumQuestion> _allQuestions = [];
+  List<ForumQuestion> get allQuestions => _allQuestions;
+
+  Future<void> loadAllQuestions() async {
+    final ref = FirebaseDatabase.instance.ref().child("forum_questions");
+
+    try {
+      final event = await ref.once();
+      final data = event.snapshot.value;
+
+      if (data != null) {
+        _allQuestions.clear();
+        final questionsMap = Map<String, dynamic>.from(data as Map);
+        questionsMap.forEach((key, value) {
+          if (value is Map) {
+            final questionData = Map<String, dynamic>.from(value);
+            questionData['id'] = key;
+            _allQuestions.add(ForumQuestion.fromJson(questionData));
+          }
+        });
+
+        _allQuestions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      }
+      notifyListeners();
+    } catch (e) {
+      print("Error loading all questions: $e");
     }
   }
 }
