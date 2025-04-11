@@ -9,13 +9,12 @@ import 'package:provider/provider.dart';
 
 class MockFlashcardDeckViewModel extends Mock implements FlashcardDeckViewModel {
   @override
-  Future<void> updateDeck(FlashcardDeck deck) async {
-    super.noSuchMethod(
-      Invocation.method(#updateDeck, [deck]),
-      returnValue: Future.value(),
-      returnValueForMissingStub: Future.value(),
-    );
-  }
+  Future<void> deleteDeck(String id) => 
+      super.noSuchMethod(
+        Invocation.method(#deleteDeck, [id]),
+        returnValue: Future.value(),
+        returnValueForMissingStub: Future.value(),
+      );
 }
 
 void main() {
@@ -33,6 +32,7 @@ void main() {
         Flashcard(front: 'Front 2', back: 'Back 2'),
       ],
     );
+    when(mockViewModel.deleteDeck('1')).thenAnswer((_) => Future.value());
   });
 
   Future<void> pumpEditDeckScreen(WidgetTester tester) async {
@@ -111,17 +111,21 @@ void main() {
     });
 
     testWidgets('Deleting a Deck', (WidgetTester tester) async {
+      // 1. Setup mock response
+      when(mockViewModel.deleteDeck('1')).thenAnswer((_) => Future.value());
+
+      // 2. Load the widget
       await pumpEditDeckScreen(tester);
 
-      // Tap delete button
+      // 3. Trigger deletion flow
       await tester.tap(find.text('Delete'));
+      await tester.pumpAndSettle(); // Wait for dialog
+
+      // 4. Confirm deletion
+      await tester.tap(find.text('Delete').last);
       await tester.pumpAndSettle();
 
-      // Confirm deletion in dialog
-      await tester.tap(find.text('Delete').last);
-      await tester.pump();
-
-      // Verify deletion was called
+      // 5. Verify
       verify(mockViewModel.deleteDeck('1')).called(1);
     });
 
