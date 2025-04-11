@@ -10,7 +10,7 @@ class ForumQuestion {
     required this.title,
     required this.description,
     required this.createdAt,
-    this.answerCount = 0, // default to 0
+    this.answerCount = 0, // ainda nao sei se isto depois funciona... quem fizer as answers vai descobrir
   });
 
   ForumQuestion copyWith({

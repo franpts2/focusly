@@ -60,7 +60,12 @@ class ForumAddQuestion extends StatelessWidget {
                       createdAt: DateTime.now(),
                       answerCount: 0,
                     );
-                    final questionViewModel = Provider.of<ForumQuestionViewModel>(context, listen: false);
+
+                    final questionViewModel = Provider.of<ForumQuestionViewModel>(
+                      context,
+                      listen: false,
+                    );
+
                     await questionViewModel.addQuestion(question);
                     Navigator.pop(context);
                   },
