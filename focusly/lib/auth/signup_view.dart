@@ -10,7 +10,6 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  final _auth = AuthenticationService();
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -201,7 +200,7 @@ class _SignUpViewState extends State<SignUpView> {
                             ),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                
+
                                 authService.createUserWithEmailAndPassword(
                                   _emailController.text,
                                   _passwordController.text,
