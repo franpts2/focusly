@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:provider/provider.dart';
+import 'package:focusly/auth/signin_view.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -10,7 +11,6 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -200,13 +200,12 @@ class _SignUpViewState extends State<SignUpView> {
                             ),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-
                                 authService.createUserWithEmailAndPassword(
                                   _emailController.text,
                                   _passwordController.text,
                                   context: context,
                                 );
-                               
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Creating Account...'),
@@ -224,18 +223,54 @@ class _SignUpViewState extends State<SignUpView> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Already have an account? ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignInView(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Sign In",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ),
 
+                // Spacer to push Google button to bottom
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+
                 Center(
-                  child: ElevatedButton(
-                    onPressed: () => authService.signIn(context: context),
-                    child: const Text('Sign in with Google'),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: ElevatedButton(
+                      onPressed: () => authService.signIn(context: context),
+                      child: const Text('Sign in with Google'),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20), // Add spacing at the bottom
               ],
             ),
           ],

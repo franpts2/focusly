@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:provider/provider.dart';
+import 'package:focusly/auth/signup_view.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
@@ -179,18 +180,54 @@ class _SignInViewState extends State<SignInView> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Don't have an account? ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignUpView(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: tertiaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ),
 
+                // Spacer to push Google button to bottom
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+
                 Center(
-                  child: ElevatedButton(
-                    onPressed: () => authService.signIn(context: context),
-                    child: const Text('Sign in with Google'),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: ElevatedButton(
+                      onPressed: () => authService.signIn(context: context),
+                      child: const Text('Sign in with Google'),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20),
               ],
             ),
           ],
