@@ -106,4 +106,42 @@ class AuthenticationService with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('userAvatar');
   }
+
+  Future<User?> createUserWithEmailAndPassword(
+    String email,
+    String password, {
+    BuildContext? context,
+  }) async {
+    try {
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // If user creation was successful and context is provided, navigate to NavigationView
+      if (userCredential.user != null && context != null && context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false, // This removes all previous routes
+        );
+      }
+
+      return userCredential.user;
+    } catch (e) {
+      print("Error creating user: $e");
+      return null;
+    }
+  }
+
+  Future<User?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } catch (e) {
+      print("Error signing in: $e");
+      return null;
+    }
+  }
 }
