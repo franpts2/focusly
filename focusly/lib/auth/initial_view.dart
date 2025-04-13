@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/auth/signin_view.dart';
+import 'package:focusly/auth/signup_view.dart';
 //import 'package:focusly/auth/signup_view.dart';
 
 class InitialPageView extends StatelessWidget {
@@ -12,17 +13,24 @@ class InitialPageView extends StatelessWidget {
     final tertiaryColor =
         Theme.of(context).colorScheme.tertiary; // Tertiary color from the theme
 
+    // Get screen dimensions for responsive layout
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Welcome text
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 120),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.08,
+              vertical: screenHeight * 0.15,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 100),
+                SizedBox(height: screenHeight * 0.1),
                 Text(
                   "Start organizing\nyour study now",
                   style: const TextStyle(
@@ -35,9 +43,11 @@ class InitialPageView extends StatelessWidget {
             ),
           ),
 
-          // Sign In button (left, slightly higher)
+          // Sign In button 
           Positioned(
-            top: 450, // Adjust the vertical position
+            top:
+                screenHeight *
+                0.55, // Relative positioning (55% of screen height)
             left: 0, // Partially cut by the screen
             child: ElevatedButton(
               onPressed: () {
@@ -54,11 +64,15 @@ class InitialPageView extends StatelessWidget {
                     right: Radius.circular(60),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 70,
-                  vertical: 30,
+                padding: EdgeInsets.only(
+                  left:
+                      screenWidth *
+                      0.10, // Less padding on left to move text left
+                  right: screenWidth * 0.22, // More padding on right
+                  top: screenHeight * 0.035,
+                  bottom: screenHeight * 0.035,
                 ),
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft, // Align text to the left
               ),
               child: const Text(
                 "Sign In",
@@ -71,42 +85,42 @@ class InitialPageView extends StatelessWidget {
             ),
           ),
 
-          // Sign Up button (right, slightly lower)
+          // Sign Up button 
           Positioned(
-            top: 580, // Adjust the vertical position
+            top:
+                screenHeight * 0.70,
             right: 0, // Partially cut by the screen
             child: ElevatedButton(
               onPressed: () {
-                // Navigator.of(context).push(
-                //   PageRouteBuilder(
-                //     pageBuilder:
-                //         (context, animation, secondaryAnimation) =>
-                //             const SignUpView(),
-                //     transitionsBuilder: (
-                //       context,
-                //       animation,
-                //       secondaryAnimation,
-                //       child,
-                //     ) {
-                //       const begin = Offset(1.0, 0.0);
-                //       const end = Offset.zero;
-                //       const curve = Curves.easeInOut;
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder:
+                        (context, animation, secondaryAnimation) =>
+                            const SignUpView(),
+                    transitionsBuilder: (
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    ) {
+                      const begin = Offset(1.0, 0.0);
+                      const end = Offset.zero;
+                      const curve = Curves.easeInOut;
 
-                //       var tween = Tween(
-                //         begin: begin,
-                //         end: end,
-                //       ).chain(CurveTween(curve: curve));
-                //       var offsetAnimation = animation.drive(tween);
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
 
-                //       return SlideTransition(
-                //         position: offsetAnimation,
-                //         child: child,
-                //       );
-                //     },
-                //   ),
-                // );
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
               },
-
               style: ElevatedButton.styleFrom(
                 backgroundColor: tertiaryColor,
                 shape: const RoundedRectangleBorder(
@@ -114,10 +128,15 @@ class InitialPageView extends StatelessWidget {
                     left: Radius.circular(60),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 70,
-                  vertical: 30,
+                padding: EdgeInsets.only(
+                  left: screenWidth * 0.22, // More padding on left
+                  right:
+                      screenWidth *
+                      0.10, // Less padding on right to move text right
+                  top: screenHeight * 0.035,
+                  bottom: screenHeight * 0.035,
                 ),
+                alignment: Alignment.centerRight, // Align text to the right
               ),
               child: const Text(
                 "Sign Up",
