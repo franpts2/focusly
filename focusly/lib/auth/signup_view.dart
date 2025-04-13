@@ -10,6 +10,8 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  final _auth = AuthenticationService();
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -199,10 +201,16 @@ class _SignUpViewState extends State<SignUpView> {
                             ),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                // Implement email/password signup logic here
+                                
+                                authService.createUserWithEmailAndPassword(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  context: context,
+                                );
+                               
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Processing Data'),
+                                    content: Text('Creating Account...'),
                                   ),
                                 );
                               }
@@ -236,4 +244,11 @@ class _SignUpViewState extends State<SignUpView> {
       ),
     );
   }
+
+  // _signUp() async {
+  //   final user = await _auth.createUserWithEmailAndPassword(
+  //     _emailController.text,
+  //     _passwordController.text,
+  //   );
+  // }
 }
