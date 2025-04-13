@@ -65,18 +65,18 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => ForumQuestionDetail(
-                            question: question,
-                            userName: user?.displayName,
-                            photoUrl: user?.photoURL,
-                          ),
+                          builder: (_) => ForumQuestionDetail(question: question),
                         ),
                       );
                     },
                     leading: CircleAvatar(
-                      backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+                      backgroundImage: question.userPhotoUrl != null
+                          ? NetworkImage(question.userPhotoUrl!)
+                          : null,
                       backgroundColor: Colors.deepPurple.shade100,
-                      child: user?.photoURL == null ? const Icon(Icons.person, color: Colors.white) : null,
+                      child: question.userPhotoUrl == null
+                          ? const Icon(Icons.person, color: Colors.white)
+                          : null,
                     ),
                     title: Text(
                       question.title,
@@ -92,7 +92,7 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${user?.displayName ?? "username"} • ${question.answerCount} answers',
+                          '${question.userName ?? "username"} • ${question.answerCount} answers',
                           style: const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ],
@@ -107,55 +107,55 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
           questions.isEmpty
               ? Center(child: Text("No questions available"))
               : ListView.builder(
-            itemCount: questions.length,
-            itemBuilder: (context, index) {
-              final question = questions[index];
-              return Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ForumQuestionDetail(
-                            question: question,
-                            userName: user?.displayName,
-                            photoUrl: user?.photoURL,
-                          ),
-                        ),
-                      );
-                    },
-                    leading: CircleAvatar(
-                      backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-                      backgroundColor: Colors.deepPurple.shade100,
-                      child: user?.photoURL == null ? const Icon(Icons.person, color: Colors.white) : null,
-                    ),
-                    title: Text(
-                      question.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  itemCount: questions.length,
+                  itemBuilder: (context, index) {
+                    final question = questions[index];
+                    return Column(
                       children: [
-                        Text(
-                          question.description.length > 50
-                              ? '${question.description.substring(0, 50)}...'
-                              : question.description,
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ForumQuestionDetail(
+                                  question: question,
+                                  userName: user?.displayName,
+                                  photoUrl: user?.photoURL,
+                                ),
+                              ),
+                            );
+                          },
+                          leading: CircleAvatar(
+                            backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+                            backgroundColor: Colors.deepPurple.shade100,
+                            child: user?.photoURL == null ? const Icon(Icons.person, color: Colors.white) : null,
+                          ),
+                          title: Text(
+                            question.title,
+                            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                question.description.length > 50
+                                    ? '${question.description.substring(0, 50)}...'
+                                    : question.description,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${user?.displayName ?? "username"} • ${question.answerCount} answers',
+                                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          isThreeLine: true,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${user?.displayName ?? "username"} • ${question.answerCount} answers',
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
+                        const Divider(),
                       ],
-                    ),
-                    isThreeLine: true,
-                  ),
-                  const Divider(),
-                ],
-              );
-            },
-          ),
+                    );
+                  },
+                ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

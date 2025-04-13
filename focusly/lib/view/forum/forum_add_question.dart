@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/forum_question_model.dart';
 import 'package:focusly/viewmodel/forum_question_viewmodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ForumAddQuestion extends StatelessWidget {
   const ForumAddQuestion({super.key});
@@ -54,11 +55,14 @@ class ForumAddQuestion extends StatelessWidget {
                 const SizedBox(width: 12),
                 ElevatedButton(
                   onPressed: () async {
+                    final currentUser = FirebaseAuth.instance.currentUser;
                     final question = ForumQuestion(
                       title: titleController.text,
                       description: descriptionController.text,
                       createdAt: DateTime.now(),
                       answerCount: 0,
+                      userName: currentUser?.displayName ?? 'Anonymous',
+                      userPhotoUrl: currentUser?.photoURL,
                     );
 
                     final questionViewModel = Provider.of<ForumQuestionViewModel>(
