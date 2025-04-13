@@ -60,13 +60,7 @@ class AuthenticationService with ChangeNotifier {
       _currentUser = googleUser;
       notifyListeners();
 
-      // If context is provided, navigate directly to NavigationView
-      if (context != null && context.mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const NavigationView()),
-          (route) => false, // This removes all previous routes
-        );
-      }
+      if (context != null && context.mounted) {}
     } catch (error) {
       print("Sign-in error: $error");
     }
@@ -113,20 +107,50 @@ class AuthenticationService with ChangeNotifier {
     BuildContext? context,
   }) async {
     try {
+      // Dismiss keyboard before authentication
+      if (context != null) {
+        FocusScope.of(context).unfocus();
+      }
+
       final UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       // If user creation was successful and context is provided, navigate to NavigationView
       if (userCredential.user != null && context != null && context.mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const NavigationView()),
-          (route) => false, // This removes all previous routes
-        );
+        // Wait a moment to ensure keyboard is fully dismissed
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        if (context.mounted) {
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder:
+                  (context, animation, secondaryAnimation) =>
+                      const NavigationView(),
+              transitionsBuilder: (
+                context,
+                animation,
+                secondaryAnimation,
+                child,
+              ) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              transitionDuration: const Duration(milliseconds: 300),
+            ),
+          );
+        }
       }
 
       return userCredential.user;
     } catch (e) {
       print("Error creating user: $e");
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Sign up failed: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       return null;
     }
   }
@@ -137,14 +161,36 @@ class AuthenticationService with ChangeNotifier {
     BuildContext? context,
   }) async {
     try {
+      // Dismiss keyboard before authentication
+      if (context != null) {
+        FocusScope.of(context).unfocus();
+      }
+
       final UserCredential userCredential = await _auth
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null && context != null && context.mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const NavigationView()),
-          (route) => false,
-        );
+        // Wait a moment to ensure keyboard is fully dismissed
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        if (context.mounted) {
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder:
+                  (context, animation, secondaryAnimation) =>
+                      const NavigationView(),
+              transitionsBuilder: (
+                context,
+                animation,
+                secondaryAnimation,
+                child,
+              ) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              transitionDuration: const Duration(milliseconds: 300),
+            ),
+          );
+        }
       }
 
       return userCredential.user;
