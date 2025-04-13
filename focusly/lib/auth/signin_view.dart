@@ -160,43 +160,13 @@ class _SignInViewState extends State<SignInView> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            onPressed: () async {
+                            onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   //const SnackBar(
-                                //     //content: Text('Signing in...'),
-                                //   ),
-                                //);
-
-                                try {
-                                  final user = await authService
-                                      .signInWithEmailAndPassword(
-                                        _emailController.text,
-                                        _passwordController.text,
-                                        context: context,
-                                      );
-
-                                  if (user == null && mounted) {
-                                    // ScaffoldMessenger.of(context).showSnackBar(
-                                    //   // const SnackBar(
-                                    //   //   content: Text(
-                                    //   //     'Sign-in failed. Check your email and password.',
-                                    //   //   ),
-                                    //   //   backgroundColor: Colors.red,
-                                    //   // ),
-                                    // );
-                                  }
-                                } catch (e) {
-                                  if (mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Error: ${e.toString()}'),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                  }
-                                  print("Detailed sign-in error: $e");
-                                }
+                                authService.signInWithEmailAndPassword(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  context: context,
+                                );
                               }
                             },
                             child: const Text(

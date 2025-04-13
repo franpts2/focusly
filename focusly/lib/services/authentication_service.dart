@@ -60,7 +60,12 @@ class AuthenticationService with ChangeNotifier {
       _currentUser = googleUser;
       notifyListeners();
 
-      if (context != null && context.mounted) {}
+      if (context != null && context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false, // This removes all previous routes
+        );
+      }
     } catch (error) {
       print("Sign-in error: $error");
     }
@@ -120,29 +125,14 @@ class AuthenticationService with ChangeNotifier {
         // Wait a moment to ensure keyboard is fully dismissed
         await Future.delayed(const Duration(milliseconds: 50));
 
-        if (context.mounted) {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              pageBuilder:
-                  (context, animation, secondaryAnimation) =>
-                      const NavigationView(),
-              transitionsBuilder: (
-                context,
-                animation,
-                secondaryAnimation,
-                child,
-              ) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-              transitionDuration: const Duration(milliseconds: 300),
-            ),
-          );
-        }
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false, // This removes all previous routes
+        );
       }
 
       return userCredential.user;
     } catch (e) {
-      print("Error creating user: $e");
       if (context != null && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -173,24 +163,10 @@ class AuthenticationService with ChangeNotifier {
         // Wait a moment to ensure keyboard is fully dismissed
         await Future.delayed(const Duration(milliseconds: 50));
 
-        if (context.mounted) {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              pageBuilder:
-                  (context, animation, secondaryAnimation) =>
-                      const NavigationView(),
-              transitionsBuilder: (
-                context,
-                animation,
-                secondaryAnimation,
-                child,
-              ) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-              transitionDuration: const Duration(milliseconds: 300),
-            ),
-          );
-        }
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false, 
+        );
       }
 
       return userCredential.user;
