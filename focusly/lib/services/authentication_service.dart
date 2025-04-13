@@ -60,7 +60,6 @@ class AuthenticationService with ChangeNotifier {
       _currentUser = googleUser;
       notifyListeners();
 
-      // If context is provided, navigate directly to NavigationView
       if (context != null && context.mounted) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const NavigationView()),
@@ -105,5 +104,83 @@ class AuthenticationService with ChangeNotifier {
     }
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('userAvatar');
+  }
+
+  Future<User?> createUserWithEmailAndPassword(
+    String email,
+    String password, {
+    BuildContext? context,
+  }) async {
+    try {
+      // Dismiss keyboard before authentication
+      if (context != null) {
+        FocusScope.of(context).unfocus();
+      }
+
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // If user creation was successful and context is provided, navigate to NavigationView
+      if (userCredential.user != null && context != null && context.mounted) {
+        // Wait a moment to ensure keyboard is fully dismissed
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false, // This removes all previous routes
+        );
+      }
+
+      return userCredential.user;
+    } catch (e) {
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Sign up failed: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return null;
+    }
+  }
+
+  Future<User?> signInWithEmailAndPassword(
+    String email,
+    String password, {
+    BuildContext? context,
+  }) async {
+    try {
+      // Dismiss keyboard before authentication
+      if (context != null) {
+        FocusScope.of(context).unfocus();
+      }
+
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      if (userCredential.user != null && context != null && context.mounted) {
+        // Wait a moment to ensure keyboard is fully dismissed
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false, 
+        );
+      }
+
+      return userCredential.user;
+    } catch (e) {
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Sign in failed: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+      return null;
+    }
   }
 }
