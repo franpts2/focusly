@@ -133,14 +133,31 @@ class AuthenticationService with ChangeNotifier {
 
   Future<User?> signInWithEmailAndPassword(
     String email,
-    String password,
-  ) async {
+    String password, {
+    BuildContext? context,
+  }) async {
     try {
       final UserCredential userCredential = await _auth
           .signInWithEmailAndPassword(email: email, password: password);
+
+      if (userCredential.user != null && context != null && context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false,
+        );
+      }
+
       return userCredential.user;
     } catch (e) {
-      print("Error signing in: $e");
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Sign in failed: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
       return null;
     }
   }
