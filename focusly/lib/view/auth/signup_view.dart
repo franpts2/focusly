@@ -28,14 +28,9 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthenticationService>(context);
 
-    final primaryColor =
-        Theme.of(context).primaryColor;
-    final secondaryColor =
-        Theme.of(
-          context,
-        ).colorScheme.secondary; 
-    final tertiaryColor =
-        Theme.of(context).colorScheme.tertiary;
+    final primaryColor = Theme.of(context).primaryColor;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+    final tertiaryColor = Theme.of(context).colorScheme.tertiary;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -204,6 +199,7 @@ class _SignUpViewState extends State<SignUpView> {
                                   _emailController.text,
                                   _passwordController.text,
                                   context: context,
+                                  name: _nameController.text.trim(),
                                 );
 
                                 ScaffoldMessenger.of(context).showSnackBar(
