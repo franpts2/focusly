@@ -11,21 +11,16 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
+  
   @override
   void initState() {
     super.initState();
-    // Navigate to the initial view after a delay
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(builder: (context) => const InitialPageView()),
-    //   );
-    // });
 
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 800),
+          transitionDuration: Duration(milliseconds: 600),
           pageBuilder: (_, __, ___) => InitialPageView(),
           transitionsBuilder: (_, animation, __, child) {
             return FadeTransition(
