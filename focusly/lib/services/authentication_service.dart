@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
-import 'package:focusly/auth/initial_view.dart';
+import 'package:focusly/view/auth/initial_view.dart';
 
 class AuthenticationService with ChangeNotifier {
   GoogleSignInAccount? _currentUser;
