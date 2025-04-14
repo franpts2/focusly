@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:focusly/auth/initial_view.dart';
-import 'package:focusly/auth/signin_view.dart';
-import 'package:focusly/auth/signup_view.dart';
+import 'package:focusly/view/auth/initial_view.dart';
+import 'package:focusly/view/auth/signin_view.dart';
+import 'package:focusly/view/auth/signup_view.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:provider/provider.dart';

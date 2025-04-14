@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:provider/provider.dart';
-import 'package:focusly/auth/signup_view.dart';
+import 'package:focusly/view/auth/signin_view.dart';
 
-class SignInView extends StatefulWidget {
-  const SignInView({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<SignInView> createState() => _SignInViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignInViewState extends State<SignInView> {
-  final _formKey = GlobalKey<FormState>();
+class _SignUpViewState extends State<SignUpView> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -26,15 +28,26 @@ class _SignInViewState extends State<SignInView> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthenticationService>(context);
 
-    final primaryColor = Theme.of(context).primaryColor;
-    final secondaryColor = Theme.of(context).colorScheme.secondary;
-    final tertiaryColor = Theme.of(context).colorScheme.tertiary;
+    final primaryColor =
+        Theme.of(context).primaryColor;
+    final secondaryColor =
+        Theme.of(
+          context,
+        ).colorScheme.secondary; 
+    final tertiaryColor =
+        Theme.of(context).colorScheme.tertiary;
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // Ellipses at the top
+            // Container to ensure Stack has size
+            // Container(
+            //   height: MediaQuery.of(context).size.height,
+            //   width: MediaQuery.of(context).size.width,
+            // ),
+
+            // Ellipses
             Positioned(
               top: -80,
               left: -10,
@@ -77,25 +90,28 @@ class _SignInViewState extends State<SignInView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 250, left: 40),
+                  padding: const EdgeInsets.only(
+                    top: 250,
+                    left: 40,
+                  ), // Adjust position of the text
                   child: RichText(
-                    textAlign: TextAlign.left,
+                    textAlign: TextAlign.left, // Align text to the left
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Welcome\n",
+                          text: "Create\n",
                           style: TextStyle(
                             fontSize: 57,
                             fontWeight: FontWeight.w400,
-                            color: primaryColor,
+                            color: tertiaryColor, // Use the primary color
                           ),
                         ),
                         TextSpan(
-                          text: "Back",
+                          text: "Account",
                           style: TextStyle(
                             fontSize: 57,
                             fontWeight: FontWeight.w400,
-                            color: primaryColor,
+                            color: tertiaryColor, // Use the primary color
                           ),
                         ),
                       ],
@@ -110,8 +126,26 @@ class _SignInViewState extends State<SignInView> {
                   ),
                   child: Form(
                     key: _formKey,
+
                     child: Column(
                       children: [
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: 'name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            prefixIcon: const Icon(Icons.person),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 15),
                         TextFormField(
                           controller: _emailController,
                           decoration: InputDecoration(
@@ -145,7 +179,10 @@ class _SignInViewState extends State<SignInView> {
                           obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                              return 'Please enter a password';
+                            }
+                            if (value.length < 8) {
+                              return 'Password must be at least 8 characters';
                             }
                             return null;
                           },
@@ -156,22 +193,28 @@ class _SignInViewState extends State<SignInView> {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryColor,
+                              backgroundColor: tertiaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                authService.signInWithEmailAndPassword(
+                                authService.createUserWithEmailAndPassword(
                                   _emailController.text,
                                   _passwordController.text,
                                   context: context,
                                 );
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Creating Account...'),
+                                  ),
+                                );
                               }
                             },
                             child: const Text(
-                              'Sign In',
+                              'Sign Up',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -185,7 +228,7 @@ class _SignInViewState extends State<SignInView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Don't have an account? ",
+                              "Already have an account? ",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.black87,
@@ -196,16 +239,16 @@ class _SignInViewState extends State<SignInView> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const SignUpView(),
+                                    builder: (context) => const SignInView(),
                                   ),
                                 );
                               },
                               child: Text(
-                                "Sign Up",
+                                "Sign In",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: tertiaryColor,
+                                  color: primaryColor,
                                 ),
                               ),
                             ),
@@ -216,8 +259,8 @@ class _SignInViewState extends State<SignInView> {
                   ),
                 ),
 
-                // Spacer to push Google button to bottom
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                // push Google button to bottom
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
 
                 Center(
                   child: Padding(
