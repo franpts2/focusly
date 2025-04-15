@@ -8,7 +8,8 @@ class CreateViewAddFlashcardDeck extends StatefulWidget {
   const CreateViewAddFlashcardDeck({super.key});
 
   @override
-  State<CreateViewAddFlashcardDeck> createState() => _CreateViewAddFlashcardState();
+  State<CreateViewAddFlashcardDeck> createState() =>
+      _CreateViewAddFlashcardState();
 }
 
 class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
@@ -37,34 +38,39 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
   }) {
     showDialog(
       context: context,
-      builder: (context) => FlashcardEditDialog(
-        flashcard: flashcard,
-        onSave: (updatedFlashcard) {
-          setState(() {
-            if (isNew) {
-              _flashcards.add(updatedFlashcard);
-            } else {
-              // Update existing flashcard
-              final index = _flashcards.indexWhere(
-                (f) => f.front == flashcard.front && f.back == flashcard.back
-              );
-              if (index != -1) {
-                _flashcards[index] = updatedFlashcard;
-              }
-            }
-          });
-        },
-        onDelete: isNew
-          ? null // No delete for new flashcards
-          : () {
+      builder:
+          (context) => FlashcardEditDialog(
+            flashcard: flashcard,
+            onSave: (updatedFlashcard) {
               setState(() {
-                _flashcards.removeWhere(
-                  (f) => f.front == flashcard.front && f.back == flashcard.back
-                );
+                if (isNew) {
+                  _flashcards.add(updatedFlashcard);
+                } else {
+                  // Update existing flashcard
+                  final index = _flashcards.indexWhere(
+                    (f) =>
+                        f.front == flashcard.front && f.back == flashcard.back,
+                  );
+                  if (index != -1) {
+                    _flashcards[index] = updatedFlashcard;
+                  }
+                }
               });
-              Navigator.pop(context);
             },
-      ),
+            onDelete:
+                isNew
+                    ? null // No delete for new flashcards
+                    : () {
+                      setState(() {
+                        _flashcards.removeWhere(
+                          (f) =>
+                              f.front == flashcard.front &&
+                              f.back == flashcard.back,
+                        );
+                      });
+                      Navigator.pop(context);
+                    },
+          ),
     );
   }
 
@@ -83,36 +89,37 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
       return;
     }
 
-    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(context, listen: false);
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
+      context,
+      listen: false,
+    );
 
     // Convert FlashcardUI to Flashcard
-    final modelFlashcards = _flashcards.map((flashcard) {
-      return Flashcard(
-        front: flashcard.front,
-        back: flashcard.back,
-      );
-    }).toList();
-
+    final modelFlashcards =
+        _flashcards.map((flashcard) {
+          return Flashcard(front: flashcard.front, back: flashcard.back);
+        }).toList();
 
     // Create Deck object
     final deck = FlashcardDeck(
       title: _titleController.text,
-      category: _categoryController.text.isEmpty 
-          ? 'General' 
-          : _categoryController.text,
+      category:
+          _categoryController.text.isEmpty
+              ? 'General'
+              : _categoryController.text,
       flashcards: modelFlashcards,
     );
 
     try {
       await flashcardViewModel.addDeck(deck);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Deck saved successfully')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Deck saved successfully')));
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving deck: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error saving deck: $e')));
     }
   }
 
@@ -120,7 +127,10 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Flashcard Deck'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Add Flashcard Deck'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -177,7 +187,6 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
             ),
             const SizedBox(height: 16),
 
-            
             Expanded(
               child: ListView.builder(
                 itemCount: _flashcards.length,
@@ -203,7 +212,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                 ),
               ),
             ),
-          ]
+          ],
         ),
       ),
     );
@@ -215,66 +224,65 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
       padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
-        color: colorScheme.primaryContainer, 
-        child:Stack(
-            children: [ 
-              Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: GestureDetector(
-                  onTap: () {
-                    _showFlashcardDialog(
-                      flashcard: flashcard,
-                      isNew: false,
-                    );  
-                  },
-                  child: Card(
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0), 
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min, // Important for centering
-                            crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to take full width
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  flashcard.front,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+        color: colorScheme.primaryContainer,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: GestureDetector(
+                onTap: () {
+                  _showFlashcardDialog(flashcard: flashcard, isNew: false);
+                },
+                child: Card(
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisSize:
+                              MainAxisSize.min, // Important for centering
+                          crossAxisAlignment:
+                              CrossAxisAlignment
+                                  .stretch, // Stretch to take full width
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                flashcard.front,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Divider(color: Colors.grey[300]),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  flashcard.back,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
+                            ),
+                            Divider(color: Colors.grey[300]),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                flashcard.back,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.grey[600]),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              Positioned(
-                top: 15.0, // Adjust position relative to the outer card's padding
-                right: 15.0, // Adjust position relative to the outer card's padding
-                child: IconButton.filled(
+            ),
+            Positioned(
+              top: 15.0, // Adjust position relative to the outer card's padding
+              right:
+                  15.0, // Adjust position relative to the outer card's padding
+              child: IconButton.filled(
                 icon: Icon(Symbols.delete, size: 20),
                 color: colorScheme.onPrimary,
                 onPressed: () {
-                    setState(() {
-                      _flashcards.removeAt(flashcardIndex);
+                  setState(() {
+                    _flashcards.removeAt(flashcardIndex);
                   });
                 },
               ),

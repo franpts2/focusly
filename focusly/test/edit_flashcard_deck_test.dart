@@ -129,24 +129,48 @@ void main() {
       verify(mockViewModel.deleteDeck('1')).called(1);
     });
 
-    testWidgets('Shows validation errors for empty title or flashcards', (WidgetTester tester) async {
+    testWidgets('Empty title validation', (WidgetTester tester) async {
       await pumpEditDeckScreen(tester);
 
-      // Set empty title
+      // Clear title field
       await tester.enterText(find.byType(TextField).first, '');
-      await tester.tap(find.text('Done'));
-      await tester.pump();
-
-      // Verify error message
+      
+      // Tap Done button
+      final doneButton = find.widgetWithText(ElevatedButton, 'Done');
+      await tester.ensureVisible(doneButton);
+      await tester.tap(doneButton);
+      
+      // Wait for snackbar
+      await tester.pump(); // Initial update
+      await tester.pump(const Duration(seconds: 2)); // Extended wait
+      
+      // Verify using multiple approaches
+      expect(find.byType(SnackBar), findsOneWidget);
       expect(find.text('Please enter a deck title'), findsOneWidget);
+    });
 
-      // Remove all flashcards
-      await tester.tap(find.byIcon(Symbols.delete).first);
-      await tester.tap(find.byIcon(Symbols.delete).first);
-      await tester.tap(find.text('Done'));
-      await tester.pump();
+    testWidgets('Empty flashcards validation', (WidgetTester tester) async {
+      await pumpEditDeckScreen(tester);
 
-      // Verify error message
+      await tester.enterText(find.byType(TextField).first, 'Valid Title');
+      
+      // Clear all flashcards
+      while (tester.any(find.byIcon(Symbols.delete))) {
+        await tester.tap(find.byIcon(Symbols.delete).first);
+        await tester.pump();
+      }
+
+      // Tap Done button
+      final doneButton = find.widgetWithText(ElevatedButton, 'Done');
+      await tester.ensureVisible(doneButton);
+      await tester.tap(doneButton);
+
+      // Wait for snackbar
+      await tester.pump(); // Initial update
+      await tester.pump(const Duration(seconds: 2)); // Extended wait
+      
+      // Verify using multiple approaches
+      expect(find.byType(SnackBar), findsOneWidget);
       expect(find.text('Please add at least one flashcard'), findsOneWidget);
     });
   });
