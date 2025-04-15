@@ -7,6 +7,8 @@ import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:focusly/view/forum/forum_view_add_answer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../viewmodel/forum_question_viewmodel.dart';
+
 class ForumQuestionDetail extends StatefulWidget {
   final ForumQuestion question;
   final String? userName;
@@ -134,11 +136,12 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                             userPhotoUrl: currentUser?.photoURL,
                             questionID: widget.question.id!,
                           );
-                          
+
                           await answerViewModel.addAnswer(
-                            widget.question.id!, 
+                            widget.question.id!,
                             answer
                           );
+                          context.read<ForumQuestionViewModel>().incrementAnswerCount(widget.question.id!);
                           // Refresh the question to update answer count
                           if (mounted) {
                             Navigator.pop(context);
