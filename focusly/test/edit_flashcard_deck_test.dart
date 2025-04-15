@@ -15,6 +15,15 @@ class MockFlashcardDeckViewModel extends Mock implements FlashcardDeckViewModel 
         returnValue: Future.value(),
         returnValueForMissingStub: Future.value(),
       );
+
+
+  @override
+  Future<void> updateDeck(FlashcardDeck deck) => 
+      super.noSuchMethod(
+        Invocation.method(#updateDeck, [deck]),
+        returnValue: Future.value(),
+        returnValueForMissingStub: Future.value(),
+      );
 }
 
 void main() {
@@ -33,6 +42,7 @@ void main() {
       ],
     );
     when(mockViewModel.deleteDeck('1')).thenAnswer((_) => Future.value());
+    when(mockViewModel.updateDeck(testDeck)).thenAnswer((_) => Future.value());
   });
 
   Future<void> pumpEditDeckScreen(WidgetTester tester) async {
@@ -76,6 +86,11 @@ void main() {
       // Verify with the specific expected deck
       verify(mockViewModel.updateDeck(expectedDeck)).called(1);
     });
+      await tester.pump();
+
+      expect(find.text('Updated Title'), findsOneWidget); // may not work here
+    });
+      
 
     testWidgets('Test Case 2: Editing a Flashcard', (WidgetTester tester) async {
       await pumpEditDeckScreen(tester);
@@ -147,6 +162,48 @@ void main() {
       await tester.pump();
 
       // Verify error message
+    testWidgets('Empty title validation', (WidgetTester tester) async {
+      await pumpEditDeckScreen(tester);
+
+      // Clear title field
+      await tester.enterText(find.byType(TextField).first, '');
+      
+      // Tap Done button
+      final doneButton = find.widgetWithText(ElevatedButton, 'Done');
+      await tester.ensureVisible(doneButton);
+      await tester.tap(doneButton);
+      
+      // Wait for snackbar
+      await tester.pump(); // Initial update
+      await tester.pump(const Duration(seconds: 2)); // Extended wait
+      
+      // Verify using multiple approaches
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.text('Please enter a deck title'), findsOneWidget);
+    });
+
+    testWidgets('Empty flashcards validation', (WidgetTester tester) async {
+      await pumpEditDeckScreen(tester);
+
+      await tester.enterText(find.byType(TextField).first, 'Valid Title');
+      
+      // Clear all flashcards
+      while (tester.any(find.byIcon(Symbols.delete))) {
+        await tester.tap(find.byIcon(Symbols.delete).first);
+        await tester.pump();
+      }
+
+      // Tap Done button
+      final doneButton = find.widgetWithText(ElevatedButton, 'Done');
+      await tester.ensureVisible(doneButton);
+      await tester.tap(doneButton);
+
+      // Wait for snackbar
+      await tester.pump(); // Initial update
+      await tester.pump(const Duration(seconds: 2)); // Extended wait
+      
+      // Verify using multiple approaches
+      expect(find.byType(SnackBar), findsOneWidget);
       expect(find.text('Please add at least one flashcard'), findsOneWidget);
     });
   });
