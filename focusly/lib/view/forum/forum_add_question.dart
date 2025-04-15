@@ -57,6 +57,35 @@ class ForumAddQuestion extends StatelessWidget {
                 const SizedBox(width: 12),
                 ElevatedButton(
                   onPressed: () async {
+                    final titleEmpty = titleController.text.trim().isEmpty;
+                    final descriptionEmpty = descriptionController.text.trim().isEmpty;
+
+                    if (titleEmpty && descriptionEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Title and description cannot be empty'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    } else if (titleEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Title cannot be empty'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    } else if (descriptionEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Description cannot be empty'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
                     final currentUser = FirebaseAuth.instance.currentUser;
 
                     // Retrieve the username
