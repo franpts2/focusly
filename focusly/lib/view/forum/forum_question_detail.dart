@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/model/forum_question_model.dart';
+import 'package:focusly/view/forum/forum_view.dart';
+import 'package:focusly/view/forum/forum_view_add_answer.dart';
 
 class ForumQuestionDetail extends StatelessWidget {
   final ForumQuestion question;
@@ -79,7 +81,12 @@ class ForumQuestionDetail extends StatelessWidget {
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Add answer logic
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.4),
+                      barrierDismissible: false,
+                      builder: (context) => const ForumViewAddAnswer(),
+                    );
                   },
                   icon: const Icon(Icons.mode_comment_outlined, color: Colors.white),
                   label: const Text("Answer", style: TextStyle(color: Colors.white)),
