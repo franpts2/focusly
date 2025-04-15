@@ -16,6 +16,7 @@ class MockFlashcardDeckViewModel extends Mock implements FlashcardDeckViewModel 
         returnValueForMissingStub: Future.value(),
       );
 
+
   @override
   Future<void> updateDeck(FlashcardDeck deck) => 
       super.noSuchMethod(
@@ -65,6 +66,26 @@ void main() {
 
       // Edit title
       await tester.enterText(find.byType(TextField).first, 'Updated Title');
+      await tester.tap(find.text('Done'));
+      await tester.pump();
+
+      // Verify title was updated
+      expect(find.text('Updated Title'), findsOneWidget);
+      
+      // Create a matcher for the expected deck
+      final expectedDeck = FlashcardDeck(
+        id: '1',
+        title: 'Updated Title',
+        category: 'General',
+        flashcards: [
+          Flashcard(front: 'Front 1', back: 'Back 1'),
+          Flashcard(front: 'Front 2', back: 'Back 2'),
+        ],
+      );
+      
+      // Verify with the specific expected deck
+      verify(mockViewModel.updateDeck(expectedDeck)).called(1);
+    });
       await tester.pump();
 
       expect(find.text('Updated Title'), findsOneWidget); // may not work here
@@ -123,6 +144,24 @@ void main() {
       verify(mockViewModel.deleteDeck('1')).called(1);
     });
 
+    testWidgets('Shows validation errors for empty title or flashcards', (WidgetTester tester) async {
+      await pumpEditDeckScreen(tester);
+
+      // Set empty title
+      await tester.enterText(find.byType(TextField).first, '');
+      await tester.tap(find.text('Done'));
+      await tester.pump();
+
+      // Verify error message
+      expect(find.text('Please enter a deck title'), findsOneWidget);
+
+      // Remove all flashcards
+      await tester.tap(find.byIcon(Symbols.delete).first);
+      await tester.tap(find.byIcon(Symbols.delete).first);
+      await tester.tap(find.text('Done'));
+      await tester.pump();
+
+      // Verify error message
     testWidgets('Empty title validation', (WidgetTester tester) async {
       await pumpEditDeckScreen(tester);
 

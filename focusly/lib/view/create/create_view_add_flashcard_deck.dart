@@ -224,6 +224,48 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
       padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
+        color: colorScheme.primaryContainer, 
+        child:Stack(
+            children: [ 
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: GestureDetector(
+                  onTap: () {
+                    _showFlashcardDialog(
+                      flashcard: flashcard,
+                      isNew: false,
+                    );  
+                  },
+                  child: Card(
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0), 
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min, // Important for centering
+                            crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to take full width
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  flashcard.front,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Divider(color: Colors.grey[300]),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  flashcard.back,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
         color: colorScheme.primaryContainer,
         child: Stack(
           children: [
@@ -264,11 +306,11 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.grey[600]),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
