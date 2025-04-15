@@ -28,14 +28,9 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthenticationService>(context);
 
-    final primaryColor =
-        Theme.of(context).primaryColor; // primary color from the theme
-    final secondaryColor =
-        Theme.of(
-          context,
-        ).colorScheme.secondary; // Secondary color from the theme
-    final tertiaryColor =
-        Theme.of(context).colorScheme.tertiary; // tertiary color from the theme
+    final primaryColor = Theme.of(context).primaryColor;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+    final tertiaryColor = Theme.of(context).colorScheme.tertiary;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -47,7 +42,7 @@ class _SignUpViewState extends State<SignUpView> {
             //   width: MediaQuery.of(context).size.width,
             // ),
 
-            // Ellipses at the top
+            // Ellipses
             Positioned(
               top: -80,
               left: -10,
@@ -204,6 +199,7 @@ class _SignUpViewState extends State<SignUpView> {
                                   _emailController.text,
                                   _passwordController.text,
                                   context: context,
+                                  name: _nameController.text.trim(),
                                 );
 
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -259,7 +255,7 @@ class _SignUpViewState extends State<SignUpView> {
                   ),
                 ),
 
-                // Spacer to push Google button to bottom
+                // push Google button to bottom
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
 
                 Center(
@@ -278,11 +274,4 @@ class _SignUpViewState extends State<SignUpView> {
       ),
     );
   }
-
-  // _signUp() async {
-  //   final user = await _auth.createUserWithEmailAndPassword(
-  //     _emailController.text,
-  //     _passwordController.text,
-  //   );
-  // }
 }

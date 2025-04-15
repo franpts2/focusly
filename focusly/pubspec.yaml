@@ -33,6 +33,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/sound.wav
+    - assets/icon/elephant_logo.png
 
 flutter_launcher_icons:
   android: "launcher_icon"
