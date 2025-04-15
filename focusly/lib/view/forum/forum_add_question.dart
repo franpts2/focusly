@@ -11,8 +11,34 @@ class ForumAddQuestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
+
+    void addQuestion() async {
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      // Retrieve the username
+      final authService = Provider.of<AuthenticationService>(context, listen: false);
+      final userName = await authService.getUserName() ?? 'Anonymous';
+
+      final question = ForumQuestion(
+        title: titleController.text,
+        description: descriptionController.text,
+        createdAt: DateTime.now(),
+        answerCount: 0,
+        userName: userName, // Use the retrieved username
+        userPhotoUrl: currentUser?.photoURL,
+      );
+
+      final questionViewModel = Provider.of<ForumQuestionViewModel>(
+        context,
+        listen: false,
+      );
+
+      await questionViewModel.addQuestion(question);
+      Navigator.pop(context);
+    }
 
     return Dialog(
       insetPadding: const EdgeInsets.all(20),
@@ -56,32 +82,9 @@ class ForumAddQuestion extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: () async {
-                    final currentUser = FirebaseAuth.instance.currentUser;
-
-                    // Retrieve the username
-                    final authService = Provider.of<AuthenticationService>(context, listen: false);
-                    final userName = await authService.getUserName() ?? 'Anonymous';
-
-                    final question = ForumQuestion(
-                      title: titleController.text,
-                      description: descriptionController.text,
-                      createdAt: DateTime.now(),
-                      answerCount: 0,
-                      userName: userName, // Use the retrieved username
-                      userPhotoUrl: currentUser?.photoURL,
-                    );
-
-                    final questionViewModel = Provider.of<ForumQuestionViewModel>(
-                      context,
-                      listen: false,
-                    );
-
-                    await questionViewModel.addQuestion(question);
-                    Navigator.pop(context);
-                  },
+                  onPressed: addQuestion,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
