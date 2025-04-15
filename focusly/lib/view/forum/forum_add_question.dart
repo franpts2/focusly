@@ -6,26 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../services/authentication_service.dart';
 
-class ForumAddQuestion extends StatefulWidget {
+class ForumAddQuestion extends StatelessWidget {
   const ForumAddQuestion({super.key});
 
   @override
-  _ForumAddQuestionState createState() => _ForumAddQuestionState();
-}
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
 
-class _ForumAddQuestionState extends State<ForumAddQuestion> {
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  String? titleError;
-  String? descriptionError;
-
-  void publishQuestion() async {
-    setState(() {
-      titleError = titleController.text.trim().isEmpty ? 'Title is required' : null;
-      descriptionError = descriptionController.text.trim().isEmpty ? 'Description is required' : null;
-    });
-
-    if (titleError == null && descriptionError == null) {
+    void addQuestion() async {
       final currentUser = FirebaseAuth.instance.currentUser;
 
       // Retrieve the username
@@ -49,10 +39,7 @@ class _ForumAddQuestionState extends State<ForumAddQuestion> {
       await questionViewModel.addQuestion(question);
       Navigator.pop(context);
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Dialog(
       insetPadding: const EdgeInsets.all(20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -68,21 +55,19 @@ class _ForumAddQuestionState extends State<ForumAddQuestion> {
             const SizedBox(height: 16),
             TextField(
               controller: titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Title',
-                border: const OutlineInputBorder(),
-                errorText: titleError,
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: descriptionController,
               maxLines: 4,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Description',
                 alignLabelWithHint: true,
-                border: const OutlineInputBorder(),
-                errorText: descriptionError,
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
@@ -97,9 +82,9 @@ class _ForumAddQuestionState extends State<ForumAddQuestion> {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: publishQuestion,
+                  onPressed: addQuestion,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
