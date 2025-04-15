@@ -33,6 +33,7 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final questions = context.watch<ForumQuestionViewModel>().questions;
     final user = FirebaseAuth.instance.currentUser;
     final allQuestions = context.watch<ForumQuestionViewModel>().allQuestions;
@@ -73,14 +74,14 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
                       backgroundImage: question.userPhotoUrl != null
                           ? NetworkImage(question.userPhotoUrl!)
                           : null,
-                      backgroundColor: Colors.deepPurple.shade100,
+                      backgroundColor: colorScheme.primaryContainer,
                       child: question.userPhotoUrl == null
                           ? const Icon(Icons.person, color: Colors.white)
                           : null,
                     ),
                     title: Text(
                       question.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,12 +128,12 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
                           },
                           leading: CircleAvatar(
                             backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-                            backgroundColor: Colors.deepPurple.shade100,
+                            backgroundColor: colorScheme.primaryContainer,
                             child: user?.photoURL == null ? const Icon(Icons.person, color: Colors.white) : null,
                           ),
                           title: Text(
                             question.title,
-                            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                            style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary),
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

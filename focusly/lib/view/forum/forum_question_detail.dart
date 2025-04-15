@@ -15,6 +15,8 @@ class ForumQuestionDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Forum"),
@@ -33,7 +35,7 @@ class ForumQuestionDetail extends StatelessWidget {
                   backgroundImage: question.userPhotoUrl != null && question.userPhotoUrl!.isNotEmpty
                       ? NetworkImage(question.userPhotoUrl!)
                       : null,
-                  backgroundColor: Colors.deepPurple.shade100,
+                  backgroundColor: colorScheme.primaryContainer,
                   child: (question.userPhotoUrl == null || question.userPhotoUrl!.isEmpty)
                       ? const Icon(Icons.person, color: Colors.white)
                       : null,
@@ -45,10 +47,10 @@ class ForumQuestionDetail extends StatelessWidget {
                     children: [
                       Text(
                         question.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
+                          color: colorScheme.primary,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -82,7 +84,7 @@ class ForumQuestionDetail extends StatelessWidget {
                   icon: const Icon(Icons.mode_comment_outlined, color: Colors.white),
                   label: const Text("Answer", style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),

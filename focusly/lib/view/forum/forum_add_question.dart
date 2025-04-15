@@ -11,6 +11,7 @@ class ForumAddQuestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
 
@@ -81,7 +82,7 @@ class ForumAddQuestion extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
