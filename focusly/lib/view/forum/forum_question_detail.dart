@@ -55,19 +55,33 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundImage: widget.question.userPhotoUrl != null && 
-                      widget.question.userPhotoUrl!.isNotEmpty
-                      ? NetworkImage(widget.question.userPhotoUrl!)
-                      : null,
-                  backgroundColor: colorScheme.primaryContainer,
-                  child: (widget.question.userPhotoUrl == null || 
-                      widget.question.userPhotoUrl!.isEmpty)
-                      ? const Icon(Icons.person, color: Colors.white)
-                      : null,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundImage: widget.question.userPhotoUrl != null && 
+                          widget.question.userPhotoUrl!.isNotEmpty
+                          ? NetworkImage(widget.question.userPhotoUrl!)
+                          : null,
+                      backgroundColor: colorScheme.primaryContainer,
+                      child: (widget.question.userPhotoUrl == null || 
+                          widget.question.userPhotoUrl!.isEmpty)
+                          ? const Icon(Icons.person, color: Colors.white)
+                          : null,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                        widget.question.userName,
+                        style: TextStyle(
+                          fontSize: 12, 
+                          color: colorScheme.tertiary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                  ],
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 20),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,14 +99,6 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                         widget.question.description,
                         style: const TextStyle(fontSize: 14),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        widget.question.userName,
-                        style: const TextStyle(
-                          fontSize: 12, 
-                          color: Colors.grey
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -107,9 +113,10 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
               children: [
                 Text(
                   "${answers.length} answers",
-                  style: const TextStyle(
-                    fontSize: 14, 
-                    fontWeight: FontWeight.bold
+                  style: TextStyle(
+                    fontSize: 15, 
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.tertiary,
                   ),
                 ),
                 ElevatedButton.icon(
@@ -166,7 +173,7 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
             Expanded(
               child: answers.isEmpty
                   ? const Center(
-                      child: Text("No answers yet. Be the first to answer!"),
+                      child: Text("No answers yet."),
                     )
                   : ListView.builder(
                       itemCount: answers.length,
@@ -177,57 +184,73 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: answer.userPhotoUrl != null && 
-                                        answer.userPhotoUrl!.isNotEmpty
-                                        ? NetworkImage(answer.userPhotoUrl!)
-                                        : null,
-                                    backgroundColor: colorScheme.primaryContainer,
-                                    child: (answer.userPhotoUrl == null || 
-                                        answer.userPhotoUrl!.isEmpty)
-                                        ? const Icon(
-                                            Icons.person, 
-                                            size: 20, 
-                                            color: Colors.white
-                                          )
-                                        : null,
+                              Container(
+                                padding: const EdgeInsets.all(12.0), 
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: colorScheme.primary,
+                                    width: 1.0, 
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                  borderRadius: BorderRadius.circular(8.0), 
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
                                       children: [
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: answer.userPhotoUrl != null && 
+                                              answer.userPhotoUrl!.isNotEmpty
+                                              ? NetworkImage(answer.userPhotoUrl!)
+                                              : null,
+                                          backgroundColor: colorScheme.primaryContainer,
+                                          child: (answer.userPhotoUrl == null || 
+                                              answer.userPhotoUrl!.isEmpty)
+                                              ? const Icon(
+                                                  Icons.person, 
+                                                  size: 20, 
+                                                  color: Colors.white
+                                                )
+                                              : null,
+                                        ),
+                                        SizedBox(height: 8),
                                         Text(
                                           answer.userName,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 12, 
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          answer.description,
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          _formatDate(answer.createdAt),
-                                          style: const TextStyle(
-                                            fontSize: 12, 
-                                            color: Colors.grey
+                                            color: colorScheme.tertiary,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                              answer.description,
+                                              style: const TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                          /*const SizedBox(height: 4),
+                                          Text(
+                                            _formatDate(answer.createdAt),
+                                            style: const TextStyle(
+                                              fontSize: 12, 
+                                              color: Colors.grey
+                                            ),
+                                          ),*/
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(height: 8),
-                              const Divider(),
                             ],
                           ),
                         );
