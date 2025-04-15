@@ -30,9 +30,13 @@ class ForumQuestionDetail extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: photoUrl != null ? NetworkImage(photoUrl!) : null,
+                  backgroundImage: question.userPhotoUrl != null && question.userPhotoUrl!.isNotEmpty
+                      ? NetworkImage(question.userPhotoUrl!)
+                      : null,
                   backgroundColor: Colors.deepPurple.shade100,
-                  child: photoUrl == null ? const Icon(Icons.person, color: Colors.white) : null,
+                  child: (question.userPhotoUrl == null || question.userPhotoUrl!.isEmpty)
+                      ? const Icon(Icons.person, color: Colors.white)
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -54,7 +58,7 @@ class ForumQuestionDetail extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        userName ?? "username",
+                        question.userName,
                         style: const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
@@ -62,10 +66,8 @@ class ForumQuestionDetail extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 16),
             const Divider(thickness: 1),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,6 +77,7 @@ class ForumQuestionDetail extends StatelessWidget {
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
+                    // TODO: Add answer logic
                   },
                   icon: const Icon(Icons.mode_comment_outlined, color: Colors.white),
                   label: const Text("Answer", style: TextStyle(color: Colors.white)),
