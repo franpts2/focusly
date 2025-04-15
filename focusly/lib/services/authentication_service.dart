@@ -156,7 +156,7 @@ class AuthenticationService with ChangeNotifier {
       final user = _auth.currentUser;
       if (user?.displayName != null) {
         name = user!.displayName;
-        _saveUserName(name);
+        await _saveUserName(name);
       }
     }
 
@@ -179,15 +179,11 @@ class AuthenticationService with ChangeNotifier {
 
       if (name != null && name.isNotEmpty) {
         await userCredential.user?.updateDisplayName(name);
-        _saveUserName(name);
+        await _saveUserName(name); // Save the username locally
       }
 
       if (userCredential.user != null && context != null && context.mounted) {
-        await Future.delayed(const Duration(milliseconds: 50));
-
-        // Refresh data in viewmodels to ensure clean state for new user
         _refreshUserData(context);
-
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const NavigationView()),
           (route) => false,
