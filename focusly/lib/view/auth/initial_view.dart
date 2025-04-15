@@ -42,7 +42,6 @@ class InitialPageView extends StatelessWidget {
               ],
             ),
           ),
-
           // Sign In button 
           Positioned(
             top:
