@@ -4,6 +4,8 @@ import 'package:focusly/model/forum_question_model.dart';
 import 'package:focusly/viewmodel/forum_question_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../services/authentication_service.dart';
+
 class ForumAddQuestion extends StatelessWidget {
   const ForumAddQuestion({super.key});
 
@@ -56,12 +58,17 @@ class ForumAddQuestion extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     final currentUser = FirebaseAuth.instance.currentUser;
+
+                    // Retrieve the username
+                    final authService = Provider.of<AuthenticationService>(context, listen: false);
+                    final userName = await authService.getUserName() ?? 'Anonymous';
+
                     final question = ForumQuestion(
                       title: titleController.text,
                       description: descriptionController.text,
                       createdAt: DateTime.now(),
                       answerCount: 0,
-                      userName: currentUser?.displayName ?? 'Anonymous',
+                      userName: userName, // Use the retrieved username
                       userPhotoUrl: currentUser?.photoURL,
                     );
 
