@@ -6,14 +6,53 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../services/authentication_service.dart';
 
-class ForumAddQuestion extends StatelessWidget {
+class ForumAddQuestion extends StatefulWidget {
   const ForumAddQuestion({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
+  _ForumAddQuestionState createState() => _ForumAddQuestionState();
+}
 
+class _ForumAddQuestionState extends State<ForumAddQuestion> {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  String? titleError;
+  String? descriptionError;
+
+  void publishQuestion() async {
+    setState(() {
+      titleError = titleController.text.trim().isEmpty ? 'Title is required' : null;
+      descriptionError = descriptionController.text.trim().isEmpty ? 'Description is required' : null;
+    });
+
+    if (titleError == null && descriptionError == null) {
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      // Retrieve the username
+      final authService = Provider.of<AuthenticationService>(context, listen: false);
+      final userName = await authService.getUserName() ?? 'Anonymous';
+
+      final question = ForumQuestion(
+        title: titleController.text,
+        description: descriptionController.text,
+        createdAt: DateTime.now(),
+        answerCount: 0,
+        userName: userName, // Use the retrieved username
+        userPhotoUrl: currentUser?.photoURL,
+      );
+
+      final questionViewModel = Provider.of<ForumQuestionViewModel>(
+        context,
+        listen: false,
+      );
+
+      await questionViewModel.addQuestion(question);
+      Navigator.pop(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       insetPadding: const EdgeInsets.all(20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -29,19 +68,21 @@ class ForumAddQuestion extends StatelessWidget {
             const SizedBox(height: 16),
             TextField(
               controller: titleController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Title',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                errorText: titleError,
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: descriptionController,
               maxLines: 4,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Description',
                 alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                errorText: descriptionError,
               ),
             ),
             const SizedBox(height: 20),
@@ -56,59 +97,7 @@ class ForumAddQuestion extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: () async {
-                    final titleEmpty = titleController.text.trim().isEmpty;
-                    final descriptionEmpty = descriptionController.text.trim().isEmpty;
-
-                    if (titleEmpty && descriptionEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Title and description cannot be empty'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                      return;
-                    } else if (titleEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Title cannot be empty'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                      return;
-                    } else if (descriptionEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Description cannot be empty'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                      return;
-                    }
-
-                    final currentUser = FirebaseAuth.instance.currentUser;
-
-                    // Retrieve the username
-                    final authService = Provider.of<AuthenticationService>(context, listen: false);
-                    final userName = await authService.getUserName() ?? 'Anonymous';
-
-                    final question = ForumQuestion(
-                      title: titleController.text,
-                      description: descriptionController.text,
-                      createdAt: DateTime.now(),
-                      answerCount: 0,
-                      userName: userName, // Use the retrieved username
-                      userPhotoUrl: currentUser?.photoURL,
-                    );
-
-                    final questionViewModel = Provider.of<ForumQuestionViewModel>(
-                      context,
-                      listen: false,
-                    );
-
-                    await questionViewModel.addQuestion(question);
-                    Navigator.pop(context);
-                  },
+                  onPressed: publishQuestion,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
                     shape: RoundedRectangleBorder(
