@@ -4,10 +4,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:focusly/view/auth/initial_view.dart';
+import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
+import 'package:focusly/viewmodel/quiz_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class AuthenticationService with ChangeNotifier {
   GoogleSignInAccount? _currentUser;
   String? _cachedAvatarUrl;
+  String? _cachedUserName;
   final GoogleSignIn _googleSignIn;
   final FirebaseAuth _auth;
 
@@ -18,11 +22,14 @@ class AuthenticationService with ChangeNotifier {
     GoogleSignIn? googleSignIn,
   }) : _auth = firebaseAuth ?? FirebaseAuth.instance,
        _googleSignIn = googleSignIn ?? GoogleSignIn() {
-    _loadCachedAvatar();
+    _loadCachedData();
 
     _auth.authStateChanges().listen((User? user) {
       if (user != null) {
         _currentUser = _googleSignIn.currentUser;
+        if (_currentUser == null && user.displayName != null) {
+          _saveUserName(user.displayName);
+        }
       } else {
         _currentUser = null;
         _cachedAvatarUrl = null;
@@ -31,9 +38,10 @@ class AuthenticationService with ChangeNotifier {
     });
   }
 
-  Future<void> _loadCachedAvatar() async {
+  Future<void> _loadCachedData() async {
     final prefs = await SharedPreferences.getInstance();
     _cachedAvatarUrl = prefs.getString('userAvatar');
+    _cachedUserName = prefs.getString('userName');
     notifyListeners();
   }
 
@@ -41,7 +49,6 @@ class AuthenticationService with ChangeNotifier {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        // The user canceled the sign-in
         return;
       }
 
@@ -57,14 +64,19 @@ class AuthenticationService with ChangeNotifier {
       _cachedAvatarUrl = googleUser.photoUrl;
       _saveUserAvatar(_cachedAvatarUrl);
 
+      _cachedUserName = googleUser.displayName;
+      _saveUserName(_cachedUserName);
+
       _currentUser = googleUser;
       notifyListeners();
 
-      // If context is provided, navigate directly to NavigationView
       if (context != null && context.mounted) {
+        // Refresh data in viewmodels to ensure we're loading the correct user's data
+        _refreshUserData(context);
+
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const NavigationView()),
-          (route) => false, // This removes all previous routes
+          (route) => false,
         );
       }
     } catch (error) {
@@ -80,18 +92,43 @@ class AuthenticationService with ChangeNotifier {
     _removeUserAvatar();
     notifyListeners();
 
-    // If context is provided, navigate back to InitialPageView
     if (context != null && context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const InitialPageView()),
-        (route) => false, // This removes all previous routes
+        (route) => false,
       );
+    }
+  }
+
+  // Helper method to refresh user-specific data in viewmodels
+  void _refreshUserData(BuildContext context) {
+    try {
+      // Refresh flashcard decks
+      final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
+        context,
+        listen: false,
+      );
+      flashcardViewModel.refreshDecks();
+
+      // Refresh quizzes
+      final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
+      quizViewModel.refreshQuizzes();
+    } catch (e) {
+      print("Error refreshing user data: $e");
     }
   }
 
   Future<void> _saveUserAvatar(String? photoURL) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userAvatar', photoURL ?? '');
+  }
+
+  Future<void> _saveUserName(String? name) async {
+    if (name != null && name.isNotEmpty) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userName', name);
+      _cachedUserName = name;
+    }
   }
 
   Future<void> _removeUserAvatar() async {
@@ -105,5 +142,113 @@ class AuthenticationService with ChangeNotifier {
     }
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('userAvatar');
+  }
+
+  Future<String?> getUserName() async {
+    if (_cachedUserName != null) {
+      return _cachedUserName;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    String? name = prefs.getString('userName');
+
+    if (name == null || name.isEmpty) {
+      final user = _auth.currentUser;
+      if (user?.displayName != null) {
+        name = user!.displayName;
+        _saveUserName(name);
+      }
+    }
+
+    return name;
+  }
+
+  Future<User?> createUserWithEmailAndPassword(
+    String email,
+    String password, {
+    BuildContext? context,
+    String? name,
+  }) async {
+    try {
+      if (context != null) {
+        FocusScope.of(context).unfocus();
+      }
+
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      if (name != null && name.isNotEmpty) {
+        await userCredential.user?.updateDisplayName(name);
+        _saveUserName(name);
+      }
+
+      if (userCredential.user != null && context != null && context.mounted) {
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        // Refresh data in viewmodels to ensure clean state for new user
+        _refreshUserData(context);
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false,
+        );
+      }
+
+      return userCredential.user;
+    } catch (e) {
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Sign up failed: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return null;
+    }
+  }
+
+  Future<User?> signInWithEmailAndPassword(
+    String email,
+    String password, {
+    BuildContext? context,
+  }) async {
+    try {
+      if (context != null) {
+        FocusScope.of(context).unfocus();
+      }
+
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      if (userCredential.user?.displayName != null) {
+        _saveUserName(userCredential.user!.displayName);
+      }
+
+      if (userCredential.user != null && context != null && context.mounted) {
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        // Refresh data in viewmodels to ensure we're loading the correct user's data
+        _refreshUserData(context);
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const NavigationView()),
+          (route) => false,
+        );
+      }
+
+      return userCredential.user;
+    } catch (e) {
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Sign in failed: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+      return null;
+    }
   }
 }

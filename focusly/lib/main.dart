@@ -8,6 +8,8 @@ import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
+import 'package:focusly/view/auth/splash_view.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +44,7 @@ class MainApp extends StatelessWidget {
           } else if (snapshot.hasData) {
             return NavigationView();
           } else {
-            return InitialPageView(); 
+            return SplashView(); 
           }
         },
       ),
