@@ -196,34 +196,38 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Column(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: answer.userPhotoUrl != null && 
-                                              answer.userPhotoUrl!.isNotEmpty
-                                              ? NetworkImage(answer.userPhotoUrl!)
-                                              : null,
-                                          backgroundColor: colorScheme.primaryContainer,
-                                          child: (answer.userPhotoUrl == null || 
-                                              answer.userPhotoUrl!.isEmpty)
-                                              ? const Icon(
-                                                  Icons.person, 
-                                                  size: 20, 
-                                                  color: Colors.white
-                                                )
-                                              : null,
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          answer.userName,
-                                          style: TextStyle(
-                                            fontSize: 12, 
-                                            color: colorScheme.tertiary,
-                                            fontWeight: FontWeight.bold,
+                                    SizedBox(
+                                      width: 60,
+                                      child: Column(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage: answer.userPhotoUrl != null && 
+                                                answer.userPhotoUrl!.isNotEmpty
+                                                ? NetworkImage(answer.userPhotoUrl!)
+                                                : null,
+                                            backgroundColor: colorScheme.primaryContainer,
+                                            child: (answer.userPhotoUrl == null || 
+                                                answer.userPhotoUrl!.isEmpty)
+                                                ? const Icon(
+                                                    Icons.person, 
+                                                    size: 20, 
+                                                    color: Colors.white
+                                                  )
+                                                : null,
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(height: 8),
+                                          Text(
+                                            answer.userName,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 11, 
+                                              color: colorScheme.tertiary,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     const SizedBox(width: 20),
                                     Expanded(
