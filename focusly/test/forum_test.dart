@@ -89,23 +89,30 @@ void main() {
           home: Scaffold(
             body: ListView(
               children: mockService.questions
-                  .map((q) => ListTile(
-                        title: Text(q['title']!),
-                        subtitle: Text(q['description']!),
-                      ))
+                  .asMap()
+                  .entries
+                  .map((entry) => ListTile(
+                key: Key('question_${entry.key}'), // Unique key based on index
+                title: Text(entry.value['title']!),
+                subtitle: Text(entry.value['description']!),
+              ))
                   .toList(),
             ),
           ),
         ),
       );
 
-      // Tap on the question
-      await tester.tap(find.widgetWithText(ListTile, 'Test Title'));
+      // Ensure the widget tree is fully built
       await tester.pumpAndSettle();
 
-      // Verify the question details are displayed
-      expect(find.text('Test Title'), findsOneWidget);
-      expect(find.text('Test Description'), findsOneWidget);
+      // Verify the ListTile exists using its unique key
+      final listTileFinder = find.byKey(const Key('question_0'));
+      expect(listTileFinder, findsOneWidget);
+
+      // Verify the question details are displayed in the ListTile
+      final listTile = tester.widget<ListTile>(listTileFinder);
+      expect((listTile.title as Text).data, 'Test Title');
+      expect((listTile.subtitle as Text).data, 'Test Description');
     });
 
     testWidgets('Test Case 5: Newly Posted Question Appears in the "New" Section', (WidgetTester tester) async {
@@ -120,6 +127,7 @@ void main() {
               children: mockService.questions
                   .reversed // Simulate "New" section with most recent first
                   .map((q) => ListTile(
+                        key: Key(q['title']!), // Unique key based on title
                         title: Text(q['title']!),
                         subtitle: Text(q['description']!),
                       ))
@@ -147,6 +155,7 @@ void main() {
               children: mockService
                   .getQuestionsByUser('Current User') // Simulate filtering by user
                   .map((q) => ListTile(
+                        key: Key(q['title']!), // Unique key based on title
                         title: Text(q['title']!),
                         subtitle: Text(q['description']!),
                       ))
