@@ -33,11 +33,21 @@ class ForumAnswerViewModel extends ChangeNotifier {
         .child("forum_questions")
         .child(questionID)
         .child("answers");
+
     final newAnswerRef = ref.push();
     final answerID = newAnswerRef.key!;
     final answerWithID = answer.copyWith(id: answerID);
 
     await newAnswerRef.set(answerWithID.toJson());
+
+    // Increment the answer count in the database
+    final questionRef = FirebaseDatabase.instance.ref()
+        .child("forum_questions")
+        .child(questionID);
+
+    await questionRef.update({
+      "answerCount": ServerValue.increment(1),
+    });
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
