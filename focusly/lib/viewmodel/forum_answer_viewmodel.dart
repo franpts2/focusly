@@ -40,7 +40,6 @@ class ForumAnswerViewModel extends ChangeNotifier {
 
     await newAnswerRef.set(answerWithID.toJson());
 
-    // Increment the answer count in the database
     final questionRef = FirebaseDatabase.instance.ref()
         .child("forum_questions")
         .child(questionID);
