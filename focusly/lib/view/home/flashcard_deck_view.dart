@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:focusly/model/flashcard_deck_model.dart';
+import 'package:provider/provider.dart';
+
+import '../../viewmodel/flashcard_deck_viewmodel.dart';
 
 class FlashcardDeckView extends StatefulWidget {
   final FlashcardDeck deck;
@@ -21,6 +24,9 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
     super.initState();
     // Initialize with the deck's flashcards
     _cards = widget.deck.flashcards;
+    // Update the lastOpened timestamp
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(context, listen: false);
+    flashcardViewModel.updateDeck(widget.deck.copyWith(lastOpened: DateTime.now()));
   }
 
   void _flipCard() {

@@ -3,12 +3,14 @@ class Quiz {
   final String title;
   final String category;
   final List<Question> questions;
+  final DateTime? lastOpened; // Add this property
 
   Quiz({
     this.id,
     required this.title,
     required this.category,
     required this.questions,
+    this.lastOpened,
   });
 
   Quiz copyWith({
@@ -16,12 +18,14 @@ class Quiz {
     String? title,
     String? category,
     List<Question>? questions,
+    DateTime? lastOpened,
   }) {
     return Quiz(
       id: id ?? this.id,
       title: title ?? this.title,
       category: category ?? this.category,
       questions: questions ?? this.questions,
+      lastOpened: lastOpened ?? this.lastOpened,
     );
   }
 
@@ -30,6 +34,7 @@ class Quiz {
       'title': title,
       'category': category,
       'questions': questions.map((q) => q.toMap()).toList(),
+      'lastOpened': lastOpened?.toIso8601String(),
     };
   }
 
@@ -41,6 +46,9 @@ class Quiz {
       questions: (json['questions'] as List)
           .map((q) => Question.fromMap(q))
           .toList(),
+      lastOpened: json['lastOpened'] != null
+          ? DateTime.parse(json['lastOpened'])
+          : null,
     );
   }
 }
