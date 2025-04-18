@@ -78,21 +78,22 @@ class ForumQuestionViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> incrementAnswerCount(String questionID) async {
-    if (_databaseReference == null) return;
-    final ref = _databaseReference!.child(questionID).child("answerCount");
-    await ref.runTransaction((currentValue) {
-      final current = (currentValue as int?) ?? 0;
-      return Transaction.success(current + 1);
-    });
-
-    final index = _questions.indexWhere((q) => q.id == questionID);
+  void incrementAnswerCount(String questionId) {
+    final index = _allQuestions.indexWhere((q) => q.id == questionId);
     if (index != -1) {
-      _questions[index] = _questions[index].copyWith(
-        answerCount: _questions[index].answerCount + 1,
+      _allQuestions[index] = _allQuestions[index].copyWith(
+        answerCount: _allQuestions[index].answerCount + 1,
       );
-      notifyListeners();
     }
+
+    final myIndex = _questions.indexWhere((q) => q.id == questionId);
+    if (myIndex != -1) {
+      _questions[myIndex] = _questions[myIndex].copyWith(
+        answerCount: _questions[myIndex].answerCount + 1,
+      );
+    }
+
+    notifyListeners();
   }
 
   final List<ForumQuestion> _allQuestions = [];
@@ -123,4 +124,5 @@ class ForumQuestionViewModel extends ChangeNotifier {
       print("Error loading all questions: $e");
     }
   }
+
 }
