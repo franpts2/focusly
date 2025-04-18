@@ -84,7 +84,7 @@ class HomeView extends StatelessWidget {
                         ),
                       );
                     },
-                    child: _buildCard(deck.title, '${deck.flashcards.length} flashcards'),
+                    child: _buildCard(deck.title, '${deck.flashcards.length} flashcards', context),
                   );
                 } else {
                   final quiz = item['item'] as Quiz;
@@ -97,7 +97,7 @@ class HomeView extends StatelessWidget {
                         ),
                       );
                     },
-                    child: _buildCard(quiz.title, '${quiz.questions.length} questions'),
+                    child: _buildCard(quiz.title, '${quiz.questions.length} questions', context),
                   );
                 }
               },
@@ -290,7 +290,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(String title, String subtitle) {
+  Widget _buildCard(String title, String subtitle, BuildContext context) {
     return Container(
       width: 140,
       margin: const EdgeInsets.only(right: 12),
@@ -305,14 +305,14 @@ class HomeView extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleMedium, // Match title style
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
               Text(
                 subtitle,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                style: Theme.of(context).textTheme.bodySmall, // Match subtitle style
                 textAlign: TextAlign.center,
               ),
             ],
