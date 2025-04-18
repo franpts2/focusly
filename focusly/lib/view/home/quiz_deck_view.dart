@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/model/quiz_model.dart';
+import 'package:provider/provider.dart';
+
+import '../../viewmodel/quiz_viewmodel.dart';
 
 class QuizDeckView extends StatefulWidget {
   final Quiz quizDeck;
@@ -17,6 +20,9 @@ class _QuizDeckViewState extends State<QuizDeckView> {
   void initState() {
     super.initState();
     _selectedAnswers = List.filled(widget.quizDeck.questions.length, null);
+    // Update the lastOpened timestamp
+    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
+    quizViewModel.updateQuiz(widget.quizDeck.copyWith(lastOpened: DateTime.now()));
   }
 
   void _restartQuiz() {
