@@ -3,12 +3,14 @@ class FlashcardDeck {
   final String title;
   final String category;
   final List<Flashcard> flashcards;
+  final DateTime? lastOpened;
 
   FlashcardDeck({
     this.id,
     required this.title,
     required this.category,
     required this.flashcards,
+    this.lastOpened,
   });
 
   FlashcardDeck copyWith({
@@ -16,12 +18,14 @@ class FlashcardDeck {
     String? title,
     String? category,
     List<Flashcard>? flashcards,
+    DateTime? lastOpened,
   }) {
     return FlashcardDeck(
       id: id ?? this.id,
       title: title ?? this.title,
       category: category ?? this.category,
       flashcards: flashcards ?? this.flashcards,
+      lastOpened: lastOpened ?? this.lastOpened,
     );
   }
 
@@ -30,6 +34,7 @@ class FlashcardDeck {
       'title': title,
       'category': category,
       'flashcards': flashcards.map((f) => f.toMap()).toList(),
+      'lastOpened': lastOpened?.toIso8601String(),
     };
   }
 
@@ -41,6 +46,9 @@ class FlashcardDeck {
       flashcards: (json['flashcards'] as List)
           .map((f) => Flashcard.fromMap(f))
           .toList(),
+      lastOpened: json['lastOpened'] != null
+          ? DateTime.parse(json['lastOpened'])
+          : null,
     );
   }
 }
