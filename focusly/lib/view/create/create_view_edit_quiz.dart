@@ -61,20 +61,19 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
       return;
     }
 
+    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
     if (_questions.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please add at least one question')),
-      );
+      _deleteQuiz(quizViewModel);
       return;
     }
-    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
+
     final List<Question> updatedQuestions =
     _questions.map(_convertToQuestion).toList();
 
     final updatedQuiz = Quiz(
       id: widget.quiz.id,
       title: _titleController.text,
-      category: widget.quiz.category, // Keep the original category for now
+      category: widget.quiz.category,
       questions: updatedQuestions,
     );
 
@@ -83,11 +82,25 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Quiz updated successfully')));
-      Navigator.pop(context); // Go back to the previous screen
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error updating quiz: $e')));
+    }
+  }
+
+  void _deleteQuiz(QuizViewModel quizViewModel) async {
+    try {
+      await quizViewModel.deleteQuiz(widget.quiz.id!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Quiz deleted successfully')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error deleting quiz: $e')));
     }
   }
 
