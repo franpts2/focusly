@@ -102,6 +102,7 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
         context,
       ).showSnackBar(SnackBar(content: Text('Error deleting quiz: $e')));
     }
+
   }
 
   void _showQuestionDialog({
@@ -169,6 +170,7 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
                 final quizViewModel =
                 Provider.of<QuizViewModel>(context, listen: false);
                 _deleteQuiz(quizViewModel);
+                Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: const Text('Delete'),
