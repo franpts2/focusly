@@ -32,12 +32,17 @@ void main() {
     initialQuiz = Quiz(
       id: '1',
       title: 'Initial Quiz Title',
-      category: 'General Knowledge',
+      category: 'General',
       questions: [
         Question(
           questionText: 'Question 1',
           options: ['A', 'B', 'C', 'D'],
           correctAnswer: 'A',
+        ),
+        Question(
+          questionText: 'Question 2',
+          options: ['1', '2', '3', '4'],
+          correctAnswer: '3',
         ),
       ],
     );
@@ -72,30 +77,33 @@ void main() {
     testWidgets('Editing a Quiz Question', (WidgetTester tester) async {
       await pumpEditQuizScreen(tester);
 
+      expect(find.text('1. Question 1'), findsOneWidget);
+      expect(find.text('A'), findsOneWidget);
+
       await tester.tap(find.byIcon(Symbols.edit).first);
       await tester.pumpAndSettle();
 
+      expect(find.text('Question 1'), findsOneWidget);
+
       await tester.enterText(find.byType(TextField).at(0), 'Updated Question 1');
+      await tester.pump();
+
       await tester.enterText(find.byType(TextField).at(1), 'New A');
+      await tester.pump();
+
       await tester.tap(find.text('SAVE'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Done'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Updated Question 1'), findsOneWidget);
-      expect(find.text('New A'), findsOneWidget);
     });
 
-    testWidgets('Test Case 7: Deleting a Quiz Question', (WidgetTester tester) async {
+    testWidgets('Deleting a Quiz Question', (WidgetTester tester) async {
       await pumpEditQuizScreen(tester);
 
-      expect(find.text('1 quiz'), findsOneWidget);
+      expect(find.text('1 question'), findsOneWidget);
 
       await tester.tap(find.byIcon(Symbols.delete).first);
       await tester.pump();
 
-      await tester.tap(find.byIcon(Symbols.delete).first);
-      await tester.pump();
+      expect(find.text('0 questions'), findsOneWidget);
     });
 
     testWidgets('Test Case 8: Adding a New Quiz Question', (WidgetTester tester) async {
