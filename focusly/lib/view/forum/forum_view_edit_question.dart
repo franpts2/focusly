@@ -31,6 +31,58 @@ class _ForumEditQuestionState extends State<ForumEditQuestion> {
     super.dispose();
   }
 
+  void _deleteQuestion(BuildContext context) async {
+    try {
+      await Provider.of<ForumQuestionViewModel>(context, listen: false)
+          .deleteQuestion(widget.question.id!);
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Question deleted successfully!')),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete question: $error')),
+        );
+      }
+    }
+  }
+
+  void _saveChanges(BuildContext context) async {
+    final updatedTitle = _titleController.text.trim();
+    final updatedDescription = _descriptionController.text.trim();
+
+    if (updatedTitle.isNotEmpty && updatedDescription.isNotEmpty) {
+      final updatedQuestion = widget.question.copyWith(
+        title: updatedTitle,
+        description: updatedDescription,
+      );
+
+      try {
+        await Provider.of<ForumQuestionViewModel>(context, listen: false)
+            .updateQuestion(updatedQuestion);
+        if (mounted) {
+          Navigator.pop(context); // Go back to the detail screen
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Question updated successfully!')),
+          );
+        }
+      } catch (error) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to update question: $error')),
+          );
+        }
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Title and description cannot be empty.')),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +114,8 @@ class _ForumEditQuestionState extends State<ForumEditQuestion> {
       ),
       actions: [
         IconButton(
-            onPressed: () {
-              Navigator.pop(context); // Cancel
-            },
-            icon: Icon(Symbols.delete,)
+            onPressed: () => _deleteQuestion(context),
+            icon: const Icon(Symbols.delete,)
         ),
         TextButton(
           onPressed: () {
@@ -74,7 +124,7 @@ class _ForumEditQuestionState extends State<ForumEditQuestion> {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () => _saveChanges(context),
           child: const Text('Save'),
         ),
       ],
