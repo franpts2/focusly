@@ -31,24 +31,6 @@ class _ForumEditQuestionState extends State<ForumEditQuestion> {
     super.dispose();
   }
 
-  void _deleteQuestion(BuildContext context) async {
-    try {
-      await Provider.of<ForumQuestionViewModel>(context, listen: false)
-          .deleteQuestion(widget.question.id!);
-      if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Question deleted successfully!')),
-        );
-      }
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to delete question: $error')),
-        );
-      }
-    }
-  }
 
   void _saveChanges(BuildContext context) async {
     final updatedTitle = _titleController.text.trim();
@@ -106,10 +88,6 @@ class _ForumEditQuestionState extends State<ForumEditQuestion> {
         ),
       ),
       actions: [
-        IconButton(
-            onPressed: () => _deleteQuestion(context),
-            icon: const Icon(Symbols.delete,)
-        ),
         TextButton(
           onPressed: () {
             Navigator.pop(context); // Cancel
