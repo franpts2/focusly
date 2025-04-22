@@ -54,32 +54,25 @@ class _ForumEditQuestionState extends State<ForumEditQuestion> {
     final updatedTitle = _titleController.text.trim();
     final updatedDescription = _descriptionController.text.trim();
 
-    if (updatedTitle.isNotEmpty && updatedDescription.isNotEmpty) {
-      final updatedQuestion = widget.question.copyWith(
-        title: updatedTitle,
-        description: updatedDescription,
-      );
-
-      try {
-        await Provider.of<ForumQuestionViewModel>(context, listen: false)
-            .updateQuestion(updatedQuestion);
-        if (mounted) {
-          Navigator.pop(context); // Go back to the detail screen
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Question updated successfully!')),
-          );
-        }
-      } catch (error) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to update question: $error')),
-          );
-        }
+    final updatedQuestion = widget.question.copyWith(
+      title: updatedTitle,
+      description: updatedDescription,
+    );
+    try {
+      await Provider.of<ForumQuestionViewModel>(context, listen: false)
+          .updateQuestion(updatedQuestion);
+      if (mounted) {
+        Navigator.pop(context); // Go back to the detail screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Question updated successfully!')),
+        );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Title and description cannot be empty.')),
-      );
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update question: $error')),
+        );
+      }
     }
   }
 
