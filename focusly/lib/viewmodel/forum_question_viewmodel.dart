@@ -125,4 +125,45 @@ class ForumQuestionViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> updateQuestion(ForumQuestion updatedQuestion) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && updatedQuestion.userName == user.uid) {
+        // Update the local lists
+        final indexAll = _allQuestions.indexWhere((q) => q.id == updatedQuestion.id);
+        if (indexAll != -1) {
+          _allQuestions[indexAll] = updatedQuestion;
+        }
+        final indexMy = _questions.indexWhere((q) => q.id == updatedQuestion.id);
+        if (indexMy != -1) {
+          _questions[indexMy] = updatedQuestion;
+        }
+        notifyListeners();
+      } else {
+        throw Exception('Cannot update question: Not the owner.');
+      }
+    } catch (e) {
+      print('Error updating question: $e');
+      throw Exception('Failed to update question');
+    }
+  }
+
+  Future<void> deleteQuestion(String questionId) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      final questionToDelete = _questions.firstWhere((q) => q.id == questionId);
+      if (user != null && questionToDelete.userName == user.uid) {
+        // Update the local lists
+        _allQuestions.removeWhere((q) => q.id == questionId);
+        _questions.removeWhere((q) => q.id == questionId);
+        notifyListeners();
+      } else {
+        throw Exception('Cannot delete question: Not the owner.');
+      }
+    } catch (e) {
+      print('Error deleting question: $e');
+      throw Exception('Failed to delete question');
+    }
+  }
+
 }
