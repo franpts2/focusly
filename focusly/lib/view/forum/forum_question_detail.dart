@@ -5,6 +5,7 @@ import 'package:focusly/model/forum_question_model.dart';
 import 'package:focusly/model/forum_answer_model.dart';
 import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:focusly/view/forum/forum_view_add_answer.dart';
+import 'package:focusly/view/forum/forum_view_edit_question.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../viewmodel/forum_question_viewmodel.dart';
@@ -104,6 +105,18 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                     ],
                   ),
                 ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return ForumEditQuestion(question: widget.question);
+                      },
+                    );
+                  },
+                )
               ],
             ),
             const SizedBox(height: 16),
