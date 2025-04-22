@@ -144,8 +144,6 @@ class ForumQuestionViewModel extends ChangeNotifier {
 
   Future<void> deleteQuestion(String questionId) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      final questionToDelete = _questions.firstWhere((q) => q.id == questionId);
       _allQuestions.removeWhere((q) => q.id == questionId);
       _questions.removeWhere((q) => q.id == questionId);
       notifyListeners();

@@ -37,6 +37,25 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
     });
   }
 
+  void _deleteQuestion(BuildContext context) async {
+    try {
+      await Provider.of<ForumQuestionViewModel>(context, listen: false)
+          .deleteQuestion(widget.question.id!);
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Question deleted successfully!')),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete question: $error')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -116,6 +135,10 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                       },
                     );
                   },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _deleteQuestion(context),
                 )
               ],
             ),
