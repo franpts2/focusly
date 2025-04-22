@@ -62,6 +62,7 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
     final currentUser = FirebaseAuth.instance.currentUser;
     final answerViewModel = context.watch<ForumAnswerViewModel>();
     final answers = answerViewModel.getAnswersForQuestion(widget.question.id!);
+    final isCurrentUserQuestion = widget.question.userName == currentUser?.displayName;
 
     return Scaffold(
       appBar: AppBar(
@@ -124,23 +125,25 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return ForumEditQuestion(question: widget.question);
-                      },
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => _deleteQuestion(context),
-                )
-              ],
+                if (isCurrentUserQuestion)
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return ForumEditQuestion(question: widget.question);
+                        },
+                      );
+                    },
+                  ),
+                if (isCurrentUserQuestion)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteQuestion(context),
+                  )
+                ],
             ),
             const SizedBox(height: 16),
             const Divider(thickness: 1),
