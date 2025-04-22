@@ -104,4 +104,80 @@ class ForumAnswerViewModel extends ChangeNotifier {
       throw Exception('Error loading answers for question $questionID: $e');
     }
   }
+
+  Future<void> updateAnswer(String questionID, ForumAnswer updatedAnswer) async {
+    try {
+      final answerRef = FirebaseDatabase.instance
+          .ref()
+          .child("forum_questions")
+          .child(questionID)
+          .child("answers")
+          .child(updatedAnswer.id!);
+
+      await answerRef.update(updatedAnswer.toJson());
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userAnswerRef = FirebaseDatabase.instance
+            .ref()
+            .child(user.uid)
+            .child("forum_answers")
+            .child(questionID)
+            .child(updatedAnswer.id!);
+        await userAnswerRef.update(updatedAnswer.toJson());
+      }
+
+      if (_answersByQuestion.containsKey(questionID)) {
+        final index = _answersByQuestion[questionID]!.indexWhere((answer) => answer.id == updatedAnswer.id);
+        if (index != -1) {
+          _answersByQuestion[questionID]![index] = updatedAnswer;
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print('Error updating answer: $e');
+      throw Exception('Failed to update answer');
+    }
+  }
+
+  Future<void> deleteAnswer(String questionID, String answerId) async {
+    try {
+      final answerRef = FirebaseDatabase.instance
+          .ref()
+          .child("forum_questions")
+          .child(questionID)
+          .child("answers")
+          .child(answerId);
+
+      await answerRef.remove();
+
+      final questionRef = FirebaseDatabase.instance
+          .ref()
+          .child("forum_questions")
+          .child(questionID);
+
+      await questionRef.update({
+        "answerCount": ServerValue.increment(-1),
+      });
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userAnswerRef = FirebaseDatabase.instance
+            .ref()
+            .child(user.uid)
+            .child("forum_answers")
+            .child(questionID)
+            .child(answerId);
+        await userAnswerRef.remove();
+      }
+
+      if (_answersByQuestion.containsKey(questionID)) {
+        _answersByQuestion[questionID]!.removeWhere((answer) => answer.id == answerId);
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error deleting answer: $e');
+      throw Exception('Failed to delete answer');
+    }
+  }
 }
