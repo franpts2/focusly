@@ -3,7 +3,6 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/quiz_model.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
-import 'package:focusly/view/create/create_view_add_quiz.dart';
 
 class CreateViewEditQuiz extends StatefulWidget {
   final Quiz quiz;
@@ -61,20 +60,20 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
       return;
     }
 
+    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
+
     if (_questions.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please add at least one question')),
-      );
+      _deleteQuiz(quizViewModel);
       return;
     }
-    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
+
     final List<Question> updatedQuestions =
     _questions.map(_convertToQuestion).toList();
 
     final updatedQuiz = Quiz(
       id: widget.quiz.id,
       title: _titleController.text,
-      category: widget.quiz.category, // Keep the original category for now
+      category: widget.quiz.category,
       questions: updatedQuestions,
     );
 
@@ -83,7 +82,7 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Quiz updated successfully')));
-      Navigator.pop(context); // Go back to the previous screen
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -91,6 +90,20 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
     }
   }
 
+  void _deleteQuiz(QuizViewModel quizViewModel) async {
+    try {
+      await quizViewModel.deleteQuiz(widget.quiz.id!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Quiz deleted successfully')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error deleting quiz: $e')));
+    }
+
+  }
 
   void _showQuestionDialog({
     required QuizQuestion question,
@@ -128,10 +141,43 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
             _questions.removeWhere(
                   (q) => q.question == question.question,
             );
+            if (_questions.isEmpty) {
+              _showDeleteConfirmationDialog();
+            }
           });
           Navigator.pop(context);
         },
       ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Quiz?'),
+          content: const Text('All questions have been removed. Do you want to delete this quiz?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final quizViewModel =
+                Provider.of<QuizViewModel>(context, listen: false);
+                _deleteQuiz(quizViewModel);
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -178,6 +224,9 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
                   onPressed: () {
                     setState(() {
                       _questions.removeAt(questionIndex);
+                      if (_questions.isEmpty) {
+                        _showDeleteConfirmationDialog();
+                      }
                     });
                   },
                 ),
@@ -242,14 +291,9 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
                     ),
                     child: TextButton(
                       onPressed: () {},
-                      child: Text('Category'),
+                      child: const Text('Category'),
                     ),
                   ),
-                  /*child: TextField(
-                   TextButton(onPressed: () {}, child: Text('Category'))
-                    controller: _categoryController,
-                    decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder(),),
-                  ),*/
                 ),
               ],
             ),
