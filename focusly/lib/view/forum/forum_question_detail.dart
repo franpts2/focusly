@@ -63,6 +63,7 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
     final answerViewModel = context.watch<ForumAnswerViewModel>();
     final answers = answerViewModel.getAnswersForQuestion(widget.question.id!);
     final isCurrentUserQuestion = widget.question.userName == currentUser?.displayName;
+    //final isCurrentUserAnswer = widget.answer.userName == currentUser?.displayName;
 
     return Scaffold(
       appBar: AppBar(
@@ -294,6 +295,26 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                                         ],
                                       ),
                                     ),
+                                    if (answer.userName == currentUser?.displayName)
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        iconSize: 20,
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return ForumEditQuestion(question: widget.question);
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    if (answer.userName == currentUser?.displayName)
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        iconSize: 20,
+                                        onPressed: () => _deleteQuestion(context),
+                                      )
                                   ],
                                 ),
                               ),
