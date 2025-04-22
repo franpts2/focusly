@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focusly/view/forum/forum_view_edit_answer.dart';
 import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/forum_question_model.dart';
@@ -56,6 +57,25 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
     }
   }
 
+  void _deleteAnswer(BuildContext context, answer) async {
+    try {
+      await Provider.of<ForumAnswerViewModel>(context, listen: false)
+          .deleteAnswer(widget.question.id!, answer.id);
+      if (mounted) {
+        //Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Answer deleted successfully!')),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete answer: $error')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -63,7 +83,6 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
     final answerViewModel = context.watch<ForumAnswerViewModel>();
     final answers = answerViewModel.getAnswersForQuestion(widget.question.id!);
     final isCurrentUserQuestion = widget.question.userName == currentUser?.displayName;
-    //final isCurrentUserAnswer = widget.answer.userName == currentUser?.displayName;
 
     return Scaffold(
       appBar: AppBar(
@@ -298,13 +317,14 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                                     if (answer.userName == currentUser?.displayName)
                                       IconButton(
                                         icon: const Icon(Icons.edit),
-                                        iconSize: 20,
+                                        iconSize: 17,
                                         onPressed: () {
                                           showDialog(
                                             context: context,
                                             barrierDismissible: false,
                                             builder: (BuildContext context) {
-                                              return ForumEditQuestion(question: widget.question);
+                                              return ForumEditAnswer(answer: answer,
+                                                questionId: widget.question.id!, );
                                             },
                                           );
                                         },
@@ -312,8 +332,8 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                                     if (answer.userName == currentUser?.displayName)
                                       IconButton(
                                         icon: const Icon(Icons.delete),
-                                        iconSize: 20,
-                                        onPressed: () => _deleteQuestion(context),
+                                        iconSize: 17,
+                                        onPressed: () => _deleteAnswer(context, answer),
                                       )
                                   ],
                                 ),
