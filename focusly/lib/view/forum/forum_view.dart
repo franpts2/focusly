@@ -34,9 +34,8 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final questions = context.watch<ForumQuestionViewModel>().questions;
-    final user = FirebaseAuth.instance.currentUser;
     final allQuestions = context.watch<ForumQuestionViewModel>().allQuestions;
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,6 +52,7 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
       body: TabBarView(
         controller: _tabController,
         children: [
+          // "New" Tab - Displays all questions
           allQuestions.isEmpty
               ? const Center(child: Text("No questions found"))
               : ListView.builder(
@@ -88,7 +88,7 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
                       children: [
                         Text(
                           question.description.length > 50
-                              ? '${question.description.substring(0, 50)}...'
+                              ? '${question.description.substring(0, 0)}...'
                               : question.description,
                         ),
                         const SizedBox(height: 4),
@@ -105,58 +105,64 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
               );
             },
           ),
-          questions.isEmpty
-              ? Center(child: Text("No questions available"))
+          // "My Questions" Tab - Displays questions asked by the current user
+          allQuestions.isEmpty
+              ? const Center(child: Text("No questions found"))
               : ListView.builder(
-                  itemCount: questions.length,
-                  itemBuilder: (context, index) {
-                    final question = questions[index];
-                    return Column(
-                      children: [
-                        ListTile(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ForumQuestionDetail(
-                                  question: question,
-                                  userName: user?.displayName,
-                                  photoUrl: user?.photoURL,
-                                ),
-                              ),
-                            );
-                          },
-                          leading: CircleAvatar(
-                            backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-                            backgroundColor: colorScheme.primaryContainer,
-                            child: user?.photoURL == null ? const Icon(Icons.person, color: Colors.white) : null,
+            itemCount: allQuestions.length,
+            itemBuilder: (context, index) {
+              final question = allQuestions[index];
+              // Filter questions for the current user.
+              if (question.userName == user?.displayName) {
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ForumQuestionDetail(question: question),
                           ),
-                          title: Text(
-                            question.title,
-                            style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary),
+                        );
+                      },
+                      leading: CircleAvatar(
+                        backgroundImage: question.userPhotoUrl != null
+                            ? NetworkImage(question.userPhotoUrl!)
+                            : null,
+                        backgroundColor: colorScheme.primaryContainer,
+                        child: question.userPhotoUrl == null
+                            ? const Icon(Icons.person, color: Colors.white)
+                            : null,
+                      ),
+                      title: Text(
+                        question.title,
+                        style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            question.description.length > 50
+                                ? '${question.description.substring(0, 50)}...'
+                                : question.description,
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                question.description.length > 50
-                                    ? '${question.description.substring(0, 50)}...'
-                                    : question.description,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${user?.displayName ?? "username"} • ${question.answerCount} answers',
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
+                          const SizedBox(height: 4),
+                          Text(
+                            '${question.userName ?? "username"} • ${question.answerCount} answers',
+                            style: const TextStyle(fontSize: 12, color: Colors.grey),
                           ),
-                          isThreeLine: true,
-                        ),
-                        const Divider(),
-                      ],
-                    );
-                  },
-                ),
+                        ],
+                      ),
+                      isThreeLine: true,
+                    ),
+                    const Divider(),
+                  ],
+                );
+              } else {
+                return const SizedBox.shrink(); // Return an empty widget for other users' questions
+              }
+            },
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -173,3 +179,4 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
     );
   }
 }
+

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:focusly/view/forum/forum_view_edit_answer.dart';
 import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/forum_question_model.dart';
 import 'package:focusly/model/forum_answer_model.dart';
 import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:focusly/view/forum/forum_view_add_answer.dart';
+import 'package:focusly/view/forum/forum_view_edit_question.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../viewmodel/forum_question_viewmodel.dart';
@@ -26,9 +28,13 @@ class ForumQuestionDetail extends StatefulWidget {
 }
 
 class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
+  final _formKey = GlobalKey<FormState>();
+  late ForumQuestion _question;
+
   @override
   void initState() {
     super.initState();
+    _question = widget.question;
     // Load answers for this question when the page opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final answerViewModel = context.read<ForumAnswerViewModel>();
@@ -37,11 +43,78 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _showQuestionEditDialog(context) {
+    showDialog(
+      context: context,
+      builder: (context) => ForumQuestionEditDialog(
+        question: _question,
+        onSave: (updatedQuestion) {
+          setState(() {
+            _question = updatedQuestion;
+          });
+          Provider.of<ForumQuestionViewModel>(context, listen: false)
+              .updateQuestion(updatedQuestion);
+          Navigator.of(context).pop();
+        },
+        onDelete: () {
+          Provider.of<ForumQuestionViewModel>(context, listen: false)
+              .deleteQuestion(_question.id!);
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+
+  void _deleteQuestion(BuildContext context) async {
+    try {
+      await Provider.of<ForumQuestionViewModel>(context, listen: false)
+          .deleteQuestion(widget.question.id!);
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Question deleted successfully!')),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete question: $error')),
+        );
+      }
+    }
+  }
+
+  void _deleteAnswer(BuildContext context, answer) async {
+    try {
+      await Provider.of<ForumAnswerViewModel>(context, listen: false)
+          .deleteAnswer(widget.question.id!, answer.id);
+      if (mounted) {
+        //Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Answer deleted successfully!')),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete answer: $error')),
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final currentUser = FirebaseAuth.instance.currentUser;
     final answerViewModel = context.watch<ForumAnswerViewModel>();
     final answers = answerViewModel.getAnswersForQuestion(widget.question.id!);
+    final isCurrentUserQuestion = widget.question.userName == currentUser?.displayName;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +147,7 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                        widget.question.userName,
+                        widget.question.userName ?? "Anonymous",
                         style: TextStyle(
                           fontSize: 12, 
                           color: colorScheme.tertiary,
@@ -89,7 +162,8 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.question.title,
+                        _question.title,
+                        //widget.question.title,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -98,13 +172,24 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        widget.question.description,
+                        _question.description,
+                        //widget.question.description,
                         style: const TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
                 ),
-              ],
+                if (isCurrentUserQuestion)
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _showQuestionEditDialog(context),
+                  ),
+                if (isCurrentUserQuestion)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteQuestion(context),
+                  )
+                ],
             ),
             const SizedBox(height: 16),
             const Divider(thickness: 1),
@@ -255,6 +340,27 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                                         ],
                                       ),
                                     ),
+                                    if (answer.userName == currentUser?.displayName)
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        iconSize: 17,
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return ForumEditAnswer(answer: answer,
+                                                questionId: widget.question.id!, );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    if (answer.userName == currentUser?.displayName)
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        iconSize: 17,
+                                        onPressed: () => _deleteAnswer(context, answer),
+                                      )
                                   ],
                                 ),
                               ),
@@ -272,5 +378,126 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
 
   String _formatDate(DateTime date) {
     return "${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+  }
+}
+
+class ForumQuestionEditDialog extends StatefulWidget {
+  final ForumQuestion question;
+  final Function(ForumQuestion) onSave;
+  final VoidCallback? onDelete;
+
+  const ForumQuestionEditDialog({
+    super.key,
+    required this.question,
+    required this.onSave,
+    this.onDelete,
+  });
+
+  @override
+  State<ForumQuestionEditDialog> createState() =>
+      _ForumQuestionEditDialogState();
+}
+
+class _ForumQuestionEditDialogState extends State<ForumQuestionEditDialog> {
+  late TextEditingController _questionTitleController;
+  late TextEditingController _questionDescriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _questionTitleController =
+        TextEditingController(text: widget.question.title);
+    _questionDescriptionController = TextEditingController(
+        text: widget.question.description);
+  }
+
+  @override
+  void dispose() {
+    _questionTitleController.dispose();
+    _questionDescriptionController.dispose();
+    super.dispose();
+  }
+
+  void _saveChanges(BuildContext context) async {
+    final updatedTitle = _questionTitleController.text.trim();
+    final updatedDescription = _questionDescriptionController.text.trim();
+
+    final updatedQuestion = widget.question.copyWith(
+      title: updatedTitle,
+      description: updatedDescription,
+    );
+    try {
+      await Provider.of<ForumQuestionViewModel>(context, listen: false)
+          .updateQuestion(updatedQuestion);
+      if (mounted) {
+        //Navigator.pop(context); // Go back to the detail screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Question updated successfully!')),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update question: $error')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //final colorScheme = Theme.of(context).colorScheme;
+    return AlertDialog(
+      title: const Text('Edit Question'),
+      //backgroundColor: colorScheme.primaryContainer,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _questionTitleController,
+              decoration: const InputDecoration(
+                labelText: 'Question Title',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _questionDescriptionController,
+              decoration: const InputDecoration(
+                labelText: 'Question Description',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 5,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); // Cancel
+          },
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            final updatedQuestion = ForumQuestion(
+            id: widget.question.id,
+            title: _questionTitleController.text,
+            description: _questionDescriptionController.text,
+            createdAt: widget.question.createdAt,
+            userName: widget.question.userName,
+            userPhotoUrl: widget.question.userPhotoUrl,
+            answerCount: widget.question.answerCount,
+            );
+            widget.onSave(updatedQuestion);
+            _saveChanges(context);
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    );
   }
 }
