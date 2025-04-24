@@ -4,11 +4,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:focusly/model/forum_question_model.dart';
 
 class ForumQuestionViewModel extends ChangeNotifier {
-  final List<ForumQuestion> _questions = [];
+  //final List<ForumQuestion> _questions = []; // Remove _questions
   DatabaseReference? _databaseReference;
   bool _isInitialized = false;
 
-  List<ForumQuestion> get questions => _questions;
+  //List<ForumQuestion> get questions => _questions; // Remove getter for _questions
 
   ForumQuestionViewModel() {
     _initialize();
@@ -18,36 +18,29 @@ class ForumQuestionViewModel extends ChangeNotifier {
     if (_isInitialized) return;
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      _databaseReference = FirebaseDatabase.instance
-          .ref()
-          .child(user.uid)
-          .child("forum_questions");
+      _databaseReference = FirebaseDatabase.instance.ref().child("forum_questions"); // Use the main node
       await _loadQuestions();
       _isInitialized = true;
     }
   }
 
   Future<void> addQuestion(ForumQuestion question) async {
-    final ref = FirebaseDatabase.instance.ref().child("forum_questions");
-    final newQuestionRef = ref.push();
-    final questionID = newQuestionRef.key!;
-    final questionWithID = question.copyWith(id: questionID);
-
-    await newQuestionRef.set(questionWithID.toJson());
-
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userRef = FirebaseDatabase.instance
-          .ref()
-          .child(user.uid)
-          .child("forum_questions")
-          .child(questionID);
-      await userRef.set(questionWithID.toJson());
+    if (_databaseReference == null) {
+      throw Exception('Database reference not initialized');
     }
 
-    _questions.add(questionWithID);
-    _allQuestions.insert(0, questionWithID);
-    notifyListeners();
+    final newQuestionRef = _databaseReference!.push();
+    final questionId = newQuestionRef.key!;
+    final questionWithId = question.copyWith(id: questionId);
+
+    try {
+      await newQuestionRef.set(questionWithId.toJson());
+      _allQuestions.insert(0, questionWithId); // Add to _allQuestions
+      notifyListeners();
+    } catch (error) {
+      print("Error adding question: $error");
+      rethrow;(); // Important: rethrow the error
+    }
   }
 
   Future<void> _loadQuestions() async {
@@ -58,22 +51,25 @@ class ForumQuestionViewModel extends ChangeNotifier {
       final event = await _databaseReference!.once();
       final data = event.snapshot.value;
       if (data != null) {
-        _questions.clear();
-        final questionsMap = Map<String, dynamic>.from(data as Map);
-        questionsMap.forEach((key, value) {
-          try {
-            if (value is Map) {
-              final questionData = Map<String, dynamic>.from(value);
-              questionData['id'] = key;
-              _questions.add(ForumQuestion.fromJson(questionData));
+        _allQuestions.clear(); // Clear the list
+        if (data is Map) {
+          data.forEach((key, value) {
+            try {
+              if (value is Map) {
+                final questionData = Map<String, dynamic>.from(value);
+                questionData['id'] = key;
+                _allQuestions.add(ForumQuestion.fromJson(questionData)); // Load all questions
+              }
+            } catch (e) {
+              print('Error parsing question $key: $e');
             }
-          } catch (e) {
-            print('Error parsing question $key: $e');
-          }
-        });
+          });
+        }
+        _allQuestions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       }
       notifyListeners();
     } catch (e) {
+      print('Error loading questions: $e');
       throw Exception('Error loading questions: $e');
     }
   }
@@ -84,16 +80,13 @@ class ForumQuestionViewModel extends ChangeNotifier {
       _allQuestions[index] = _allQuestions[index].copyWith(
         answerCount: _allQuestions[index].answerCount + 1,
       );
+      if (_databaseReference != null) {
+        _databaseReference!.child(questionId).update({
+          'answerCount': _allQuestions[index].answerCount,
+        });
+      }
+      notifyListeners();
     }
-
-    final myIndex = _questions.indexWhere((q) => q.id == questionId);
-    if (myIndex != -1) {
-      _questions[myIndex] = _questions[myIndex].copyWith(
-        answerCount: _questions[myIndex].answerCount + 1,
-      );
-    }
-
-    notifyListeners();
   }
 
   final List<ForumQuestion> _allQuestions = [];
@@ -101,28 +94,66 @@ class ForumQuestionViewModel extends ChangeNotifier {
 
   Future<void> loadAllQuestions() async {
     final ref = FirebaseDatabase.instance.ref().child("forum_questions");
-
     try {
       final event = await ref.once();
       final data = event.snapshot.value;
 
       if (data != null) {
         _allQuestions.clear();
-        final questionsMap = Map<String, dynamic>.from(data as Map);
-        questionsMap.forEach((key, value) {
-          if (value is Map) {
-            final questionData = Map<String, dynamic>.from(value);
-            questionData['id'] = key;
-            _allQuestions.add(ForumQuestion.fromJson(questionData));
-          }
-        });
+        if (data is Map) {
+          data.forEach((key, value) {
+            if (value is Map) {
+              final questionData = Map<String, dynamic>.from(value);
+              questionData['id'] = key;
+              _allQuestions.add(ForumQuestion.fromJson(questionData));
+            }
+          });
+        }
 
         _allQuestions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       }
       notifyListeners();
     } catch (e) {
       print("Error loading all questions: $e");
+      rethrow;();
     }
   }
 
+  Future<void> updateQuestion(ForumQuestion updatedQuestion) async {
+    if (_databaseReference == null) {
+      throw Exception('Database reference not initialized');
+    }
+    try {
+      // Update in the database
+      await _databaseReference!.child(updatedQuestion.id!).update(updatedQuestion.toJson());
+
+      // Update in the local list
+      final indexAll = _allQuestions.indexWhere((q) => q.id == updatedQuestion.id);
+      if (indexAll != -1) {
+        _allQuestions[indexAll] = updatedQuestion;
+      }
+      notifyListeners();
+    } catch (error) {
+      print('Error updating question: $error');
+      rethrow;(); // Re-throw the error
+    }
+  }
+
+  Future<void> deleteQuestion(String questionId) async {
+    if (_databaseReference == null) {
+      throw Exception('Database reference not initialized');
+    }
+    try {
+      // Delete from the database
+      await _databaseReference!.child(questionId).remove();
+
+      // Remove from the local list
+      _allQuestions.removeWhere((q) => q.id == questionId);
+      notifyListeners();
+    } catch (error) {
+      print('Error deleting question: $error');
+      rethrow;();
+    }
+  }
 }
+
