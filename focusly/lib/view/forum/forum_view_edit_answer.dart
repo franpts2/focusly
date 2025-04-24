@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focusly/model/forum_answer_model.dart';
 import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:focusly/model/forum_question_model.dart';
-import 'package:focusly/viewmodel/forum_question_viewmodel.dart';
 
 class ForumEditAnswer extends StatefulWidget {
   final ForumAnswer answer;
@@ -39,9 +36,9 @@ class _ForumEditAnswerState extends State<ForumEditAnswer> {
     );
     try {
       await Provider.of<ForumAnswerViewModel>(context, listen: false)
-          .updateAnswer(widget.questionId, updatedAnswer); // Use correct view model
+          .updateAnswer(widget.questionId, updatedAnswer);
       if (mounted) {
-        Navigator.pop(context); // Go back to the detail screen
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Answer updated successfully!')),
         );
@@ -54,7 +51,6 @@ class _ForumEditAnswerState extends State<ForumEditAnswer> {
       }
     }
   }
-
 
 
   @override
