@@ -86,6 +86,21 @@ class ForumQuestionViewModel extends ChangeNotifier {
     }
   }
 
+  void decrementAnswerCount(String questionId) {
+    final index = _allQuestions.indexWhere((q) => q.id == questionId);
+    if (index != -1) {
+      _allQuestions[index] = _allQuestions[index].copyWith(
+        answerCount: _allQuestions[index].answerCount - 1,
+      );
+      if (_databaseReference != null) {
+        _databaseReference!.child(questionId).update({
+          'answerCount': _allQuestions[index].answerCount,
+        });
+      }
+      notifyListeners();
+    }
+  }
+
   final List<ForumQuestion> _allQuestions = [];
   List<ForumQuestion> get allQuestions => _allQuestions;
 

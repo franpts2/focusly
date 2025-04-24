@@ -90,7 +90,7 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
   void _deleteAnswer(BuildContext context, answer) async {
     try {
       await Provider.of<ForumAnswerViewModel>(context, listen: false)
-          .deleteAnswer(widget.question.id!, answer.id);
+          .deleteAnswer(widget.question.id!, answer.id, context: context);
       if (mounted) {
         //Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
