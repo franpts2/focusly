@@ -6,16 +6,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../services/authentication_service.dart';
 
-class ForumAddQuestion extends StatelessWidget {
+class ForumAddQuestion extends StatefulWidget {
   const ForumAddQuestion({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
+  _ForumAddQuestionState createState() => _ForumAddQuestionState();
+}
 
-    void addQuestion() async {
+class _ForumAddQuestionState extends State<ForumAddQuestion> {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  String? titleError;
+  String? descriptionError;
+
+  void publishQuestion() async {
+    setState(() {
+      titleError = titleController.text.trim().isEmpty ? 'Title is required' : null;
+      descriptionError = descriptionController.text.trim().isEmpty ? 'Description is required' : null;
+    });
+
+    if (titleError == null && descriptionError == null) {
       final currentUser = FirebaseAuth.instance.currentUser;
 
       // Retrieve the username
@@ -23,8 +33,8 @@ class ForumAddQuestion extends StatelessWidget {
       final userName = await authService.getUserName() ?? 'Anonymous';
 
       final question = ForumQuestion(
-        title: titleController.text,
-        description: descriptionController.text,
+        title: titleController.text.trim(),
+        description: descriptionController.text.trim(),
         createdAt: DateTime.now(),
         answerCount: 0,
         userName: userName, // Use the retrieved username
@@ -39,6 +49,11 @@ class ForumAddQuestion extends StatelessWidget {
       await questionViewModel.addQuestion(question);
       Navigator.pop(context);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Dialog(
       insetPadding: const EdgeInsets.all(20),
@@ -55,19 +70,37 @@ class ForumAddQuestion extends StatelessWidget {
             const SizedBox(height: 16),
             TextField(
               controller: titleController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Title',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                errorText: titleError,
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: descriptionController,
               maxLines: 4,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Description',
                 alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                errorText: descriptionError,
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -82,7 +115,7 @@ class ForumAddQuestion extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: addQuestion,
+                  onPressed: publishQuestion,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(
