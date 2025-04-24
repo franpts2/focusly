@@ -4,9 +4,7 @@ import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/forum_question_model.dart';
 import 'package:focusly/model/forum_answer_model.dart';
-import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:focusly/view/forum/forum_view_add_answer.dart';
-import 'package:focusly/view/forum/forum_view_edit_question.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../viewmodel/forum_question_viewmodel.dart';
@@ -194,7 +192,6 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
             const SizedBox(height: 16),
             const Divider(thickness: 1),
             
-            // Answers Count and Add Answer Button
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -227,7 +224,6 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                             answer
                           );
                           context.read<ForumQuestionViewModel>().incrementAnswerCount(widget.question.id!);
-                          // Refresh the question to update answer count
                           if (mounted) {
                             Navigator.pop(context);
                           }
@@ -329,14 +325,6 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                                               style: const TextStyle(fontSize: 14),
                                             ),
                                           ),
-                                          /*const SizedBox(height: 4),
-                                          Text(
-                                            _formatDate(answer.createdAt),
-                                            style: const TextStyle(
-                                              fontSize: 12, 
-                                              color: Colors.grey
-                                            ),
-                                          ),*/
                                         ],
                                       ),
                                     ),
@@ -349,8 +337,10 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                                             context: context,
                                             barrierDismissible: false,
                                             builder: (BuildContext context) {
-                                              return ForumEditAnswer(answer: answer,
-                                                questionId: widget.question.id!, );
+                                              return ForumEditAnswer(
+                                                answer: answer,
+                                                questionId: widget.question.id!,
+                                              );
                                             },
                                           );
                                         },
@@ -430,7 +420,7 @@ class _ForumQuestionEditDialogState extends State<ForumQuestionEditDialog> {
       await Provider.of<ForumQuestionViewModel>(context, listen: false)
           .updateQuestion(updatedQuestion);
       if (mounted) {
-        //Navigator.pop(context); // Go back to the detail screen
+        //Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Question updated successfully!')),
         );
@@ -446,10 +436,8 @@ class _ForumQuestionEditDialogState extends State<ForumQuestionEditDialog> {
 
   @override
   Widget build(BuildContext context) {
-    //final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
       title: const Text('Edit Question'),
-      //backgroundColor: colorScheme.primaryContainer,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
