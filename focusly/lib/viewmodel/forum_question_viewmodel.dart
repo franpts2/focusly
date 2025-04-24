@@ -93,6 +93,12 @@ class ForumQuestionViewModel extends ChangeNotifier {
       );
     }
 
+    if (_databaseReference != null) {
+      _databaseReference!.child(questionId).update({
+        'answerCount': _allQuestions[index].answerCount,
+      });
+    }
+
     notifyListeners();
   }
 
@@ -125,7 +131,7 @@ class ForumQuestionViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateQuestion(ForumQuestion updatedQuestion) async {
+  /*Future<void> updateQuestion(ForumQuestion updatedQuestion) async {
     try {
       final indexAll = _allQuestions.indexWhere((q) => q.id == updatedQuestion.id);
       if (indexAll != -1) {
@@ -150,6 +156,44 @@ class ForumQuestionViewModel extends ChangeNotifier {
     } catch (e) {
       print('Error deleting question: $e');
       throw Exception('Failed to delete question');
+    }
+  }*/
+
+  Future<void> updateQuestion(ForumQuestion updatedQuestion) async {
+    if (_databaseReference == null) {
+      throw Exception('Database reference not initialized');
+    }
+    try {
+      await _databaseReference!.child(updatedQuestion.id!).update(updatedQuestion.toJson());
+
+      final indexAll = _allQuestions.indexWhere((q) => q.id == updatedQuestion.id);
+      if (indexAll != -1) {
+        _allQuestions[indexAll] = updatedQuestion;
+      }
+      final indexMy = _questions.indexWhere((q) => q.id == updatedQuestion.id);
+      if (indexMy != -1) {
+        _questions[indexMy] = updatedQuestion;
+      }
+      notifyListeners();
+    } catch (error) {
+      print('Error updating question: $error');
+      rethrow;();
+    }
+  }
+
+  Future<void> deleteQuestion(String questionId) async {
+    if (_databaseReference == null) {
+      throw Exception('Database reference not initialized');
+    }
+    try {
+      await _databaseReference!.child(questionId).remove();
+
+      _allQuestions.removeWhere((q) => q.id == questionId);
+      _questions.removeWhere((q) => q.id == questionId);
+      notifyListeners();
+    } catch (error) {
+      print('Error deleting question: $error');
+      rethrow;();
     }
   }
 
