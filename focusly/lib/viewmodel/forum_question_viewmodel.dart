@@ -4,11 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:focusly/model/forum_question_model.dart';
 
 class ForumQuestionViewModel extends ChangeNotifier {
-  //final List<ForumQuestion> _questions = []; // Remove _questions
   DatabaseReference? _databaseReference;
   bool _isInitialized = false;
-
-  //List<ForumQuestion> get questions => _questions; // Remove getter for _questions
 
   ForumQuestionViewModel() {
     _initialize();
@@ -18,7 +15,7 @@ class ForumQuestionViewModel extends ChangeNotifier {
     if (_isInitialized) return;
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      _databaseReference = FirebaseDatabase.instance.ref().child("forum_questions"); // Use the main node
+      _databaseReference = FirebaseDatabase.instance.ref().child("forum_questions");
       await _loadQuestions();
       _isInitialized = true;
     }
@@ -35,11 +32,11 @@ class ForumQuestionViewModel extends ChangeNotifier {
 
     try {
       await newQuestionRef.set(questionWithId.toJson());
-      _allQuestions.insert(0, questionWithId); // Add to _allQuestions
+      _allQuestions.insert(0, questionWithId);
       notifyListeners();
     } catch (error) {
       print("Error adding question: $error");
-      rethrow;(); // Important: rethrow the error
+      rethrow;();
     }
   }
 
@@ -58,7 +55,7 @@ class ForumQuestionViewModel extends ChangeNotifier {
               if (value is Map) {
                 final questionData = Map<String, dynamic>.from(value);
                 questionData['id'] = key;
-                _allQuestions.add(ForumQuestion.fromJson(questionData)); // Load all questions
+                _allQuestions.add(ForumQuestion.fromJson(questionData));
               }
             } catch (e) {
               print('Error parsing question $key: $e');
@@ -124,10 +121,8 @@ class ForumQuestionViewModel extends ChangeNotifier {
       throw Exception('Database reference not initialized');
     }
     try {
-      // Update in the database
       await _databaseReference!.child(updatedQuestion.id!).update(updatedQuestion.toJson());
 
-      // Update in the local list
       final indexAll = _allQuestions.indexWhere((q) => q.id == updatedQuestion.id);
       if (indexAll != -1) {
         _allQuestions[indexAll] = updatedQuestion;
@@ -135,7 +130,7 @@ class ForumQuestionViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('Error updating question: $error');
-      rethrow;(); // Re-throw the error
+      rethrow;();
     }
   }
 
@@ -144,10 +139,8 @@ class ForumQuestionViewModel extends ChangeNotifier {
       throw Exception('Database reference not initialized');
     }
     try {
-      // Delete from the database
       await _databaseReference!.child(questionId).remove();
 
-      // Remove from the local list
       _allQuestions.removeWhere((q) => q.id == questionId);
       notifyListeners();
     } catch (error) {
