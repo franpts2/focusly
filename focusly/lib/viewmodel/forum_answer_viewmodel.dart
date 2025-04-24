@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:focusly/model/forum_answer_model.dart';
+import 'package:focusly/viewmodel/forum_question_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 
 class ForumAnswerViewModel extends ChangeNotifier {
   final Map<String, List<ForumAnswer>> _answersByQuestion = {}; // Maps questionID to its answers
@@ -140,7 +144,7 @@ class ForumAnswerViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteAnswer(String questionID, String answerId) async {
+  Future<void> deleteAnswer(String questionID, String answerId, {BuildContext? context}) async {
     try {
       final answerRef = FirebaseDatabase.instance
           .ref()
@@ -174,6 +178,9 @@ class ForumAnswerViewModel extends ChangeNotifier {
       if (_answersByQuestion.containsKey(questionID)) {
         _answersByQuestion[questionID]!.removeWhere((answer) => answer.id == answerId);
         notifyListeners();
+      }
+      if (context != null) {
+        Provider.of<ForumQuestionViewModel>(context, listen: false).decrementAnswerCount(questionID);
       }
     } catch (e) {
       print('Error deleting answer: $e');
