@@ -48,7 +48,6 @@ class ForumQuestionViewModel extends ChangeNotifier {
     } catch (error) {
       print("Error adding question: $error");
       rethrow;
-      ();
     }
   }
 
@@ -163,7 +162,6 @@ class ForumQuestionViewModel extends ChangeNotifier {
     } catch (e) {
       print("Error loading all questions: $e");
       rethrow;
-      ();
     }
   }
 
@@ -186,7 +184,6 @@ class ForumQuestionViewModel extends ChangeNotifier {
     } catch (error) {
       print('Error updating question: $error');
       rethrow;
-      ();
     }
   }
 
@@ -202,7 +199,6 @@ class ForumQuestionViewModel extends ChangeNotifier {
     } catch (error) {
       print('Error deleting question: $error');
       rethrow;
-      ();
     }
   }
 }
