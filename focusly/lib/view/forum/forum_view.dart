@@ -12,8 +12,11 @@ class ForumView extends StatefulWidget {
   State<ForumView> createState() => _ForumViewState();
 }
 
-class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMixin {
+class _ForumViewState extends State<ForumView>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final TextEditingController _searchController = TextEditingController();
+  bool _showSearchBar = false;
 
   @override
   void initState() {
@@ -28,6 +31,7 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -36,17 +40,58 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
     final colorScheme = Theme.of(context).colorScheme;
     final allQuestions = context.watch<ForumQuestionViewModel>().allQuestions;
     final user = FirebaseAuth.instance.currentUser;
+    final forumViewModel = context.read<ForumQuestionViewModel>();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Forum"),
+        title:
+            _showSearchBar
+                ? Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceVariant,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: 'Search questions by title...',
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                        color: colorScheme.onSurface.withOpacity(0.6),
+                      ),
+                      prefixIcon: const Icon(Icons.search, size: 20),
+                    ),
+                    style: TextStyle(color: colorScheme.onSurface),
+                    onChanged: (value) {
+                      forumViewModel.searchQuestions(value);
+                    },
+                  ),
+                )
+                : const Text("Forum"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(_showSearchBar ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                _showSearchBar = !_showSearchBar;
+                if (!_showSearchBar) {
+                  _searchController.clear();
+                  forumViewModel.clearSearch();
+                }
+              });
+            },
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: "New"),
-            Tab(text: "My questions"),
-          ],
+          tabs: const [Tab(text: "New"), Tab(text: "My questions")],
         ),
       ),
       body: TabBarView(
@@ -56,113 +101,139 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
           allQuestions.isEmpty
               ? const Center(child: Text("No questions found"))
               : ListView.builder(
-            itemCount: allQuestions.length,
-            itemBuilder: (context, index) {
-              final question = allQuestions[index];
-              return Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ForumQuestionDetail(question: question),
+                itemCount: allQuestions.length,
+                itemBuilder: (context, index) {
+                  final question = allQuestions[index];
+                  return Column(
+                    children: [
+                      ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) =>
+                                      ForumQuestionDetail(question: question),
+                            ),
+                          );
+                        },
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              question.userPhotoUrl != null
+                                  ? NetworkImage(question.userPhotoUrl!)
+                                  : null,
+                          backgroundColor: colorScheme.primaryContainer,
+                          child:
+                              question.userPhotoUrl == null
+                                  ? const Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                  )
+                                  : null,
                         ),
-                      );
-                    },
-                    leading: CircleAvatar(
-                      backgroundImage: question.userPhotoUrl != null
-                          ? NetworkImage(question.userPhotoUrl!)
-                          : null,
-                      backgroundColor: colorScheme.primaryContainer,
-                      child: question.userPhotoUrl == null
-                          ? const Icon(Icons.person, color: Colors.white)
-                          : null,
-                    ),
-                    title: Text(
-                      question.title,
-                      style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          question.description.length > 50
-                              ? '${question.description.substring(0, 0)}...'
-                              : question.description,
+                        title: Text(
+                          question.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.primary,
+                          ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${question.userName ?? "username"} • ${question.answerCount} answers',
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              question.description.length > 50
+                                  ? '${question.description.substring(0, 50)}...'
+                                  : question.description,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${question.userName ?? "username"} • ${question.answerCount} answers',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    isThreeLine: true,
-                  ),
-                  const Divider(),
-                ],
-              );
-            },
-          ),
+                        isThreeLine: true,
+                      ),
+                      const Divider(),
+                    ],
+                  );
+                },
+              ),
           // "My Questions" Tab - Displays questions asked by the current user
           allQuestions.isEmpty
               ? const Center(child: Text("No questions found"))
               : ListView.builder(
-            itemCount: allQuestions.length,
-            itemBuilder: (context, index) {
-              final question = allQuestions[index];
-              // Filter questions for the current user.
-              if (question.userName == user?.displayName) {
-                return Column(
-                  children: [
-                    ListTile(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ForumQuestionDetail(question: question),
+                itemCount: allQuestions.length,
+                itemBuilder: (context, index) {
+                  final question = allQuestions[index];
+                  // Filter questions for the current user.
+                  if (question.userName == user?.displayName) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) =>
+                                        ForumQuestionDetail(question: question),
+                              ),
+                            );
+                          },
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                question.userPhotoUrl != null
+                                    ? NetworkImage(question.userPhotoUrl!)
+                                    : null,
+                            backgroundColor: colorScheme.primaryContainer,
+                            child:
+                                question.userPhotoUrl == null
+                                    ? const Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                    )
+                                    : null,
                           ),
-                        );
-                      },
-                      leading: CircleAvatar(
-                        backgroundImage: question.userPhotoUrl != null
-                            ? NetworkImage(question.userPhotoUrl!)
-                            : null,
-                        backgroundColor: colorScheme.primaryContainer,
-                        child: question.userPhotoUrl == null
-                            ? const Icon(Icons.person, color: Colors.white)
-                            : null,
-                      ),
-                      title: Text(
-                        question.title,
-                        style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.primary),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            question.description.length > 50
-                                ? '${question.description.substring(0, 50)}...'
-                                : question.description,
+                          title: Text(
+                            question.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.primary,
+                            ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${question.userName ?? "username"} • ${question.answerCount} answers',
-                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                question.description.length > 50
+                                    ? '${question.description.substring(0, 50)}...'
+                                    : question.description,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${question.userName ?? "username"} • ${question.answerCount} answers',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      isThreeLine: true,
-                    ),
-                    const Divider(),
-                  ],
-                );
-              } else {
-                return const SizedBox.shrink(); // Return an empty widget for other users' questions
-              }
-            },
-          ),
+                          isThreeLine: true,
+                        ),
+                        const Divider(),
+                      ],
+                    );
+                  } else {
+                    return const SizedBox.shrink(); // Return an empty widget for other users' questions
+                  }
+                },
+              ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -179,4 +250,3 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
     );
   }
 }
-
