@@ -56,7 +56,7 @@ class _ForumViewState extends State<ForumView>
                     controller: _searchController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: 'Search questions by title...',
+                      hintText: 'Search a question',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 10,
