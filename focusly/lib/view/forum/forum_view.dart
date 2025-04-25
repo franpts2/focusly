@@ -58,7 +58,7 @@ class _ForumViewState extends State<ForumView>
             child: Container(
               height: 50,
               decoration: BoxDecoration(
-                color: colorScheme.surfaceVariant,
+                color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(25),
               ),
               child: TextField(
