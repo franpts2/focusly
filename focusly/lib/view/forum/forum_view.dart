@@ -56,10 +56,10 @@ class _ForumViewState extends State<ForumView>
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Container(
-              height: 45,
+              height: 50,
               decoration: BoxDecoration(
                 color: colorScheme.surfaceVariant,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(25),
               ),
               child: TextField(
                 controller: _searchController,
@@ -74,8 +74,8 @@ class _ForumViewState extends State<ForumView>
                   ),
                   prefixIcon: const Icon(Icons.search, size: 20),
                   prefixIconConstraints: const BoxConstraints(
-                    minWidth: 45,
-                    minHeight: 45,
+                    minWidth: 50,
+                    minHeight: 50,
                   ),
                   suffixIcon:
                       _searchController.text.isEmpty
@@ -88,8 +88,8 @@ class _ForumViewState extends State<ForumView>
                             },
                           ),
                   suffixIconConstraints: const BoxConstraints(
-                    minWidth: 40,
-                    minHeight: 40,
+                    minWidth: 50,
+                    minHeight: 50,
                   ),
                 ),
                 style: TextStyle(color: colorScheme.onSurface),
