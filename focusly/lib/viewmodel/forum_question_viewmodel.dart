@@ -28,7 +28,10 @@ class ForumQuestionViewModel extends ChangeNotifier {
 
     final newQuestionRef = _databaseReference!.push();
     final questionId = newQuestionRef.key!;
-    final questionWithId = question.copyWith(id: questionId);
+    final questionWithId = question.copyWith(
+      id: questionId,
+      uid: FirebaseAuth.instance.currentUser?.uid, // Ensure userId is set here
+    );
 
     try {
       await newQuestionRef.set(questionWithId.toJson());

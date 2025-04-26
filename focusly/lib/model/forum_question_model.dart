@@ -6,6 +6,7 @@ class ForumQuestion {
   final int answerCount;
   final String userName; // New field
   final String? userPhotoUrl; // Optional field
+  final String? uid; 
 
   ForumQuestion({
     this.id,
@@ -15,6 +16,7 @@ class ForumQuestion {
     this.answerCount = 0,
     required this.userName, // Make userName required
     this.userPhotoUrl,
+    this.uid,
   });
 
   ForumQuestion copyWith({
@@ -25,6 +27,7 @@ class ForumQuestion {
     int? answerCount,
     String? userName,
     String? userPhotoUrl,
+    String? uid,
   }) {
     return ForumQuestion(
       id: id ?? this.id,
@@ -34,6 +37,7 @@ class ForumQuestion {
       answerCount: answerCount ?? this.answerCount,
       userName: userName ?? this.userName,
       userPhotoUrl: userPhotoUrl ?? this.userPhotoUrl,
+      uid: uid ?? this.uid,
     );
   }
 
@@ -46,6 +50,7 @@ class ForumQuestion {
       'answerCount': answerCount,
       'userName': userName, // Save userName
       'userPhotoUrl': userPhotoUrl, // Save userPhotoUrl
+      "userId": uid, //Save user id
     };
   }
 
@@ -60,6 +65,7 @@ class ForumQuestion {
       answerCount: json['answerCount'] ?? 0, // Default to 0 if null
       userName: json['userName'] ?? 'Anonymous', // Default to 'Anonymous' if null
       userPhotoUrl: json['userPhotoUrl'], // Allow null for optional fields
+      uid: json['userId'], // Allow null for optional fields
     );
   }
 }
