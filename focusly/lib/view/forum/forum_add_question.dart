@@ -39,6 +39,7 @@ class _ForumAddQuestionState extends State<ForumAddQuestion> {
         answerCount: 0,
         userName: userName, // Use the retrieved username
         userPhotoUrl: currentUser?.photoURL,
+        uid: currentUser?.uid ?? '',
       );
 
       final questionViewModel = Provider.of<ForumQuestionViewModel>(
