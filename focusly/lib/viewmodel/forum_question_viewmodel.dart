@@ -122,9 +122,9 @@ class ForumQuestionViewModel extends ChangeNotifier {
       _filteredQuestions.clear(); // Clear the list first
       _filteredQuestions.addAll(
         _allQuestions
-            .where(
-              (question) =>
-                  question.title.toLowerCase().contains(query.toLowerCase()),
+            .where((question) =>
+            question.title.toLowerCase().contains(query.toLowerCase()) ||
+                question.userName.toLowerCase().contains(query.toLowerCase())
             )
             .toList(),
       );
