@@ -36,7 +36,7 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
     final colorScheme = Theme.of(context).colorScheme;
     final allQuestions = context.watch<ForumQuestionViewModel>().allQuestions;
     final user = FirebaseAuth.instance.currentUser;
-
+    final myQuestions = allQuestions.where((q) => q.uid == user?.uid).toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Forum"),
@@ -113,7 +113,7 @@ class _ForumViewState extends State<ForumView> with SingleTickerProviderStateMix
             itemBuilder: (context, index) {
               final question = allQuestions[index];
               // Filter questions for the current user.
-              if (question.userName == user?.displayName) {
+              if (question.uid == user?.uid) {
                 return Column(
                   children: [
                     ListTile(

@@ -219,13 +219,22 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                             questionID: widget.question.id!,
                           );
 
-                          await answerViewModel.addAnswer(
-                            widget.question.id!,
-                            answer
-                          );
-                          context.read<ForumQuestionViewModel>().incrementAnswerCount(widget.question.id!);
-                          if (mounted) {
-                            Navigator.pop(context);
+                          try {
+                            await answerViewModel.addAnswer(widget.question.id!, answer);
+                            context.read<ForumQuestionViewModel>().incrementAnswerCount(widget.question.id!);
+
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Answer added successfully!')),
+                              );
+                              Navigator.pop(context); // Close the dialog
+                            }
+                          } catch (error) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to add answer: $error')),
+                              );
+                            }
                           }
                         },
                       ),
