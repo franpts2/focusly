@@ -40,6 +40,7 @@ class _ForumViewState extends State<ForumView>
     final allQuestions = context.watch<ForumQuestionViewModel>().allQuestions;
     final user = FirebaseAuth.instance.currentUser;
     final forumViewModel = context.read<ForumQuestionViewModel>();
+    final myQuestions = allQuestions.where((q) => q.uid == user?.uid).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -72,6 +73,7 @@ class _ForumViewState extends State<ForumView>
                   hintStyle: TextStyle(
                     color: colorScheme.onSurface.withOpacity(0.6),
                   ),
+
                   prefixIcon: const Icon(Icons.search, size: 20),
                   prefixIconConstraints: const BoxConstraints(
                     minWidth: 50,
