@@ -704,6 +704,21 @@ Improvements to implement next Sprint:
 - Study better the topic we are about to implement so that we can divide the tasks more appropriately
 
 ### Sprint 2
+**Beginning**
+<img src="images/scrumboard/sprint2_beginning.png">
+
+**End**
+<img src="images/scrumboard/sprint2_end.png">
+
+**Did well**: Good collaboration and task division among team members, which helped deliver both major features on time
+
+**Do differently**: Plan more time for backend/database integration when introducing new features
+
+**Puzzles**: Deciding how to structure forum posts and replies in the database took longer than expected
+
+
+Improvements to implement next Sprint:
+- Plan more effectively to avoid last-minute work on the final day
 
 ### Sprint 3
 
