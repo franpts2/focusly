@@ -7,6 +7,15 @@ class ForumQuestionViewModel extends ChangeNotifier {
   DatabaseReference? _databaseReference;
   bool _isInitialized = false;
 
+  final List<ForumQuestion> _allQuestions = [];
+  final List<ForumQuestion> _filteredQuestions = [];
+  String _searchQuery = '';
+
+  List<ForumQuestion> get allQuestions =>
+      _filteredQuestions.isEmpty && _searchQuery.isEmpty
+          ? _allQuestions
+          : _filteredQuestions;
+
   ForumQuestionViewModel() {
     _initialize();
   }
@@ -15,7 +24,9 @@ class ForumQuestionViewModel extends ChangeNotifier {
     if (_isInitialized) return;
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      _databaseReference = FirebaseDatabase.instance.ref().child("forum_questions");
+      _databaseReference = FirebaseDatabase.instance.ref().child(
+        "forum_questions",
+      );
       await _loadQuestions();
       _isInitialized = true;
     }
@@ -39,14 +50,16 @@ class ForumQuestionViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print("Error adding question: $error");
-      rethrow;();
+      rethrow;
     }
   }
 
   Future<void> _loadQuestions() async {
     try {
       if (_databaseReference == null) {
-        throw Exception('Cannot load questions: Database reference not initialized');
+        throw Exception(
+          'Cannot load questions: Database reference not initialized',
+        );
       }
       final event = await _databaseReference!.once();
       final data = event.snapshot.value;
@@ -104,8 +117,29 @@ class ForumQuestionViewModel extends ChangeNotifier {
     }
   }
 
-  final List<ForumQuestion> _allQuestions = [];
-  List<ForumQuestion> get allQuestions => _allQuestions;
+  void searchQuestions(String query) {
+    _searchQuery = query;
+    if (query.isEmpty) {
+      _filteredQuestions.clear();
+    } else {
+      _filteredQuestions.clear(); // Clear the list first
+      _filteredQuestions.addAll(
+        _allQuestions
+            .where((question) =>
+            question.title.toLowerCase().contains(query.toLowerCase()) ||
+                question.userName.toLowerCase().contains(query.toLowerCase())
+            )
+            .toList(),
+      );
+    }
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    _searchQuery = '';
+    _filteredQuestions.clear();
+    notifyListeners();
+  }
 
   Future<void> loadAllQuestions() async {
     final ref = FirebaseDatabase.instance.ref().child("forum_questions");
@@ -130,7 +164,7 @@ class ForumQuestionViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print("Error loading all questions: $e");
-      rethrow;();
+      rethrow;
     }
   }
 
@@ -139,16 +173,20 @@ class ForumQuestionViewModel extends ChangeNotifier {
       throw Exception('Database reference not initialized');
     }
     try {
-      await _databaseReference!.child(updatedQuestion.id!).update(updatedQuestion.toJson());
+      await _databaseReference!
+          .child(updatedQuestion.id!)
+          .update(updatedQuestion.toJson());
 
-      final indexAll = _allQuestions.indexWhere((q) => q.id == updatedQuestion.id);
+      final indexAll = _allQuestions.indexWhere(
+        (q) => q.id == updatedQuestion.id,
+      );
       if (indexAll != -1) {
         _allQuestions[indexAll] = updatedQuestion;
       }
       notifyListeners();
     } catch (error) {
       print('Error updating question: $error');
-      rethrow;();
+      rethrow;
     }
   }
 
@@ -163,8 +201,7 @@ class ForumQuestionViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('Error deleting question: $error');
-      rethrow;();
+      rethrow;
     }
   }
 }
-
