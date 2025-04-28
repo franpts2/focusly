@@ -653,11 +653,11 @@ Implemented Features
 ---
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="images/vertical prototype/sprint1/sprint1_sign_in.gif" alt="Image 1" width="32%" />
-  <img src="images/vertical prototype/sprint1/sprint1_flashcards.gif" alt="Image 2" width="32%" />
-  <img src="images/vertical prototype/sprint1/sprint1_quiz.gif" alt="Image 3" width="32%" />
+  <img src="images/vertical prototype/sprint1/sign_in.gif" alt="Image 1" width="32%" />
+  <img src="images/vertical prototype/sprint1/flashcards.gif" alt="Image 2" width="32%" />
+  <img src="images/vertical prototype/sprint1/quiz.gif" alt="Image 3" width="32%" />
 </div>
-<br><br>
+<br>
 
 ---
 <div style="display: flex; justify-content: space-between;">
@@ -673,7 +673,7 @@ Implemented Features
   <img src="images/vertical prototype/sprint2/search.gif" alt="Image 4" width="24%" />
 </div>
 <br><br>
-![alt text](search.gif) ![alt text](edit_question.gif) ![alt text](post_edit_answer.gif) ![alt text](post_a_question.gif)
+
 
 
 ## Project management
