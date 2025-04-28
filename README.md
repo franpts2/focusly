@@ -611,9 +611,11 @@ Implemented Features
 
     - UI consistency with mockups and active mode highlighting.
 
-- **User Authentication** (Sprint 1)
+- **User Authentication** (Sprint 1 & 2)
 
     - Sign in with Google and Sign Out functionality.
+
+    - Email & password authentication (Create Account & Sign In pages).
 
     - Secure user data storage and retrieval.
 
@@ -622,26 +624,56 @@ Implemented Features
     - Creation of quizzes and flashcard decks, linked to the database.
 
     - Visualization of quizzes and flashcards for review.
+
+- **Quiz and Flashcard Editing** (Sprint 2)
+
+    - Modification of existing flashcards and quizzes via a dedicated edit page.
+
+    - Edit section in the Create page to view and select flashcards/quizzes for editing.
+
+    - Separate edit pages for modifying content after selection.
+
+- **Forum Feature** (Sprint 2)
+
+    - Users can post questions and answer existing ones.
+
+    - Search functionality to browse through questions.
 <br><br>
 
 **UI Snapshot**
 
 <div style="text-align: center;">
-    <img src="images/vertical%20prototype/verticalprototype_pomodoro.gif" alt="Pomodoro Timer" width="200"/>
+    <img src="images/vertical%20prototype/sprint0/verticalprototype_pomodoro.gif" alt="Pomodoro Timer" width="200"/>
 </div>
 
 <div style="text-align: center">
-    <img src="images/vertical%20prototype/pomodoro_notification.jpeg" width="250"/>
+    <img src="images/vertical%20prototype/sprint0/pomodoro_notification.jpeg" width="250"/>
 </div>
 
 ---
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="images/vertical prototype/sprint1_sign_in.gif" alt="Image 1" width="32%" />
-  <img src="images/vertical prototype/sprint1_flashcards.gif" alt="Image 2" width="32%" />
-  <img src="images/vertical prototype/sprint1_quiz.gif" alt="Image 3" width="32%" />
+  <img src="images/vertical prototype/sprint1/sprint1_sign_in.gif" alt="Image 1" width="32%" />
+  <img src="images/vertical prototype/sprint1/sprint1_flashcards.gif" alt="Image 2" width="32%" />
+  <img src="images/vertical prototype/sprint1/sprint1_quiz.gif" alt="Image 3" width="32%" />
 </div>
 <br><br>
+
+---
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/vertical prototype/sprint2/edit_quiz.gif" alt="Image 1" width="32%" />
+  <img src="images/vertical prototype/sprint2/edit_flashcard_deck.gif" alt="Image 2" width="32%" />
+  <img src="images/vertical prototype/sprint2/deleting_decks_quizzes.gif" alt="Image 3" width="32%" />
+</div>
+<br>
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/vertical prototype/sprint2/post_a_question.gif" alt="Image 1" width="24%" />
+  <img src="images/vertical prototype/sprint2/edit_question.gif" alt="Image 2" width="24%" />
+  <img src="images/vertical prototype/sprint2/post_edit_answer.gif" alt="Image 3" width="24%" />
+  <img src="images/vertical prototype/sprint2/search.gif" alt="Image 4" width="24%" />
+</div>
+<br><br>
+![alt text](search.gif) ![alt text](edit_question.gif) ![alt text](post_edit_answer.gif) ![alt text](post_a_question.gif)
 
 
 ## Project management
