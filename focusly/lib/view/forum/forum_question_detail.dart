@@ -26,7 +26,6 @@ class ForumQuestionDetail extends StatefulWidget {
 }
 
 class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
-  final _formKey = GlobalKey<FormState>();
   late ForumQuestion _question;
 
   @override
