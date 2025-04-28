@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Sprint 2] - April 28, 2025
 ### Added
 - Forum: users can post questions, answer existing ones, and search through questions
+- Flashcard and quiz editing: users can now edit existing flashcards and quizzes through dedicated edit pages accessible from the create section
 - Email and password authentication system (new Create Account and Sign In pages)
 
 ### Notes
