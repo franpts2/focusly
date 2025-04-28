@@ -127,31 +127,35 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundImage: widget.question.userPhotoUrl != null && 
-                          widget.question.userPhotoUrl!.isNotEmpty
-                          ? NetworkImage(widget.question.userPhotoUrl!)
-                          : null,
-                      backgroundColor: colorScheme.primaryContainer,
-                      child: (widget.question.userPhotoUrl == null || 
-                          widget.question.userPhotoUrl!.isEmpty)
-                          ? const Icon(Icons.person, color: Colors.white)
-                          : null,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                        widget.question.userName ?? "Anonymous",
-                        style: TextStyle(
-                          fontSize: 12, 
-                          color: colorScheme.tertiary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                SizedBox(
+                  width: 60,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundImage: widget.question.userPhotoUrl != null && 
+                            widget.question.userPhotoUrl!.isNotEmpty
+                            ? NetworkImage(widget.question.userPhotoUrl!)
+                            : null,
+                        backgroundColor: colorScheme.primaryContainer,
+                        child: (widget.question.userPhotoUrl == null || 
+                            widget.question.userPhotoUrl!.isEmpty)
+                            ? const Icon(Icons.person, color: Colors.white)
+                            : null,
                       ),
-                  ],
+                      SizedBox(height: 8),
+                      Text(
+                          widget.question.userName ?? "Anonymous",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12, 
+                            color: colorScheme.tertiary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 20),
                 Expanded(
