@@ -703,6 +703,49 @@ Improvements to implement next Sprint:
 Improvements to implement next Sprint:
 - Study better the topic we are about to implement so that we can divide the tasks more appropriately
 
+
+**happiness meters**
+
+<table border="1" cellspacing="0" cellpadding="10">
+  <tr>
+    <th></th>
+    <th>Francisca</th>
+    <th>Gabriela</th>
+    <th>Maria Luiza</th>
+    <th>Sara</th>
+  </tr>
+  <tr>
+    <th>Francisca</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Gabriela</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Maria Luiza</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Sara</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+</table>
+
+_Each row in the table corresponds to an individual's evaluations, with the person's name indicating the evaluator and the subsequent cells detailing their assessments of each peer._
+
 ### Sprint 2
 **Beginning**
 <img src="images/scrumboard/sprint2_beginning.png">
@@ -719,6 +762,49 @@ Improvements to implement next Sprint:
 
 Improvements to implement next Sprint:
 - Plan more effectively to avoid last-minute work on the final day
+
+
+**happiness meters**
+
+<table border="1" cellspacing="0" cellpadding="10">
+  <tr>
+    <th></th>
+    <th>Francisca</th>
+    <th>Gabriela</th>
+    <th>Maria Luiza</th>
+    <th>Sara</th>
+  </tr>
+  <tr>
+    <th>Francisca</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Gabriela</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Maria Luiza</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Sara</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+</table>
+
+_Each row in the table corresponds to an individual's evaluations, with the person's name indicating the evaluator and the subsequent cells detailing their assessments of each peer._
 
 ### Sprint 3
 
