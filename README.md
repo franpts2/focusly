@@ -704,6 +704,21 @@ Improvements to implement next Sprint:
 - Study better the topic we are about to implement so that we can divide the tasks more appropriately
 
 ### Sprint 2
+**Beginning**
+<img src="sprint2_beginning.png">
+
+**End**
+<img src="sprint2_end.png">
+
+**Did well**: 
+
+**Do differently**: 
+
+**Puzzles**: 
+
+
+Improvements to implement next Sprint:
+- 
 
 ### Sprint 3
 
