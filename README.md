@@ -705,10 +705,10 @@ Improvements to implement next Sprint:
 
 ### Sprint 2
 **Beginning**
-<img src="sprint2_beginning.png">
+<img src="images/scrumboard/sprint2_beginning.png">
 
 **End**
-<img src="sprint2_end.png">
+<img src="images/scrumboard/sprint2_end.png">
 
 **Did well**: 
 
