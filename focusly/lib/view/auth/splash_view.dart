@@ -11,29 +11,42 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
-  
+  late Timer _timer;
+
   @override
   void initState() {
     super.initState();
 
-    Timer(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 600),
-          pageBuilder: (_, __, ___) => InitialPageView(),
-          transitionsBuilder: (_, animation, __, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: ScaleTransition(
-                scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
-                child: child,
-              ),
-            );
-          },
-        ),
-      );
+    _timer = Timer(Duration(seconds: 2), () {
+      if (mounted) {
+        // Check if widget is still mounted before using context
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 600),
+            pageBuilder: (_, __, ___) => InitialPageView(),
+            transitionsBuilder: (_, animation, __, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: ScaleTransition(
+                  scale: Tween<double>(
+                    begin: 0.95,
+                    end: 1.0,
+                  ).animate(animation),
+                  child: child,
+                ),
+              );
+            },
+          ),
+        );
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Cancel the timer when widget is disposed
+    super.dispose();
   }
 
   @override

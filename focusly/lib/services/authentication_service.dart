@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
-import 'package:focusly/view/auth/initial_view.dart';
 import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:focusly/view/auth/splash_view.dart';
 
 class AuthenticationService with ChangeNotifier {
   GoogleSignInAccount? _currentUser;
@@ -94,7 +94,7 @@ class AuthenticationService with ChangeNotifier {
 
     if (context != null && context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const InitialPageView()),
+        MaterialPageRoute(builder: (_) => const SplashView()),
         (route) => false,
       );
     }
