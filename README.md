@@ -710,15 +710,15 @@ Improvements to implement next Sprint:
 **End**
 <img src="images/scrumboard/sprint2_end.png">
 
-**Did well**: 
+**Did well**: Good collaboration and task division among team members, which helped deliver both major features on time
 
-**Do differently**: 
+**Do differently**: Plan more time for backend/database integration when introducing new features
 
-**Puzzles**: 
+**Puzzles**: Deciding how to structure forum posts and replies in the database took longer than expected
 
 
 Improvements to implement next Sprint:
-- 
+- Plan more effectively to avoid last-minute work on the final day
 
 ### Sprint 3
 
