@@ -642,35 +642,42 @@ Implemented Features
 
 **UI Snapshot**
 
+Sprint 0:
 <div style="text-align: center;">
     <img src="images/vertical%20prototype/sprint0/verticalprototype_pomodoro.gif" alt="Pomodoro Timer" width="200"/>
 </div>
 
 <div style="text-align: center">
-    <img src="images/vertical%20prototype/sprint0/pomodoro_notification.jpeg" width="250"/>
+    <img src="images/vertical%20prototype/sprint0/pomodoro_notification.jpeg" width="250" alt="timer end notification"/>
 </div>
 
 ---
-
+Sprint 1:
 <div style="display: flex; justify-content: space-between;">
-  <img src="images/vertical prototype/sprint1/sign_in.gif" alt="Image 1" width="32%" />
-  <img src="images/vertical prototype/sprint1/flashcards.gif" alt="Image 2" width="32%" />
-  <img src="images/vertical prototype/sprint1/quiz.gif" alt="Image 3" width="32%" />
+  <img src="images/vertical prototype/sprint1/sign_in.gif" alt="google sign in" width="32%" />
+  <img src="images/vertical prototype/sprint1/flashcards.gif" alt="flashcard" width="32%" />
+  <img src="images/vertical prototype/sprint1/quiz.gif" alt="quiz" width="32%" />
 </div>
 <br>
 
 ---
+Sprint 2:
 <div style="display: flex; justify-content: space-between;">
-  <img src="images/vertical prototype/sprint2/edit_quiz.gif" alt="Image 1" width="32%" />
-  <img src="images/vertical prototype/sprint2/edit_flashcard_deck.gif" alt="Image 2" width="32%" />
-  <img src="images/vertical prototype/sprint2/deleting_decks_quizzes.gif" alt="Image 3" width="32%" />
+  <img src="images/vertical prototype/sprint2/sign_up.gif" alt="sign up" width="49%" />
+  <img src="images/vertical prototype/sprint2/sign_in.gif" alt="sign in" width="49%" />
 </div>
 <br>
 <div style="display: flex; justify-content: space-between;">
-  <img src="images/vertical prototype/sprint2/post_a_question.gif" alt="Image 1" width="24%" />
-  <img src="images/vertical prototype/sprint2/edit_question.gif" alt="Image 2" width="24%" />
-  <img src="images/vertical prototype/sprint2/post_edit_answer.gif" alt="Image 3" width="24%" />
-  <img src="images/vertical prototype/sprint2/search.gif" alt="Image 4" width="24%" />
+  <img src="images/vertical prototype/sprint2/edit_quiz.gif" alt="edit quiz" width="32%" />
+  <img src="images/vertical prototype/sprint2/edit_flashcard_deck.gif" alt="edit flashcard deck" width="32%" />
+  <img src="images/vertical prototype/sprint2/deleting_decks_quizzes.gif" alt="delete quiz and flashcard" width="32%" />
+</div>
+<br>
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/vertical prototype/sprint2/post_a_question.gif" alt="post a question" width="24%" />
+  <img src="images/vertical prototype/sprint2/edit_question.gif" alt="edit a question" width="24%" />
+  <img src="images/vertical prototype/sprint2/post_edit_answer.gif" alt="post and edit an answer" width="24%" />
+  <img src="images/vertical prototype/sprint2/search.gif" alt="search in the forum" width="24%" />
 </div>
 <br><br>
 
