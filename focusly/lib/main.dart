@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:focusly/firebase_options.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:focusly/viewmodel/category_viewmodel.dart';
 import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:focusly/viewmodel/forum_answer_viewmodel.dart';
 import 'package:focusly/viewmodel/forum_question_viewmodel.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
 import 'package:focusly/view/auth/splash_view.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +23,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => FlashcardDeckViewModel()),
         ChangeNotifierProvider(create: (_) => ForumQuestionViewModel()),
         ChangeNotifierProvider(create: (_) => ForumAnswerViewModel()),
+        ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         // add other providers here if needed
       ],
       child: const MainApp(),
@@ -47,7 +48,7 @@ class MainApp extends StatelessWidget {
           } else if (snapshot.hasData) {
             return NavigationView();
           } else {
-            return SplashView(); 
+            return SplashView();
           }
         },
       ),

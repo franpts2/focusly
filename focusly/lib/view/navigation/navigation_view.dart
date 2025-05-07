@@ -4,7 +4,9 @@ import 'package:focusly/view/home/home_view.dart';
 import 'package:focusly/view/forum/forum_view.dart';
 import 'package:focusly/view/pomodoro/pomodoro_view.dart';
 import 'package:focusly/view/profile/profile_view.dart';
+import 'package:focusly/viewmodel/category_viewmodel.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:provider/provider.dart';
 
 class NavigationView extends StatefulWidget {
   const NavigationView({super.key});
@@ -15,21 +17,21 @@ class NavigationView extends StatefulWidget {
 
 class _NavigationViewState extends State<NavigationView> {
   int currentIndex = 0;
-  final List<Widget> _pages = const [
-    HomeView(),
-    ForumView(),
-    CreateView(),
-    PomodoroView(skipNotifications: false),
-    ProfileView(),
+  final List<Widget> _pages = [
+    const HomeView(),
+    const ForumView(),
+    const CreateView(),
+    const PomodoroView(skipNotifications: false),
+    ChangeNotifierProvider<CategoryViewModel>(
+      create: (_) => CategoryViewModel(),
+      child: const ProfileView(),
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: currentIndex, children: _pages),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
