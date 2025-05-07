@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:focusly/model/category_model.dart';
+import 'dart:async';
 
 class CategoryViewModel extends ChangeNotifier {
   final List<Category> _categories = [];
   DatabaseReference? _databaseReference;
+  StreamSubscription<DatabaseEvent>? _categoriesSubscription;
   bool _isInitialized = false;
 
   List<Category> get categories => _categories;
@@ -14,21 +16,60 @@ class CategoryViewModel extends ChangeNotifier {
     _initialize();
   }
 
+  @override
+  void dispose() {
+    _categoriesSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> _initialize() async {
     if (_isInitialized) return;
+
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _databaseReference = FirebaseDatabase.instance
           .ref()
           .child(user.uid)
           .child("categories");
+
+      // Initial load
       await _loadCategories();
+
+      // Set up real-time listener
+      _setupCategoriesListener();
+
       _isInitialized = true;
     }
   }
 
+  void _setupCategoriesListener() {
+    _categoriesSubscription?.cancel();
+
+    _categoriesSubscription = _databaseReference?.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        _categories.clear();
+        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+
+        data.forEach((key, value) {
+          try {
+            if (value is Map) {
+              final categoryData = Map<String, dynamic>.from(value);
+              categoryData['id'] = key;
+              _categories.add(Category.fromJson(categoryData));
+            }
+          } catch (e) {
+            debugPrint('Error parsing category $key: $e');
+          }
+        });
+
+        notifyListeners();
+      }
+    });
+  }
+
   Future<void> refreshCategories() async {
     _isInitialized = false;
+    _categoriesSubscription?.cancel();
     _databaseReference = null;
     _categories.clear();
     await _initialize();

@@ -484,6 +484,16 @@ class _CategoryDialogState extends State<CategoryDialog> {
           icon: _selectedIcon,
         );
         categoryViewModel.addCategory(newCategory);
+
+        // Explicitly refresh categories to ensure they appear
+        Future.delayed(Duration(milliseconds: 500), () {
+          categoryViewModel.refreshCategories();
+        });
+
+        // Show feedback
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Category created successfully')),
+        );
       } else {
         // Update existing category
         final updatedCategory = widget.category!.copyWith(
@@ -492,6 +502,11 @@ class _CategoryDialogState extends State<CategoryDialog> {
           icon: _selectedIcon,
         );
         categoryViewModel.updateCategory(updatedCategory);
+
+        // Show feedback
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Category updated successfully')),
+        );
       }
 
       Navigator.of(context).pop();
