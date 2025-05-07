@@ -297,7 +297,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
             TextField(
               controller: _titleController,
               decoration: const InputDecoration(
-                labelText: 'Category Title',
+                labelText: 'Title',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -324,11 +324,12 @@ class _CategoryDialogState extends State<CategoryDialog> {
                         });
                       },
                       child: Container(
-                        width: 40,
-                        height: 40,
+                        width: 38,
+                        height: 38,
                         decoration: BoxDecoration(
                           color: color,
-                          shape: BoxShape.circle,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color:
                                 isSelected ? Colors.white : Colors.transparent,
