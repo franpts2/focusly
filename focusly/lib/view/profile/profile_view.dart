@@ -233,12 +233,12 @@ class _CategoryDialogState extends State<CategoryDialog> {
 
   // Predefined color options - smaller set to reduce rendering load
   final List<Color> _colorOptions = [
-    Colors.blue,
-    Colors.green,
-    Colors.red,
-    Colors.purple,
-    Colors.orange,
-    Colors.teal,
+    Color(0xffFFC2D4),
+    Color(0xff98C9A3),
+    Color(0xffB6CCFE),
+    Color(0xffFAE588),
+    Color(0xffFFD19F),
+    Color(0xffDF7373),
   ];
 
   // Predefined icon options - using static Material icons to avoid Material Symbols rendering issues
