@@ -230,7 +230,8 @@ class _CategoryDialogState extends State<CategoryDialog> {
   late TextEditingController _titleController;
   late Color _selectedColor;
   late IconData _selectedIcon;
-  bool _showIconSelector = false; // Toggle state for icon selector
+  final GlobalKey _iconButtonKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
 
   // Predefined color options - smaller set to reduce rendering load
   final List<Color> _colorOptions = [
@@ -270,8 +271,114 @@ class _CategoryDialogState extends State<CategoryDialog> {
 
   @override
   void dispose() {
+    _hideIconSelector();
     _titleController.dispose();
     super.dispose();
+  }
+
+  // Shows the icon selector overlay
+  void _showIconSelector() {
+    _hideIconSelector(); // Hide existing overlay if any
+
+    final RenderBox? iconButton =
+        _iconButtonKey.currentContext?.findRenderObject() as RenderBox?;
+    if (iconButton == null) return;
+
+    final RenderBox? overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox?;
+    if (overlay == null) return;
+
+    final buttonPosition = iconButton.localToGlobal(
+      Offset.zero,
+      ancestor: overlay,
+    );
+    final buttonSize = iconButton.size;
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          left: buttonPosition.dx - 150, // Center it near the button
+          top:
+              buttonPosition.dy +
+              buttonSize.height +
+              8, // Position below the button
+          child: Material(
+            elevation: 8,
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              width: 240,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Select Icon',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    constraints: BoxConstraints(maxHeight: 200),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                      ),
+                      itemCount: _iconOptions.length,
+                      itemBuilder: (context, index) {
+                        final icon = _iconOptions[index];
+                        final isSelected = _selectedIcon == icon;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIcon = icon;
+                            });
+                            _hideIconSelector();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.grey.shade200,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              icon,
+                              color: isSelected ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  // Hides the icon selector overlay
+  void _hideIconSelector() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
   @override
@@ -308,11 +415,8 @@ class _CategoryDialogState extends State<CategoryDialog> {
                 ),
                 const SizedBox(width: 8),
                 InkWell(
-                  onTap: () {
-                    setState(() {
-                      _showIconSelector = !_showIconSelector;
-                    });
-                  },
+                  key: _iconButtonKey, // Add key to get position for overlay
+                  onTap: _showIconSelector,
                   child: Container(
                     width: 48,
                     height: 48,
@@ -328,60 +432,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
               ],
             ),
             const SizedBox(height: 16),
-
-            // Icon selector (only shown when toggle is active)
-            if (_showIconSelector) ...[
-              const Text(
-                'Select Icon:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SingleChildScrollView(
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    alignment: WrapAlignment.center,
-                    children:
-                        _iconOptions.map((icon) {
-                          final isSelected = _selectedIcon == icon;
-                          return Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedIcon = icon;
-                                });
-                              },
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color:
-                                      isSelected
-                                          ? theme.primaryColor
-                                          : Colors.grey.shade200,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  icon,
-                                  color:
-                                      isSelected ? Colors.white : Colors.black,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
 
             // Color selection
             const Text(
@@ -441,7 +491,10 @@ class _CategoryDialogState extends State<CategoryDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    _hideIconSelector(); // Ensure overlay is removed
+                    Navigator.of(context).pop();
+                  },
                   child: const Text('Cancel'),
                 ),
                 const SizedBox(width: 8),
@@ -472,6 +525,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
 
   // Simplified confirmation delete method
   void _confirmDelete(BuildContext context) {
+    _hideIconSelector(); // Ensure overlay is removed
     showDialog(
       context: context,
       builder:
@@ -502,6 +556,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
 
   // Save category method
   void _saveCategory(BuildContext context) {
+    _hideIconSelector(); // Ensure overlay is removed
     final title = _titleController.text.trim();
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
