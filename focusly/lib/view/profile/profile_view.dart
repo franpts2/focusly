@@ -230,6 +230,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
   late TextEditingController _titleController;
   late Color _selectedColor;
   late IconData _selectedIcon;
+  bool _showIconSelector = false; // Toggle state for icon selector
 
   // Predefined color options - smaller set to reduce rendering load
   final List<Color> _colorOptions = [
@@ -293,15 +294,94 @@ class _CategoryDialogState extends State<CategoryDialog> {
             ),
             const SizedBox(height: 16),
 
-            // Title field
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-                border: OutlineInputBorder(),
-              ),
+            // Title field with icon toggle button
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _showIconSelector = !_showIconSelector;
+                    });
+                  },
+                  child: Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: theme.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Icon(_selectedIcon, color: theme.primaryColor),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
+
+            // Icon selector (only shown when toggle is active)
+            if (_showIconSelector) ...[
+              const Text(
+                'Select Icon:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children:
+                        _iconOptions.map((icon) {
+                          final isSelected = _selectedIcon == icon;
+                          return Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedIcon = icon;
+                                });
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color:
+                                      isSelected
+                                          ? theme.primaryColor
+                                          : Colors.grey.shade200,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  icon,
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
 
             // Color selection
             const Text(
@@ -350,46 +430,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
                             isSelected
                                 ? const Icon(Icons.check, color: Colors.white)
                                 : null,
-                      ),
-                    );
-                  }).toList(),
-            ),
-            const SizedBox(height: 16),
-
-            // Icon selection
-            const Text(
-              'Select Icon:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-
-            // Icon options in a wrap - avoids GridView which can cause rendering issues
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children:
-                  _iconOptions.map((icon) {
-                    final isSelected = _selectedIcon == icon;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIcon = icon;
-                        });
-                      },
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color:
-                              isSelected
-                                  ? theme.primaryColor
-                                  : Colors.grey.shade200,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          icon,
-                          color: isSelected ? Colors.white : Colors.black,
-                        ),
                       ),
                     );
                   }).toList(),
