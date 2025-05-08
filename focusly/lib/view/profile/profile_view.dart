@@ -19,7 +19,7 @@ class ProfileView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Profile"), centerTitle: true),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.only(right: 16.0, left: 16.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -99,19 +99,22 @@ class ProfileView extends StatelessWidget {
                     "Your Categories",
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: theme.primaryColor,
+                      fontWeight: FontWeight.w400,
+                      color: theme.colorScheme.secondary,
                     ),
                   ),
                   IconButton(
                     onPressed: () => _showAddCategoryDialog(context),
-                    icon: Icon(Icons.add_circle, color: theme.primaryColor),
+                    icon: Icon(
+                      Icons.add_circle_outline,
+                      color: theme.primaryColor,
+                    ),
                     tooltip: 'Add Category',
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-
+              const Divider(),
+              const SizedBox(height: 8),
               // Categories grid
               categoryViewModel.categories.isEmpty
                   ? const Center(
@@ -233,7 +236,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
   final GlobalKey _iconButtonKey = GlobalKey();
   OverlayEntry? _overlayEntry;
 
-  // Predefined color options - smaller set to reduce rendering load
+  // Predefined color options
   final List<Color> _colorOptions = [
     Color(0xffFFC2D4),
     Color(0xff98C9A3),
@@ -243,7 +246,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
     Color(0xffDF7373),
   ];
 
-  // Predefined icon options - using static Material icons to avoid Material Symbols rendering issues
+  // Predefined icon options
   final List<IconData> _iconOptions = [
     Icons.school,
     Icons.science,
