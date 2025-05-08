@@ -10,6 +10,8 @@ class CategoryViewModel extends ChangeNotifier {
   StreamSubscription<DatabaseEvent>? _categoriesSubscription;
   bool _isInitialized = false;
   bool _isDisposed = false;
+  // Flag to temporarily ignore Firebase updates when we're making local changes
+  bool _ignoreNextUpdate = false;
 
   List<Category> get categories => _categories;
 
@@ -51,6 +53,12 @@ class CategoryViewModel extends ChangeNotifier {
 
     _categoriesSubscription = _databaseReference?.onValue.listen((event) {
       if (_isDisposed) return; // Skip if disposed
+
+      if (_ignoreNextUpdate) {
+        // Skip this update but process future ones
+        _ignoreNextUpdate = false;
+        return;
+      }
 
       if (event.snapshot.value != null) {
         _categories.clear();
@@ -142,6 +150,7 @@ class CategoryViewModel extends ChangeNotifier {
     final categoryId = newCategoryRef.key!;
     final categoryWithId = category.copyWith(id: categoryId);
 
+    _ignoreNextUpdate = true;
     await newCategoryRef.set(categoryWithId.toJson());
     if (!_isDisposed) {
       _categories.add(categoryWithId);
@@ -166,6 +175,7 @@ class CategoryViewModel extends ChangeNotifier {
       throw Exception('Cannot update category without an ID');
     }
 
+    _ignoreNextUpdate = true;
     await _databaseReference!.child(category.id!).update(category.toJson());
 
     if (!_isDisposed) {
@@ -190,6 +200,7 @@ class CategoryViewModel extends ChangeNotifier {
       );
     }
 
+    _ignoreNextUpdate = true;
     await _databaseReference!.child(categoryId).remove();
     if (!_isDisposed) {
       _categories.removeWhere((c) => c.id == categoryId);

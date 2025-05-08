@@ -92,34 +92,46 @@ class ProfileView extends StatelessWidget {
               const SizedBox(height: 40),
 
               // Categories section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Your Categories",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      color: theme.colorScheme.secondary,
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Your Categories",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: theme.colorScheme.secondary,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () => _showAddCategoryDialog(context),
-                    icon: Icon(
-                      Icons.add_circle_outline,
-                      color: theme.primaryColor,
+                    IconButton(
+                      onPressed: () => _showAddCategoryDialog(context),
+                      icon: Icon(
+                        Icons.add_circle_outline,
+                        color: theme.primaryColor,
+                      ),
+                      tooltip: 'Add Category',
                     ),
-                    tooltip: 'Add Category',
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const Divider(),
+
+              Padding(
+                padding: const EdgeInsets.only(right: 6.0, left: 6.0),
+                child: const Divider(),
+              ),
+
               const SizedBox(height: 8),
               // Categories grid
               categoryViewModel.categories.isEmpty
-                  ? const Center(
-                    child: Text(
-                      "No categories yet. Create one by tapping the + button!",
+                  ? Padding(
+                    padding: const EdgeInsets.only(right: 10.0, left: 10.0),
+                    child: const Center(
+                      child: Text(
+                        "No categories yet. Create one by tapping the + button!",
+                        style: TextStyle(fontSize: 13),
+                      ),
                     ),
                   )
                   : GridView.builder(
@@ -177,7 +189,7 @@ class ProfileView extends StatelessWidget {
       color: category.color,
       child: InkWell(
         onTap: () {
-          // This will be implemented in future functionality to show items by category
+          // to be implemented
         },
         onLongPress: () => _showEditDeleteCategoryDialog(context, category),
         borderRadius: BorderRadius.circular(12),
