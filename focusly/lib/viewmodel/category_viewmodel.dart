@@ -9,6 +9,7 @@ class CategoryViewModel extends ChangeNotifier {
   DatabaseReference? _databaseReference;
   StreamSubscription<DatabaseEvent>? _categoriesSubscription;
   bool _isInitialized = false;
+  bool _isDisposed = false;
 
   List<Category> get categories => _categories;
 
@@ -18,12 +19,13 @@ class CategoryViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _categoriesSubscription?.cancel();
     super.dispose();
   }
 
   Future<void> _initialize() async {
-    if (_isInitialized) return;
+    if (_isInitialized || _isDisposed) return;
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -38,7 +40,9 @@ class CategoryViewModel extends ChangeNotifier {
       // Set up real-time listener
       _setupCategoriesListener();
 
-      _isInitialized = true;
+      if (!_isDisposed) {
+        _isInitialized = true;
+      }
     }
   }
 
@@ -46,6 +50,8 @@ class CategoryViewModel extends ChangeNotifier {
     _categoriesSubscription?.cancel();
 
     _categoriesSubscription = _databaseReference?.onValue.listen((event) {
+      if (_isDisposed) return; // Skip if disposed
+
       if (event.snapshot.value != null) {
         _categories.clear();
         final data = Map<String, dynamic>.from(event.snapshot.value as Map);
@@ -62,7 +68,9 @@ class CategoryViewModel extends ChangeNotifier {
           }
         });
 
-        notifyListeners();
+        if (!_isDisposed) {
+          notifyListeners();
+        }
       }
     });
   }
@@ -76,6 +84,8 @@ class CategoryViewModel extends ChangeNotifier {
   }
 
   Future<void> _loadCategories() async {
+    if (_isDisposed) return;
+
     try {
       if (_databaseReference == null) {
         throw Exception(
@@ -84,6 +94,8 @@ class CategoryViewModel extends ChangeNotifier {
       }
 
       final event = await _databaseReference!.once();
+      if (_isDisposed) return; // Check if disposed after async operation
+
       final data = event.snapshot.value;
 
       if (data != null) {
@@ -101,21 +113,29 @@ class CategoryViewModel extends ChangeNotifier {
             debugPrint('Error parsing category $key: $e');
           }
         });
-        notifyListeners();
+        if (!_isDisposed) {
+          notifyListeners();
+        }
       }
     } catch (e) {
-      debugPrint('Error loading categories: $e');
-      throw Exception('Error loading categories: $e');
+      if (!_isDisposed) {
+        debugPrint('Error loading categories: $e');
+        throw Exception('Error loading categories: $e');
+      }
     }
   }
 
   Future<void> addCategory(Category category) async {
+    if (_isDisposed) return;
+
     if (!_isInitialized) {
       await _initialize();
     }
 
-    if (!_isInitialized || _databaseReference == null) {
-      throw Exception('Cannot add category: User not authenticated');
+    if (_isDisposed || !_isInitialized || _databaseReference == null) {
+      throw Exception(
+        'Cannot add category: User not authenticated or viewmodel disposed',
+      );
     }
 
     final newCategoryRef = _databaseReference!.push();
@@ -123,18 +143,22 @@ class CategoryViewModel extends ChangeNotifier {
     final categoryWithId = category.copyWith(id: categoryId);
 
     await newCategoryRef.set(categoryWithId.toJson());
-    _categories.add(categoryWithId);
-    notifyListeners();
+    if (!_isDisposed) {
+      _categories.add(categoryWithId);
+      notifyListeners();
+    }
   }
 
   Future<void> updateCategory(Category category) async {
+    if (_isDisposed) return;
+
     if (!_isInitialized) {
       await _initialize();
     }
 
-    if (_databaseReference == null) {
+    if (_isDisposed || _databaseReference == null) {
       throw Exception(
-        'Cannot update category: Database reference not initialized',
+        'Cannot update category: Database reference not initialized or viewmodel disposed',
       );
     }
 
@@ -144,26 +168,41 @@ class CategoryViewModel extends ChangeNotifier {
 
     await _databaseReference!.child(category.id!).update(category.toJson());
 
-    final index = _categories.indexWhere((c) => c.id == category.id);
-    if (index >= 0) {
-      _categories[index] = category;
-      notifyListeners();
+    if (!_isDisposed) {
+      final index = _categories.indexWhere((c) => c.id == category.id);
+      if (index >= 0) {
+        _categories[index] = category;
+        notifyListeners();
+      }
     }
   }
 
   Future<void> deleteCategory(String categoryId) async {
+    if (_isDisposed) return;
+
     if (!_isInitialized) {
       await _initialize();
     }
 
-    if (_databaseReference == null) {
+    if (_isDisposed || _databaseReference == null) {
       throw Exception(
-        'Cannot delete category: Database reference not initialized',
+        'Cannot delete category: Database reference not initialized or viewmodel disposed',
       );
     }
 
     await _databaseReference!.child(categoryId).remove();
-    _categories.removeWhere((c) => c.id == categoryId);
-    notifyListeners();
+    if (!_isDisposed) {
+      _categories.removeWhere((c) => c.id == categoryId);
+      notifyListeners();
+    }
+  }
+
+  // Check if a category with the same title already exists
+  bool categoryTitleExists(String title, [String? excludeId]) {
+    return _categories.any(
+      (category) =>
+          category.title.toLowerCase() == title.toLowerCase() &&
+          category.id != excludeId,
+    );
   }
 }

@@ -571,6 +571,17 @@ class _CategoryDialogState extends State<CategoryDialog> {
         listen: false,
       );
 
+      // Check for duplicate title before saving
+      final String? currentCategoryId = widget.category?.id;
+      if (categoryViewModel.categoryTitleExists(title, currentCategoryId)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('A category with this title already exists'),
+          ),
+        );
+        return;
+      }
+
       if (widget.category == null) {
         // Create new category
         final newCategory = Category(

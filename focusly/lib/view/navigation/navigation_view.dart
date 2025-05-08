@@ -22,10 +22,7 @@ class _NavigationViewState extends State<NavigationView> {
     const ForumView(),
     const CreateView(),
     const PomodoroView(skipNotifications: false),
-    ChangeNotifierProvider<CategoryViewModel>(
-      create: (_) => CategoryViewModel(),
-      child: const ProfileView(),
-    ),
+    const ProfileView(),
   ];
 
   @override
