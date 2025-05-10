@@ -175,10 +175,9 @@ class ProfileView extends StatelessWidget {
                       listen: false,
                     );
 
-
                     // cleanup for categories
                     await categoryViewModel.cleanupForSignOut();
-                  
+
                     debugPrint('Sign out: Database cleanup completed');
 
                     // Direct Firebase sign out implementation
@@ -241,14 +240,14 @@ class ProfileView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(category.icon, size: 32, color: Colors.white),
+              Icon(category.icon, size: 32, color: category.textColor),
               const SizedBox(height: 8),
               Text(
                 category.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: category.textColor,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
