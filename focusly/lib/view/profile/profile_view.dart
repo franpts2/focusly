@@ -174,20 +174,11 @@ class ProfileView extends StatelessWidget {
                       context,
                       listen: false,
                     );
-                    final flashcardViewModel =
-                        Provider.of<FlashcardDeckViewModel>(
-                          context,
-                          listen: false,
-                        );
-                    final quizViewModel = Provider.of<QuizViewModel>(
-                      context,
-                      listen: false,
-                    );
 
-                    // Run cleanup for all models with database connections
+
+                    // cleanup for categories
                     await categoryViewModel.cleanupForSignOut();
-                    await flashcardViewModel.cleanupForSignOut();
-                    await quizViewModel.cleanupForSignOut();
+                  
                     debugPrint('Sign out: Database cleanup completed');
 
                     // Direct Firebase sign out implementation

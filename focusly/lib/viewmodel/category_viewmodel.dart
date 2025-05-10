@@ -224,7 +224,7 @@ class CategoryViewModel extends ChangeNotifier {
     _categoriesSubscription = null;
     _databaseReference = null;
     _isInitialized = false;
-    _categories.clear();
+    //_categories.clear();
     notifyListeners();
     debugPrint('CategoryViewModel: Cleanup completed');
   }

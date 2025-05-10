@@ -147,13 +147,4 @@ class QuizViewModel extends ChangeNotifier {
     await _initialize();
   }
 
-  // Method to clean up database listeners when signing out
-  Future<void> cleanupForSignOut() async {
-    debugPrint('QuizViewModel: Cleaning up for sign out');
-    _databaseReference = null;
-    _isInitialized = false;
-    _quizzes.clear();
-    notifyListeners();
-    debugPrint('QuizViewModel: Cleanup completed');
-  }
 }

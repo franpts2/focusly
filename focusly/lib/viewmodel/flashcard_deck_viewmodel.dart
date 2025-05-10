@@ -120,13 +120,5 @@ class FlashcardDeckViewModel extends ChangeNotifier {
     await _initialize();
   }
 
-  // Method to clean up database listeners when signing out
-  Future<void> cleanupForSignOut() async {
-    debugPrint('FlashcardDeckViewModel: Cleaning up for sign out');
-    _databaseReference = null;
-    _isInitialized = false;
-    _decks.clear();
-    notifyListeners();
-    debugPrint('FlashcardDeckViewModel: Cleanup completed');
-  }
+
 }
