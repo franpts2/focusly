@@ -10,10 +10,17 @@ class CategoryViewModel extends ChangeNotifier {
   StreamSubscription<DatabaseEvent>? _categoriesSubscription;
   bool _isInitialized = false;
   bool _isDisposed = false;
-  // Flag to temporarily ignore Firebase updates when we're making local changes
+  // flag to temporarily ignore firebase updates when we're making local changes
   bool _ignoreNextUpdate = false;
 
-  List<Category> get categories => _categories;
+  
+  List<Category> get categories {
+    final sortedCategories = List<Category>.from(_categories);
+    sortedCategories.sort(
+      (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+    );
+    return sortedCategories;
+  }
 
   CategoryViewModel() {
     _initialize();
