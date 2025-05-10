@@ -158,45 +158,79 @@ class ProfileView extends StatelessWidget {
               // Sign out button
               ElevatedButton(
                 onPressed: () async {
-                  try {
-                    // Show loading indicator
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder:
-                          (context) =>
-                              const Center(child: CircularProgressIndicator()),
-                    );
+                  // Show confirmation dialog
+                  bool confirmSignOut =
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Sign Out'),
+                            content: const Text(
+                              'Are you sure you want to sign out?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed:
+                                    () => Navigator.of(context).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed:
+                                    () => Navigator.of(context).pop(true),
+                                child: const Text(
+                                  'Sign Out',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ) ??
+                      false;
 
-                    // Clean up all database listeners first to prevent permission errors
-                    debugPrint('Sign out: Starting database cleanup');
-                    final categoryViewModel = Provider.of<CategoryViewModel>(
-                      context,
-                      listen: false,
-                    );
+                  // If user confirmed, proceed with sign out
+                  if (confirmSignOut) {
+                    try {
+                      // Show loading indicator
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder:
+                            (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                      );
 
-                    // cleanup for categories
-                    await categoryViewModel.cleanupForSignOut();
-
-                    debugPrint('Sign out: Database cleanup completed');
-
-                    // Direct Firebase sign out implementation
-                    await FirebaseAuth.instance.signOut();
-                    debugPrint('Sign out: Firebase Auth sign out completed');
-
-                    // Navigate to splash screen first (which will auto-navigate to initial page after 2 seconds)
-                    if (context.mounted) {
-                      Navigator.of(
+                      // Clean up all database listeners first to prevent permission errors
+                      debugPrint('Sign out: Starting database cleanup');
+                      final categoryViewModel = Provider.of<CategoryViewModel>(
                         context,
-                      ).pushNamedAndRemoveUntil('/splash', (route) => false);
-                    }
-                  } catch (e) {
-                    debugPrint('Sign out error: $e');
-                    // If there's an error, force navigation to splash screen
-                    if (context.mounted) {
-                      Navigator.of(
-                        context,
-                      ).pushNamedAndRemoveUntil('/splash', (route) => false);
+                        listen: false,
+                      );
+
+                      // cleanup for categories
+                      await categoryViewModel.cleanupForSignOut();
+
+                      debugPrint('Sign out: Database cleanup completed');
+
+                      // Direct Firebase sign out implementation
+                      await FirebaseAuth.instance.signOut();
+                      debugPrint('Sign out: Firebase Auth sign out completed');
+
+                      // Navigate to splash screen first (which will auto-navigate to initial page after 2 seconds)
+                      if (context.mounted) {
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil('/splash', (route) => false);
+                      }
+                    } catch (e) {
+                      debugPrint('Sign out error: $e');
+                      // If there's an error, force navigation to splash screen
+                      if (context.mounted) {
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil('/splash', (route) => false);
+                      }
                     }
                   }
                 },
