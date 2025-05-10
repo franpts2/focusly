@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:focusly/model/category_model.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:focusly/viewmodel/category_viewmodel.dart';
+import 'package:focusly/viewmodel/quiz_viewmodel.dart';
+import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
@@ -155,8 +157,58 @@ class ProfileView extends StatelessWidget {
 
               // Sign out button
               ElevatedButton(
-                onPressed: () {
-                  authService.signOut(context: context);
+                onPressed: () async {
+                  try {
+                    // Show loading indicator
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder:
+                          (context) =>
+                              const Center(child: CircularProgressIndicator()),
+                    );
+
+                    // Clean up all database listeners first to prevent permission errors
+                    debugPrint('Sign out: Starting database cleanup');
+                    final categoryViewModel = Provider.of<CategoryViewModel>(
+                      context,
+                      listen: false,
+                    );
+                    final flashcardViewModel =
+                        Provider.of<FlashcardDeckViewModel>(
+                          context,
+                          listen: false,
+                        );
+                    final quizViewModel = Provider.of<QuizViewModel>(
+                      context,
+                      listen: false,
+                    );
+
+                    // Run cleanup for all models with database connections
+                    await categoryViewModel.cleanupForSignOut();
+                    await flashcardViewModel.cleanupForSignOut();
+                    await quizViewModel.cleanupForSignOut();
+                    debugPrint('Sign out: Database cleanup completed');
+
+                    // Direct Firebase sign out implementation
+                    await FirebaseAuth.instance.signOut();
+                    debugPrint('Sign out: Firebase Auth sign out completed');
+
+                    // Navigate to splash screen first (which will auto-navigate to initial page after 2 seconds)
+                    if (context.mounted) {
+                      Navigator.of(
+                        context,
+                      ).pushNamedAndRemoveUntil('/splash', (route) => false);
+                    }
+                  } catch (e) {
+                    debugPrint('Sign out error: $e');
+                    // If there's an error, force navigation to splash screen
+                    if (context.mounted) {
+                      Navigator.of(
+                        context,
+                      ).pushNamedAndRemoveUntil('/splash', (route) => false);
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.primaryColor,

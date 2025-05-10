@@ -75,7 +75,9 @@ class FlashcardDeckViewModel extends ChangeNotifier {
   Future<void> _loadDecks() async {
     try {
       if (_databaseReference == null) {
-        throw Exception('Cannot load decks: Database reference not initialized');
+        throw Exception(
+          'Cannot load decks: Database reference not initialized',
+        );
       }
 
       final event = await _databaseReference!.once();
@@ -84,14 +86,16 @@ class FlashcardDeckViewModel extends ChangeNotifier {
       if (data != null) {
         _decks.clear();
         final decksMap = Map<String, dynamic>.from(data as Map);
-      
+
         decksMap.forEach((key, value) {
           try {
             if (value is Map) {
               final deckData = Map<String, dynamic>.from(value);
               if (deckData['flashcards'] != null) {
                 final flashcardsList = List<Map<String, dynamic>>.from(
-                  deckData['flashcards'].map((f) => Map<String, dynamic>.from(f))
+                  deckData['flashcards'].map(
+                    (f) => Map<String, dynamic>.from(f),
+                  ),
                 );
                 deckData['flashcards'] = flashcardsList;
               }
@@ -114,5 +118,15 @@ class FlashcardDeckViewModel extends ChangeNotifier {
     _databaseReference = null;
     _decks.clear();
     await _initialize();
+  }
+
+  // Method to clean up database listeners when signing out
+  Future<void> cleanupForSignOut() async {
+    debugPrint('FlashcardDeckViewModel: Cleaning up for sign out');
+    _databaseReference = null;
+    _isInitialized = false;
+    _decks.clear();
+    notifyListeners();
+    debugPrint('FlashcardDeckViewModel: Cleanup completed');
   }
 }

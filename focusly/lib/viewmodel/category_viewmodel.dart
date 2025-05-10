@@ -216,4 +216,16 @@ class CategoryViewModel extends ChangeNotifier {
           category.id != excludeId,
     );
   }
+
+  // Method to clean up database listeners when user signs out
+  Future<void> cleanupForSignOut() async {
+    debugPrint('CategoryViewModel: Cleaning up for sign out');
+    _categoriesSubscription?.cancel();
+    _categoriesSubscription = null;
+    _databaseReference = null;
+    _isInitialized = false;
+    _categories.clear();
+    notifyListeners();
+    debugPrint('CategoryViewModel: Cleanup completed');
+  }
 }

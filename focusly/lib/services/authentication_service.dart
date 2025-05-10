@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
+import 'package:focusly/viewmodel/category_viewmodel.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/view/auth/splash_view.dart';
@@ -85,24 +86,52 @@ class AuthenticationService with ChangeNotifier {
   }
 
   Future<void> signOut({BuildContext? context}) async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-    _currentUser = null;
-    _cachedAvatarUrl = null;
-    _removeUserAvatar();
-    notifyListeners();
+    debugPrint('SignOut: Starting sign out process');
+    try {
+      // First clear local data
+      _currentUser = null;
+      _cachedAvatarUrl = null;
+      _cachedUserName = null;
+      await _removeUserAvatar();
+      debugPrint('SignOut: Cleared local data');
 
-    if (context != null && context.mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const SplashView()),
-        (route) => false,
-      );
+      // Then sign out from services - one at a time with error handling
+      try {
+        await _googleSignIn.signOut();
+        debugPrint('SignOut: Google sign out complete');
+      } catch (e) {
+        debugPrint('SignOut: Google sign out error: $e');
+      }
+
+      try {
+        await _auth.signOut();
+        debugPrint('SignOut: Firebase sign out complete');
+      } catch (e) {
+        debugPrint('SignOut: Firebase sign out error: $e');
+      }
+
+      notifyListeners();
+      debugPrint('SignOut: Notified listeners');
+
+      // No need to navigate manually - our StreamBuilder in main.dart will handle navigation
+      // based on the authentication state change
+    } catch (e) {
+      debugPrint('SignOut: General error: $e');
+    } finally {
+      debugPrint('SignOut: Process completed');
     }
   }
 
   // Helper method to refresh user-specific data in viewmodels
   void _refreshUserData(BuildContext context) {
     try {
+      // Refresh categories
+      final categoryViewModel = Provider.of<CategoryViewModel>(
+        context,
+        listen: false,
+      );
+      categoryViewModel.refreshCategories();
+
       // Refresh flashcard decks
       final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
         context,

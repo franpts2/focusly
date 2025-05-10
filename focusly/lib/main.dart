@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
 import 'package:focusly/view/auth/splash_view.dart';
+import 'package:focusly/view/auth/initial_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,18 +38,24 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/initial': (context) => const InitialPageView(),
+        '/splash': (context) => const SplashView(),
+      },
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              snapshot.connectionState == ConnectionState.none) {
+          // Always show splash screen first when the app starts
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasData) {
-            return NavigationView();
+            // User is logged in
+            return const NavigationView();
           } else {
-            return SplashView();
+            // User is not logged in, show initial view directly
+            return const InitialPageView();
           }
         },
       ),

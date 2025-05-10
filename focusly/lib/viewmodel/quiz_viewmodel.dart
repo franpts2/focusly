@@ -19,7 +19,6 @@ class QuizViewModel extends ChangeNotifier {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-     
       _databaseReference = FirebaseDatabase.instance
           .ref()
           .child(user.uid)
@@ -93,46 +92,50 @@ class QuizViewModel extends ChangeNotifier {
   }
 
   Future<void> _loadQuizzes() async {
-  try {
-    if (_databaseReference == null) {
-      throw Exception('Cannot load quizzes: Database reference not initialized');
-    }
+    try {
+      if (_databaseReference == null) {
+        throw Exception(
+          'Cannot load quizzes: Database reference not initialized',
+        );
+      }
 
-    final event = await _databaseReference!.once();
-    final data = event.snapshot.value;
+      final event = await _databaseReference!.once();
+      final data = event.snapshot.value;
 
-    if (data != null) {
-      _quizzes.clear();
-      final quizzesMap = Map<String, dynamic>.from(data as Map);
-      
-      quizzesMap.forEach((key, value) {
-        try {
-          if (value is Map) {
-            final quizData = Map<String, dynamic>.from(value);
-            
-            // Convert questions if they exist (similar to flashcards in decks)
-            if (quizData['questions'] != null) {
-              final questionsList = List<Map<String, dynamic>>.from(
-                quizData['questions'].map((q) => Map<String, dynamic>.from(q))
-              );
-              quizData['questions'] = questionsList;
+      if (data != null) {
+        _quizzes.clear();
+        final quizzesMap = Map<String, dynamic>.from(data as Map);
+
+        quizzesMap.forEach((key, value) {
+          try {
+            if (value is Map) {
+              final quizData = Map<String, dynamic>.from(value);
+
+              // Convert questions if they exist (similar to flashcards in decks)
+              if (quizData['questions'] != null) {
+                final questionsList = List<Map<String, dynamic>>.from(
+                  quizData['questions'].map(
+                    (q) => Map<String, dynamic>.from(q),
+                  ),
+                );
+                quizData['questions'] = questionsList;
+              }
+
+              quizData['id'] = key; // Ensure the ID is set
+              _quizzes.add(Quiz.fromJson(quizData));
             }
-            
-            quizData['id'] = key; // Ensure the ID is set
-            _quizzes.add(Quiz.fromJson(quizData));
+          } catch (e) {
+            print('Error parsing quiz $key: $e');
+            // For debugging:
+            print('Problematic quiz data: $value');
           }
-        } catch (e) {
-          print('Error parsing quiz $key: $e');
-          // For debugging:
-          print('Problematic quiz data: $value');
-        }
-      });
+        });
+      }
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Error loading quizzes: $e');
     }
-    notifyListeners();
-  } catch (e) {
-    throw Exception('Error loading quizzes: $e');
   }
-}
 
   Future<void> refreshQuizzes() async {
     // Complete reset of initialization state and database reference
@@ -142,5 +145,15 @@ class QuizViewModel extends ChangeNotifier {
 
     // Re-initialize from scratch
     await _initialize();
+  }
+
+  // Method to clean up database listeners when signing out
+  Future<void> cleanupForSignOut() async {
+    debugPrint('QuizViewModel: Cleaning up for sign out');
+    _databaseReference = null;
+    _isInitialized = false;
+    _quizzes.clear();
+    notifyListeners();
+    debugPrint('QuizViewModel: Cleanup completed');
   }
 }
