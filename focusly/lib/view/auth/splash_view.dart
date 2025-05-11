@@ -28,8 +28,8 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
   }
 
   void _navigateToInitialView() {
-    // Only navigate if not already navigated and context is available
-    if (!_navigated && mounted && context != null) {
+    // only navigate if not already navigated and context is available
+    if (!_navigated && mounted) {
       _navigated = true;
       Navigator.pushReplacement(
         context,
@@ -52,7 +52,6 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // If app resumes and we're still on the splash screen, try to navigate
     if (state == AppLifecycleState.resumed && !_navigated && mounted) {
       _navigateToInitialView();
     }
@@ -66,11 +65,10 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // Ensure we navigate even if the delayed callback somehow missed
+    // ensure we navigate even if the delayed callback somehow missed
     if (!_navigated) {
-      // Use a microtask to avoid calling during build
       Future.microtask(() {
-        // Add additional delay to allow build to complete
+        // additional delay to allow build to complete
         Future.delayed(Duration(milliseconds: 100), () {
           if (mounted && !_navigated) {
             _scheduleNavigation();

@@ -4,9 +4,7 @@ import 'package:focusly/view/home/home_view.dart';
 import 'package:focusly/view/forum/forum_view.dart';
 import 'package:focusly/view/pomodoro/pomodoro_view.dart';
 import 'package:focusly/view/profile/profile_view.dart';
-import 'package:focusly/viewmodel/category_viewmodel.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:provider/provider.dart';
 
 class NavigationView extends StatefulWidget {
   const NavigationView({super.key});

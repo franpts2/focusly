@@ -4,31 +4,30 @@ class Category {
   final String? id;
   final String title;
   final Color color;
-  final Color textColor; // New field for text/icon color
+  final Color textColor;
   final IconData icon;
 
   Category({
     this.id,
     required this.title,
     required this.color,
-    Color? textColor, // Optional parameter with default mapping in constructor
+    Color? textColor, 
     required this.icon,
   }) : textColor = textColor ?? _getTextColorForBackground(color);
 
-  // Static mapping between background colors and corresponding text colors
+  // mapping between background colors and corresponding text colors
   static Color _getTextColorForBackground(Color backgroundColor) {
-    // Map of predefined background colors to text colors
+
     final colorMap = {
-      0xffFFC2D4: Color(0xffE05780), // Pink bg -> Purple text
-      0xff98C9A3: Color(0xff4F772D), // Green bg -> Indigo text
-      0xffB6CCFE: Color(0xff0077B6), // Light blue bg -> Orange text
-      0xffFAE588: Color(0xffB69121), // Yellow bg -> Teal text
-      0xffFFD19F: Color(0xffF3722C), // Peach bg -> Blue text
-      0xffDF7373: Color(0xff85182A), // Red bg -> White text
-      //0xFF9C27B0: Colors.amber, // Purple bg -> Amber text
+      0xffFFC2D4: Color(0xffE05780), 
+      0xff98C9A3: Color(0xff4F772D), 
+      0xffB6CCFE: Color(0xff0077B6), 
+      0xffFAE588: Color(0xffB69121), 
+      0xffFFD19F: Color(0xffF3722C), 
+      0xffDF7373: Color(0xff85182A),
     };
 
-    // Return matched color or default to black
+    // return matched color or default to black
     return colorMap[backgroundColor.value] ?? Colors.black;
   }
 
@@ -52,7 +51,7 @@ class Category {
     return {
       'title': title,
       'colorValue': color.value,
-      'textColorValue': textColor.value, // Store text color value
+      'textColorValue': textColor.value, 
       'iconCodePoint': icon.codePoint,
       'iconFontFamily': icon.fontFamily,
     };
@@ -65,7 +64,6 @@ class Category {
       id: json['id'],
       title: json['title'] ?? 'Untitled',
       color: color,
-      // Use stored text color if available, otherwise calculate based on background
       textColor:
           json['textColorValue'] != null
               ? Color(json['textColorValue'])

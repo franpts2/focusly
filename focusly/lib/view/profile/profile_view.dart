@@ -3,9 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:focusly/model/category_model.dart';
 import 'package:focusly/services/authentication_service.dart';
 import 'package:focusly/viewmodel/category_viewmodel.dart';
-import 'package:focusly/viewmodel/quiz_viewmodel.dart';
-import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 class ProfileView extends StatelessWidget {
@@ -25,7 +22,7 @@ class ProfileView extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Profile picture section
+              // profile picture section
               Center(
                 child: FutureBuilder<String?>(
                   future: authService.getUserAvatar(),
@@ -41,7 +38,7 @@ class ProfileView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(60),
                         child:
                             snapshot.data != null && snapshot.data!.isNotEmpty
-                                // Show Google profile picture if available
+                                // google profile pic if available
                                 ? Image.network(
                                   snapshot.data!,
                                   fit: BoxFit.cover,
@@ -57,7 +54,7 @@ class ProfileView extends StatelessWidget {
                                     return _buildDefaultAvatar(theme);
                                   },
                                 )
-                                // Default avatar for email/password users
+                                // default avatar for email/password users
                                 : _buildDefaultAvatar(theme),
                       ),
                     );
@@ -66,7 +63,7 @@ class ProfileView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // User name section
+              // username section
               FutureBuilder<String?>(
                 future: authService.getUserName(),
                 builder: (context, snapshot) {
@@ -93,7 +90,7 @@ class ProfileView extends StatelessWidget {
 
               const SizedBox(height: 40),
 
-              // Categories section
+              // categories section
               Padding(
                 padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                 child: Row(
@@ -125,7 +122,7 @@ class ProfileView extends StatelessWidget {
               ),
 
               const SizedBox(height: 8),
-              // Categories grid
+              // categories grid
               categoryViewModel.categories.isEmpty
                   ? Padding(
                     padding: const EdgeInsets.only(right: 10.0, left: 10.0),
@@ -155,10 +152,10 @@ class ProfileView extends StatelessWidget {
 
               const SizedBox(height: 40),
 
-              // Sign out button
+              // sign out button
               ElevatedButton(
                 onPressed: () async {
-                  // Show confirmation dialog
+                  // confirmation dialog
                   bool confirmSignOut =
                       await showDialog(
                         context: context,
@@ -188,7 +185,6 @@ class ProfileView extends StatelessWidget {
                       ) ??
                       false;
 
-                  // If user confirmed, proceed with sign out
                   if (confirmSignOut) {
                     try {
                       // Show loading indicator
@@ -201,8 +197,6 @@ class ProfileView extends StatelessWidget {
                             ),
                       );
 
-                      // Clean up all database listeners first to prevent permission errors
-                      debugPrint('Sign out: Starting database cleanup');
                       final categoryViewModel = Provider.of<CategoryViewModel>(
                         context,
                         listen: false,
@@ -211,13 +205,8 @@ class ProfileView extends StatelessWidget {
                       // cleanup for categories
                       await categoryViewModel.cleanupForSignOut();
 
-                      debugPrint('Sign out: Database cleanup completed');
-
-                      // Direct Firebase sign out implementation
                       await FirebaseAuth.instance.signOut();
-                      debugPrint('Sign out: Firebase Auth sign out completed');
-
-                      // Navigate to splash screen first (which will auto-navigate to initial page after 2 seconds)
+    
                       if (context.mounted) {
                         Navigator.of(
                           context,
@@ -225,7 +214,7 @@ class ProfileView extends StatelessWidget {
                       }
                     } catch (e) {
                       debugPrint('Sign out error: $e');
-                      // If there's an error, force navigation to splash screen
+                      // if theres an error force navigation to splash screen
                       if (context.mounted) {
                         Navigator.of(
                           context,
@@ -251,7 +240,6 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  // Helper method to build default avatar
   Widget _buildDefaultAvatar(ThemeData theme) {
     return Container(
       color: theme.primaryColor.withOpacity(0.2),
@@ -259,7 +247,6 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  // Helper method to build category card
   Widget _buildCategoryCard(BuildContext context, Category category) {
     return Card(
       color: category.color,
@@ -294,12 +281,10 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  // Show dialog to add a new category
   void _showAddCategoryDialog(BuildContext context) {
     showDialog(context: context, builder: (context) => CategoryDialog());
   }
 
-  // Show dialog to edit or delete a category
   void _showEditDeleteCategoryDialog(BuildContext context, Category category) {
     showDialog(
       context: context,
@@ -324,7 +309,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
   final GlobalKey _iconButtonKey = GlobalKey();
   OverlayEntry? _overlayEntry;
 
-  // Predefined color options
+  // predefined color options
   final List<Color> _colorOptions = [
     Color(0xffFFC2D4),
     Color(0xff98C9A3),
@@ -334,7 +319,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
     Color(0xffDF7373),
   ];
 
-  // Predefined icon options
+  // predefined icon options
   final List<IconData> _iconOptions = [
     Icons.school,
     Icons.science,
@@ -367,9 +352,8 @@ class _CategoryDialogState extends State<CategoryDialog> {
     super.dispose();
   }
 
-  // Shows the icon selector overlay
   void _showIconSelector() {
-    _hideIconSelector(); // Hide existing overlay if any
+    _hideIconSelector();
 
     final RenderBox? iconButton =
         _iconButtonKey.currentContext?.findRenderObject() as RenderBox?;
@@ -388,11 +372,11 @@ class _CategoryDialogState extends State<CategoryDialog> {
     _overlayEntry = OverlayEntry(
       builder: (context) {
         return Positioned(
-          left: buttonPosition.dx - 150, // Center it near the button
+          left: buttonPosition.dx - 150, 
           top:
               buttonPosition.dy +
               buttonSize.height +
-              8, // Position below the button
+              8, 
           child: Material(
             elevation: 8,
             borderRadius: BorderRadius.circular(8),
@@ -466,7 +450,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
-  // Hides the icon selector overlay
   void _hideIconSelector() {
     _overlayEntry?.remove();
     _overlayEntry = null;
@@ -485,14 +468,12 @@ class _CategoryDialogState extends State<CategoryDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dialog title
             Text(
               isEditing ? 'Edit Category' : 'Create Category',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
-            // Title field with icon toggle button
             Row(
               children: [
                 Expanded(
@@ -506,7 +487,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                 ),
                 const SizedBox(width: 8),
                 InkWell(
-                  key: _iconButtonKey, // Add key to get position for overlay
+                  key: _iconButtonKey, 
                   onTap: _showIconSelector,
                   child: Container(
                     width: 48,
@@ -524,14 +505,12 @@ class _CategoryDialogState extends State<CategoryDialog> {
             ),
             const SizedBox(height: 16),
 
-            // Color selection
             const Text(
               'Select Color:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
 
-            // Color options in a wrap
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -577,13 +556,12 @@ class _CategoryDialogState extends State<CategoryDialog> {
             ),
             const SizedBox(height: 24),
 
-            // Action buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {
-                    _hideIconSelector(); // Ensure overlay is removed
+                    _hideIconSelector(); // ensure overlay is removed
                     Navigator.of(context).pop();
                   },
                   child: const Text('Cancel'),
@@ -614,7 +592,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
     );
   }
 
-  // Simplified confirmation delete method
   void _confirmDelete(BuildContext context) {
     _hideIconSelector(); // Ensure overlay is removed
     showDialog(
@@ -645,7 +622,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
     );
   }
 
-  // Save category method
   void _saveCategory(BuildContext context) {
     _hideIconSelector(); // Ensure overlay is removed
     final title = _titleController.text.trim();
@@ -662,7 +638,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
         listen: false,
       );
 
-      // Check for duplicate title before saving
+      // check for duplicate title before saving
       final String? currentCategoryId = widget.category?.id;
       if (categoryViewModel.categoryTitleExists(title, currentCategoryId)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -674,7 +650,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
       }
 
       if (widget.category == null) {
-        // Create new category
+        // create new category
         final newCategory = Category(
           title: title,
           color: _selectedColor,
@@ -682,17 +658,17 @@ class _CategoryDialogState extends State<CategoryDialog> {
         );
         categoryViewModel.addCategory(newCategory);
 
-        // Explicitly refresh categories to ensure they appear
+        // refresh categories to ensure they appear
         Future.delayed(Duration(milliseconds: 500), () {
           categoryViewModel.refreshCategories();
         });
 
-        // Show feedback
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Category created successfully')),
         );
+
       } else {
-        // Update existing category
+        // update existing category
         final updatedCategory = widget.category!.copyWith(
           title: title,
           color: _selectedColor,
@@ -700,7 +676,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
         );
         categoryViewModel.updateCategory(updatedCategory);
 
-        // Show feedback
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Category updated successfully')),
         );
@@ -714,7 +689,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
     }
   }
 
-  // Delete category method
   void _deleteCategory(BuildContext context) {
     if (widget.category?.id == null) return;
 
@@ -724,7 +698,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
         listen: false,
       );
       categoryViewModel.deleteCategory(widget.category!.id!);
-      Navigator.of(context).pop(); // Close the main dialog
+      Navigator.of(context).pop(); 
     } catch (e) {
       ScaffoldMessenger.of(
         context,

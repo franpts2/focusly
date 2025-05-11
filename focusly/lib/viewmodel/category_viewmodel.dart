@@ -43,10 +43,10 @@ class CategoryViewModel extends ChangeNotifier {
           .child(user.uid)
           .child("categories");
 
-      // Initial load
+      // initial load
       await _loadCategories();
 
-      // Set up real-time listener
+      // set up real-time listener
       _setupCategoriesListener();
 
       if (!_isDisposed) {
@@ -59,10 +59,10 @@ class CategoryViewModel extends ChangeNotifier {
     _categoriesSubscription?.cancel();
 
     _categoriesSubscription = _databaseReference?.onValue.listen((event) {
-      if (_isDisposed) return; // Skip if disposed
+      if (_isDisposed) return; // skip if disposed
 
       if (_ignoreNextUpdate) {
-        // Skip this update but process future ones
+        // skip this update but process future ones
         _ignoreNextUpdate = false;
         return;
       }
@@ -109,7 +109,7 @@ class CategoryViewModel extends ChangeNotifier {
       }
 
       final event = await _databaseReference!.once();
-      if (_isDisposed) return; // Check if disposed after async operation
+      if (_isDisposed) return; // check if disposed after async operation
 
       final data = event.snapshot.value;
 
@@ -215,7 +215,7 @@ class CategoryViewModel extends ChangeNotifier {
     }
   }
 
-  // Check if a category with the same title already exists
+  // check if a category with the same title already exists
   bool categoryTitleExists(String title, [String? excludeId]) {
     return _categories.any(
       (category) =>
@@ -224,15 +224,12 @@ class CategoryViewModel extends ChangeNotifier {
     );
   }
 
-  // Method to clean up database listeners when user signs out
   Future<void> cleanupForSignOut() async {
-    debugPrint('CategoryViewModel: Cleaning up for sign out');
     _categoriesSubscription?.cancel();
     _categoriesSubscription = null;
     _databaseReference = null;
     _isInitialized = false;
     //_categories.clear();
     notifyListeners();
-    debugPrint('CategoryViewModel: Cleanup completed');
   }
 }

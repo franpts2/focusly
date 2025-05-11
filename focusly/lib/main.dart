@@ -25,7 +25,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ForumQuestionViewModel()),
         ChangeNotifierProvider(create: (_) => ForumAnswerViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
-        // add other providers here if needed
       ],
       child: const MainApp(),
     ),
