@@ -3,6 +3,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/quiz_model.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
+import 'package:focusly/view/create/create_view_select_category.dart';
 
 class CreateViewAddQuiz extends StatefulWidget {
   const CreateViewAddQuiz({super.key});
@@ -13,13 +14,12 @@ class CreateViewAddQuiz extends StatefulWidget {
 
 class _CreateAddQuizState extends State<CreateViewAddQuiz> {
   final _titleController = TextEditingController();
-  final _categoryController = TextEditingController();
   final List<QuizQuestion> _questions = [];
+  String? _selectedCategoryId;
 
   @override
   void dispose() {
     _titleController.dispose();
-    _categoryController.dispose();
     super.dispose();
   }
 
@@ -32,6 +32,20 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
         correctIndex: 0,
       ),
       isNew: true,
+    );
+  }
+
+  void _selectCategory() {
+    showDialog(
+      context: context,
+      builder: (context) => CategorySelectionDialog(
+        selectedCategoryId: _selectedCategoryId,
+        onCategorySelected: (categoryId) {
+          setState(() {
+            _selectedCategoryId = categoryId;
+          });
+        },
+      ),
     );
   }
 
@@ -59,19 +73,23 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
       return;
     }
 
+    if (_selectedCategoryId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
+
     final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
 
     // Convert UI questions to database model questions
     final List<Question> modelQuestions =
-        _questions.map(_convertToQuestion).toList();
+    _questions.map(_convertToQuestion).toList();
 
     // Create Quiz object
     final quiz = Quiz(
       title: _titleController.text,
-      category:
-          _categoryController.text.isEmpty
-              ? 'General'
-              : _categoryController.text,
+      category: _selectedCategoryId!,
       questions: modelQuestions,
     );
 
@@ -99,40 +117,40 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
       context: context,
       builder:
           (context) => QuestionEditDialog(
-            question: question,
-            onSave: (updatedQuestion) {
-              if (_hasDuplicateOptions(updatedQuestion.options)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Options cannot have the same value')),
-                );
-                return;
-              }
-              setState(() {
-                if (isNew) {
-                  _questions.add(updatedQuestion);
-                } else {
-                  // Find and update the existing question
-                  final index = _questions.indexWhere(
+        question: question,
+        onSave: (updatedQuestion) {
+          if (_hasDuplicateOptions(updatedQuestion.options)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Options cannot have the same value')),
+            );
+            return;
+          }
+          setState(() {
+            if (isNew) {
+              _questions.add(updatedQuestion);
+            } else {
+              // Find and update the existing question
+              final index = _questions.indexWhere(
                     (q) => q.question == question.question,
-                  );
-                  if (index != -1) {
-                    _questions[index] = updatedQuestion;
-                  }
-                }
-              });
-            },
-            onDelete:
-                isNew
-                    ? null // No delete for new questions
-                    : () {
-                      setState(() {
-                        _questions.removeWhere(
-                          (q) => q.question == question.question,
-                        );
-                      });
-                      Navigator.pop(context);
-                    },
-          ),
+              );
+              if (index != -1) {
+                _questions[index] = updatedQuestion;
+              }
+            }
+          });
+        },
+        onDelete:
+        isNew
+            ? null // No delete for new questions
+            : () {
+          setState(() {
+            _questions.removeWhere(
+                  (q) => q.question == question.question,
+            );
+          });
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
@@ -149,7 +167,6 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    //final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: const Text('Add Quiz'), centerTitle: true),
       body: Padding(
@@ -173,21 +190,14 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(26.0),
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text('Category'),
+                  child: TextButton(
+                    onPressed: _selectCategory,
+                    child: Text(
+                      _selectedCategoryId == null
+                          ? 'Select Category'
+                          : 'Change Category',
                     ),
                   ),
-                  /*child: TextField(
-                   TextButton(onPressed: () {}, child: Text('Category'))
-                    controller: _categoryController,
-                    decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder(),),
-                  ),*/
                 ),
               ],
             ),
