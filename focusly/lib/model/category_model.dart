@@ -11,7 +11,7 @@ class Category {
     this.id,
     required this.title,
     required this.color,
-    Color? textColor, 
+    Color? textColor,
     required this.icon,
   }) : textColor = textColor ?? _getTextColorForBackground(color);
 
@@ -19,11 +19,11 @@ class Category {
   static Color _getTextColorForBackground(Color backgroundColor) {
 
     final colorMap = {
-      0xffFFC2D4: Color(0xffE05780), 
-      0xff98C9A3: Color(0xff4F772D), 
-      0xffB6CCFE: Color(0xff0077B6), 
-      0xffFAE588: Color(0xffB69121), 
-      0xffFFD19F: Color(0xffF3722C), 
+      0xffFFC2D4: Color(0xffE05780),
+      0xff98C9A3: Color(0xff4F772D),
+      0xffB6CCFE: Color(0xff0077B6),
+      0xffFAE588: Color(0xffB69121),
+      0xffFFD19F: Color(0xffF3722C),
       0xffDF7373: Color(0xff85182A),
     };
 
@@ -38,11 +38,12 @@ class Category {
     Color? textColor,
     IconData? icon,
   }) {
+    final newColor = color ?? this.color;
     return Category(
       id: id ?? this.id,
       title: title ?? this.title,
-      color: color ?? this.color,
-      textColor: textColor ?? this.textColor,
+      color: newColor,
+      textColor: textColor ?? _getTextColorForBackground(newColor),
       icon: icon ?? this.icon,
     );
   }
@@ -51,7 +52,7 @@ class Category {
     return {
       'title': title,
       'colorValue': color.value,
-      'textColorValue': textColor.value, 
+      'textColorValue': textColor.value,
       'iconCodePoint': icon.codePoint,
       'iconFontFamily': icon.fontFamily,
     };
@@ -65,9 +66,9 @@ class Category {
       title: json['title'] ?? 'Untitled',
       color: color,
       textColor:
-          json['textColorValue'] != null
-              ? Color(json['textColorValue'])
-              : _getTextColorForBackground(color),
+      json['textColorValue'] != null
+          ? Color(json['textColorValue'])
+          : _getTextColorForBackground(color),
       icon: IconData(
         json['iconCodePoint'] ?? Icons.category.codePoint,
         fontFamily: json['iconFontFamily'] ?? Icons.category.fontFamily,
