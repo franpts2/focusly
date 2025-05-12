@@ -314,14 +314,26 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
         onPressed: _selectCategory,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (category != null) ...[
-              Icon(category.icon, color: category.color, size: 16),
+              Icon(category.icon, color: category.color, size: 20),
               const SizedBox(width: 8),
             ],
-            Text(
-              _selectedCategoryId == null ? 'Choose Category' : 'Change Category',
-              style: const TextStyle(fontSize: 14),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _selectedCategoryId == null ? 'Choose' : 'Change',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Category',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ],
         ),
