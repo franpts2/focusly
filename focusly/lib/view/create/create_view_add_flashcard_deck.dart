@@ -379,3 +379,4 @@ class FlashcardUI {
 
   FlashcardUI({required this.front, required this.back});
 }
+
