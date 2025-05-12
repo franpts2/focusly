@@ -3,6 +3,9 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:focusly/model/quiz_model.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
+import 'package:focusly/view/create/create_view_select_category.dart';
+
+import '../../viewmodel/category_viewmodel.dart';
 
 class CreateViewEditQuiz extends StatefulWidget {
   final Quiz quiz;
@@ -14,12 +17,14 @@ class CreateViewEditQuiz extends StatefulWidget {
 
 class _CreateEditQuizState extends State<CreateViewEditQuiz> {
   late TextEditingController _titleController;
+  late String _selectedCategoryId; // Prepopulate category
   final List<QuizQuestion> _questions = [];
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.quiz.title);
+    _selectedCategoryId = widget.quiz.category; // Prepopulate category
     _questions.addAll(widget.quiz.questions.map((q) => QuizQuestion(
       question: q.questionText,
       options: List<String>.from(q.options),
@@ -60,33 +65,32 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
       return;
     }
 
-    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
-
     if (_questions.isEmpty) {
-      _deleteQuiz(quizViewModel);
+      _deleteQuiz(context.read<QuizViewModel>());
       return;
     }
 
-    final List<Question> updatedQuestions =
-    _questions.map(_convertToQuestion).toList();
+    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
 
-    final updatedQuiz = Quiz(
-      id: widget.quiz.id,
+    final List<Question> updatedQuestions =
+        _questions.map(_convertToQuestion).toList();
+
+    final updatedQuiz = widget.quiz.copyWith(
       title: _titleController.text,
-      category: widget.quiz.category,
+      category: _selectedCategoryId ?? widget.quiz.category, // Save updated category
       questions: updatedQuestions,
     );
 
     try {
       await quizViewModel.updateQuiz(updatedQuiz);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Quiz updated successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Quiz updated successfully')),
+      );
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error updating quiz: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating quiz: $e')),
+      );
     }
   }
 
@@ -258,6 +262,56 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
     );
   }
 
+  Widget _buildCategoryButton(BuildContext context) {
+    final category = _selectedCategoryId != null
+        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
+        : null;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(26.0),
+      ),
+      child: TextButton(
+        onPressed: _selectCategory,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (category != null) ...[
+              Icon(category.icon, color: category.color, size: 20),
+              const SizedBox(width: 8),
+            ],
+            Column(
+              children: [
+                Text(
+                  _selectedCategoryId == null ? 'Choose' : 'Change',
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const Text(
+                  'Category',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _selectCategory() {
+    showDialog(
+      context: context,
+      builder: (context) => CategorySelectionDialog(
+        selectedCategoryId: _selectedCategoryId,
+        onCategorySelected: (categoryId) {
+          setState(() {
+            _selectedCategoryId = categoryId;
+          });
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -284,16 +338,7 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(26.0),
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text('Category'),
-                    ),
-                  ),
+                  child: _buildCategoryButton(context),
                 ),
               ],
             ),

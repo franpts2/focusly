@@ -43,22 +43,11 @@ class HomeView extends StatelessWidget {
       ...flashcardDecks.map((deck) => {'type': 'flashcard', 'item': deck}),
       ...quizzes.map((quiz) => {'type': 'quiz', 'item': quiz}),
     ];
+
+    // Sort by `lastOpened` in descending order
     items.sort((a, b) {
-      final aItem = a['item'];
-      final bItem = b['item'];
-
-      final aLastOpened = aItem is FlashcardDeck
-          ? aItem.lastOpened ?? DateTime(0)
-          : aItem is Quiz
-          ? aItem.lastOpened ?? DateTime(0)
-          : DateTime(0);
-
-      final bLastOpened = bItem is FlashcardDeck
-          ? bItem.lastOpened ?? DateTime(0)
-          : bItem is Quiz
-          ? bItem.lastOpened ?? DateTime(0)
-          : DateTime(0);
-
+      final aLastOpened = (a['item'] as dynamic).lastOpened ?? DateTime(0);
+      final bLastOpened = (b['item'] as dynamic).lastOpened ?? DateTime(0);
       return bLastOpened.compareTo(aLastOpened);
     });
 
@@ -89,7 +78,7 @@ class HomeView extends StatelessWidget {
                 deck.title,
                 '${deck.flashcards.length} flashcards',
                 context,
-                category: context.read<CategoryViewModel>().getCategoryById(deck.category),
+                category: context.read<CategoryViewModel>().getCategoryById(deck.category), // Ensure this fetches the updated category
               ),
             );
           } else {
