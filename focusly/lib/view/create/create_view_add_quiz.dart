@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:focusly/model/quiz_model.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
 import 'package:focusly/view/create/create_view_select_category.dart';
+import 'package:focusly/viewmodel/category_viewmodel.dart';
 
 class CreateViewAddQuiz extends StatefulWidget {
   const CreateViewAddQuiz({super.key});
@@ -165,6 +166,47 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
     return false;
   }
 
+  Widget _buildCategoryButton(BuildContext context) {
+    final category = _selectedCategoryId != null
+        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
+        : null;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(26.0),
+      ),
+      child: TextButton(
+        onPressed: _selectCategory,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (category != null) ...[
+              Icon(category.icon, color: category.color, size: 20),
+              const SizedBox(width: 8),
+            ],
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _selectedCategoryId == null ? 'Choose' : 'Change',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Category',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,14 +232,7 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,
-                  child: TextButton(
-                    onPressed: _selectCategory,
-                    child: Text(
-                      _selectedCategoryId == null
-                          ? 'Select Category'
-                          : 'Change Category',
-                    ),
-                  ),
+                  child: _buildCategoryButton(context),
                 ),
               ],
             ),
