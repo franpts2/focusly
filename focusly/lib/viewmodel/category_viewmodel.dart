@@ -13,11 +13,11 @@ class CategoryViewModel extends ChangeNotifier {
   // flag to temporarily ignore firebase updates when we're making local changes
   bool _ignoreNextUpdate = false;
 
-  
+
   List<Category> get categories {
     final sortedCategories = List<Category>.from(_categories);
     sortedCategories.sort(
-      (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
     );
     return sortedCategories;
   }
@@ -218,8 +218,8 @@ class CategoryViewModel extends ChangeNotifier {
   // check if a category with the same title already exists
   bool categoryTitleExists(String title, [String? excludeId]) {
     return _categories.any(
-      (category) =>
-          category.title.toLowerCase() == title.toLowerCase() &&
+          (category) =>
+      category.title.toLowerCase() == title.toLowerCase() &&
           category.id != excludeId,
     );
   }
@@ -231,5 +231,17 @@ class CategoryViewModel extends ChangeNotifier {
     _isInitialized = false;
     //_categories.clear();
     notifyListeners();
+  }
+
+  Category getCategoryById(String? categoryId) {
+    return _categories.firstWhere(
+          (category) => category.id == categoryId,
+      orElse: () => Category(
+        id: null,
+        title: 'General',
+        color: Colors.grey.shade600, // Dark gray color
+        icon: Icons.public, // Planet Earth icon
+      ),
+    );
   }
 }
