@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:focusly/model/category_model.dart';
 import 'package:focusly/services/authentication_service.dart';
+import 'package:focusly/view/profile/category_content_view.dart';
 import 'package:focusly/viewmodel/category_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -206,7 +207,7 @@ class ProfileView extends StatelessWidget {
                       await categoryViewModel.cleanupForSignOut();
 
                       await FirebaseAuth.instance.signOut();
-    
+
                       if (context.mounted) {
                         Navigator.of(
                           context,
@@ -252,7 +253,12 @@ class ProfileView extends StatelessWidget {
       color: category.color,
       child: InkWell(
         onTap: () {
-          // to be implemented
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryContentView(category: category),
+            ),
+          );
         },
         onLongPress: () => _showEditDeleteCategoryDialog(context, category),
         borderRadius: BorderRadius.circular(12),
@@ -372,11 +378,8 @@ class _CategoryDialogState extends State<CategoryDialog> {
     _overlayEntry = OverlayEntry(
       builder: (context) {
         return Positioned(
-          left: buttonPosition.dx - 150, 
-          top:
-              buttonPosition.dy +
-              buttonSize.height +
-              8, 
+          left: buttonPosition.dx - 150,
+          top: buttonPosition.dy + buttonSize.height + 8,
           child: Material(
             elevation: 8,
             borderRadius: BorderRadius.circular(8),
@@ -487,7 +490,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                 ),
                 const SizedBox(width: 8),
                 InkWell(
-                  key: _iconButtonKey, 
+                  key: _iconButtonKey,
                   onTap: _showIconSelector,
                   child: Container(
                     width: 48,
@@ -666,7 +669,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Category created successfully')),
         );
-
       } else {
         // update existing category
         final updatedCategory = widget.category!.copyWith(
@@ -698,7 +700,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
         listen: false,
       );
       categoryViewModel.deleteCategory(widget.category!.id!);
-      Navigator.of(context).pop(); 
+      Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(
         context,
