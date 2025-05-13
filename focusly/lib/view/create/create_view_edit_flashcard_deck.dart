@@ -3,6 +3,9 @@ import 'package:focusly/model/flashcard_deck_model.dart';
 import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:focusly/view/create/create_view_select_category.dart';
+
+import '../../viewmodel/category_viewmodel.dart';
 
 class CreateViewEditFlashcardDeck extends StatefulWidget {
   final FlashcardDeck deck;
@@ -17,10 +20,12 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
   late TextEditingController _titleController;
   late TextEditingController _categoryController;
   late List<FlashcardUI> _flashcards;
+  String? _selectedCategoryId;
 
   @override
   void initState() {
     super.initState();
+    _selectedCategoryId = widget.deck.category; // Prepopulate category
     _titleController = TextEditingController(text: widget.deck.title);
     _categoryController = TextEditingController(text: widget.deck.category);
     _flashcards =
@@ -216,21 +221,7 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(26.0),
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text('Category'),
-                    ),
-                  ),
-                  /*child: TextField(
-                   TextButton(onPressed: () {}, child: Text('Category'))
-                    controller: _categoryController,
-                    decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder(),),
-                  ),*/
+                  child: _buildCategoryButton(context),
                 ),
               ],
             ),
@@ -377,6 +368,57 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(BuildContext context) {
+    final category = _selectedCategoryId != null
+        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
+        : null;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(26.0),
+      ),
+      child: TextButton(
+        onPressed: _selectCategory,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (category != null) ...[
+              Icon(category.icon, color: category.color, size: 20),
+              const SizedBox(width: 8),
+            ],
+            Column(
+              children: [
+                Text(
+                  _selectedCategoryId == null ? 'Choose' : 'Change',
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const Text(
+                  'Category',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _selectCategory() {
+    showDialog(
+      context: context,
+      builder: (context) => CategorySelectionDialog(
+        selectedCategoryId: _selectedCategoryId,
+        onCategorySelected: (categoryId) {
+          setState(() {
+            _selectedCategoryId = categoryId;
+          });
+        },
       ),
     );
   }

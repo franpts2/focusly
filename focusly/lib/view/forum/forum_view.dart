@@ -80,15 +80,15 @@ class _ForumViewState extends State<ForumView>
                     minHeight: 50,
                   ),
                   suffixIcon:
-                      _searchController.text.isEmpty
-                          ? null
-                          : IconButton(
-                            icon: const Icon(Icons.clear, size: 20),
-                            onPressed: () {
-                              _searchController.clear();
-                              forumViewModel.clearSearch();
-                            },
-                          ),
+                  _searchController.text.isEmpty
+                      ? null
+                      : IconButton(
+                    icon: const Icon(Icons.clear, size: 20),
+                    onPressed: () {
+                      _searchController.clear();
+                      forumViewModel.clearSearch();
+                    },
+                  ),
                   suffixIconConstraints: const BoxConstraints(
                     minWidth: 50,
                     minHeight: 50,
@@ -98,7 +98,7 @@ class _ForumViewState extends State<ForumView>
                 onChanged: (value) {
                   forumViewModel.searchQuestions(value);
                   setState(
-                    () {},
+                        () {},
                   ); // Update to show clear button when text is entered
                 },
               ),
@@ -113,141 +113,133 @@ class _ForumViewState extends State<ForumView>
                 allQuestions.isEmpty
                     ? const Center(child: Text("No questions found"))
                     : ListView.builder(
-                      itemCount: allQuestions.length,
-                      itemBuilder: (context, index) {
-                        final question = allQuestions[index];
-                        return Column(
-                          children: [
-                            ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (_) => ForumQuestionDetail(
-                                          question: question,
-                                        ),
-                                  ),
-                                );
-                              },
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    question.userPhotoUrl != null
-                                        ? NetworkImage(question.userPhotoUrl!)
-                                        : null,
-                                backgroundColor: colorScheme.primaryContainer,
-                                child:
-                                    question.userPhotoUrl == null
-                                        ? const Icon(
-                                          Icons.person,
-                                          color: Colors.white,
-                                        )
-                                        : null,
-                              ),
-                              title: Text(
-                                question.title,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.primary,
+                  itemCount: allQuestions.length,
+                  itemBuilder: (context, index) {
+                    final question = allQuestions[index];
+                    return Column(
+                      children: [
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => ForumQuestionDetail(
+                                  question: question,
                                 ),
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    question.description.length > 50
-                                        ? '${question.description.substring(0, 50)}...'
-                                        : question.description,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${question.userName ?? "username"} • ${question.answerCount} answers',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              isThreeLine: true,
+                            );
+                          },
+                          leading: CircleAvatar(
+                            backgroundImage:
+                            question.userPhotoUrl != null
+                                ? NetworkImage(question.userPhotoUrl!)
+                                : null,
+                            backgroundColor: colorScheme.primaryContainer,
+                            child:
+                            question.userPhotoUrl == null
+                                ? const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                            )
+                                : null,
+                          ),
+                          title: Text(
+                            question.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.primary,
                             ),
-                            const Divider(),
-                          ],
-                        );
-                      },
-                    ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                question.description.length > 50
+                                    ? '${question.description.substring(0, 50)}...'
+                                    : question.description,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${question.userName ?? "username"} • ${question.answerCount} answers',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          isThreeLine: true,
+                        ),
+                        const Divider(),
+                      ],
+                    );
+                  },
+                ),
                 // "My Questions" Tab - Displays questions asked by the current user
-                allQuestions.isEmpty
+                myQuestions.isEmpty
                     ? const Center(child: Text("No questions found"))
                     : ListView.builder(
-                      itemCount: allQuestions.length,
-                      itemBuilder: (context, index) {
-                        final question = allQuestions[index];
-                        // Filter questions for the current user.
-                        if (question.userName == user?.displayName) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (_) => ForumQuestionDetail(
-                                            question: question,
-                                          ),
-                                    ),
-                                  );
-                                },
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      question.userPhotoUrl != null
-                                          ? NetworkImage(question.userPhotoUrl!)
-                                          : null,
-                                  backgroundColor: colorScheme.primaryContainer,
-                                  child:
-                                      question.userPhotoUrl == null
-                                          ? const Icon(
-                                            Icons.person,
-                                            color: Colors.white,
-                                          )
-                                          : null,
+                  itemCount: myQuestions.length,
+                  itemBuilder: (context, index) {
+                    final question = myQuestions[index];
+                    return Column(
+                      children: [
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ForumQuestionDetail(
+                                  question: question,
                                 ),
-                                title: Text(
-                                  question.title,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: colorScheme.primary,
-                                  ),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      question.description.length > 50
-                                          ? '${question.description.substring(0, 50)}...'
-                                          : question.description,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '${question.userName ?? "username"} • ${question.answerCount} answers',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                isThreeLine: true,
                               ),
-                              const Divider(),
+                            );
+                          },
+                          leading: CircleAvatar(
+                            backgroundImage: question.userPhotoUrl != null
+                                ? NetworkImage(question.userPhotoUrl!)
+                                : null,
+                            backgroundColor: colorScheme.primaryContainer,
+                            child: question.userPhotoUrl == null
+                                ? const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                            )
+                                : null,
+                          ),
+                          title: Text(
+                            question.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.primary,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                question.description.length > 50
+                                    ? '${question.description.substring(0, 50)}...'
+                                    : question.description,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${question.userName ?? "username"} • ${question.answerCount} answers',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ],
-                          );
-                        } else {
-                          return const SizedBox.shrink(); // Return an empty widget for other users' questions
-                        }
-                      },
-                    ),
+                          ),
+                          isThreeLine: true,
+                        ),
+                        const Divider(),
+                      ],
+                    );
+                  },
+                ),
               ],
             ),
           ),

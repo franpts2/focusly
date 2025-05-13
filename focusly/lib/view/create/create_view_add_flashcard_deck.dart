@@ -3,6 +3,8 @@ import 'package:focusly/model/flashcard_deck_model.dart';
 import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:focusly/view/create/create_view_select_category.dart';
+import 'package:focusly/viewmodel/category_viewmodel.dart';
 
 class CreateViewAddFlashcardDeck extends StatefulWidget {
   const CreateViewAddFlashcardDeck({super.key});
@@ -16,6 +18,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
   final _titleController = TextEditingController();
   final _categoryController = TextEditingController();
   final List<FlashcardUI> _flashcards = [];
+  String? _selectedCategoryId;
 
   @override
   void dispose() {
@@ -40,37 +43,51 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
       context: context,
       builder:
           (context) => FlashcardEditDialog(
-            flashcard: flashcard,
-            onSave: (updatedFlashcard) {
-              setState(() {
-                if (isNew) {
-                  _flashcards.add(updatedFlashcard);
-                } else {
-                  // Update existing flashcard
-                  final index = _flashcards.indexWhere(
+        flashcard: flashcard,
+        onSave: (updatedFlashcard) {
+          setState(() {
+            if (isNew) {
+              _flashcards.add(updatedFlashcard);
+            } else {
+              // Update existing flashcard
+              final index = _flashcards.indexWhere(
                     (f) =>
-                        f.front == flashcard.front && f.back == flashcard.back,
-                  );
-                  if (index != -1) {
-                    _flashcards[index] = updatedFlashcard;
-                  }
-                }
-              });
-            },
-            onDelete:
-                isNew
-                    ? null // No delete for new flashcards
-                    : () {
-                      setState(() {
-                        _flashcards.removeWhere(
-                          (f) =>
-                              f.front == flashcard.front &&
-                              f.back == flashcard.back,
-                        );
-                      });
-                      Navigator.pop(context);
-                    },
-          ),
+                f.front == flashcard.front && f.back == flashcard.back,
+              );
+              if (index != -1) {
+                _flashcards[index] = updatedFlashcard;
+              }
+            }
+          });
+        },
+        onDelete:
+        isNew
+            ? null // No delete for new flashcards
+            : () {
+          setState(() {
+            _flashcards.removeWhere(
+                  (f) =>
+              f.front == flashcard.front &&
+                  f.back == flashcard.back,
+            );
+          });
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _selectCategory() {
+    showDialog(
+      context: context,
+      builder: (context) => CategorySelectionDialog(
+        selectedCategoryId: _selectedCategoryId,
+        onCategorySelected: (categoryId) {
+          setState(() {
+            _selectedCategoryId = categoryId;
+          });
+        },
+      ),
     );
   }
 
@@ -89,6 +106,13 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
       return;
     }
 
+    if (_selectedCategoryId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
+
     final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
       context,
       listen: false,
@@ -96,17 +120,14 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
 
     // Convert FlashcardUI to Flashcard
     final modelFlashcards =
-        _flashcards.map((flashcard) {
-          return Flashcard(front: flashcard.front, back: flashcard.back);
-        }).toList();
+    _flashcards.map((flashcard) {
+      return Flashcard(front: flashcard.front, back: flashcard.back);
+    }).toList();
 
     // Create Deck object
     final deck = FlashcardDeck(
       title: _titleController.text,
-      category:
-          _categoryController.text.isEmpty
-              ? 'General'
-              : _categoryController.text,
+      category: _selectedCategoryId!,
       flashcards: modelFlashcards,
     );
 
@@ -152,21 +173,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(26.0),
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text('Category'),
-                    ),
-                  ),
-                  /*child: TextField(
-                   TextButton(onPressed: () {}, child: Text('Category'))
-                    controller: _categoryController,
-                    decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder(),),
-                  ),*/
+                  child: _buildCategoryButton(context),
                 ),
               ],
             ),
@@ -240,10 +247,10 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           mainAxisSize:
-                              MainAxisSize.min, // Important for centering
+                          MainAxisSize.min, // Important for centering
                           crossAxisAlignment:
-                              CrossAxisAlignment
-                                  .stretch, // Stretch to take full width
+                          CrossAxisAlignment
+                              .stretch, // Stretch to take full width
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -276,7 +283,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
             Positioned(
               top: 15.0, // Adjust position relative to the outer card's padding
               right:
-                  15.0, // Adjust position relative to the outer card's padding
+              15.0, // Adjust position relative to the outer card's padding
               child: IconButton.filled(
                 icon: Icon(Symbols.delete, size: 20),
                 color: colorScheme.onPrimary,
@@ -286,6 +293,47 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                   });
                 },
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(BuildContext context) {
+    final category = _selectedCategoryId != null
+        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
+        : null;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(26.0),
+      ),
+      child: TextButton(
+        onPressed: _selectCategory,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (category != null) ...[
+              Icon(category.icon, color: category.color, size: 20),
+              const SizedBox(width: 8),
+            ],
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _selectedCategoryId == null ? 'Choose' : 'Change',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Category',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ],
         ),

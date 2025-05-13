@@ -15,21 +15,18 @@ class NavigationView extends StatefulWidget {
 
 class _NavigationViewState extends State<NavigationView> {
   int currentIndex = 0;
-  final List<Widget> _pages = const [
-    HomeView(),
-    ForumView(),
-    CreateView(),
-    PomodoroView(skipNotifications: false),
-    ProfileView(),
+  final List<Widget> _pages = [
+    const HomeView(),
+    const ForumView(),
+    const CreateView(),
+    const PomodoroView(skipNotifications: false),
+    const ProfileView(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: currentIndex, children: _pages),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
