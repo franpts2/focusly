@@ -8,6 +8,7 @@ import 'package:focusly/viewmodel/flashcard_deck_viewmodel.dart';
 import 'package:focusly/viewmodel/quiz_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'dart:math';
 
 class CategoryContentView extends StatefulWidget {
   final Category category;
@@ -32,6 +33,65 @@ class _CategoryContentViewState extends State<CategoryContentView>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _openRandomLearningMaterial(BuildContext context) {
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
+      context,
+      listen: false,
+    );
+    final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
+
+    final flashcardDecks =
+        flashcardViewModel.decks
+            .where((deck) => deck.category == widget.category.id)
+            .toList();
+
+    final quizzes =
+        quizViewModel.quizzes
+            .where((quiz) => quiz.category == widget.category.id)
+            .toList();
+
+    // Check if there are any items to choose from
+    if (flashcardDecks.isEmpty && quizzes.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No learning materials available in this category'),
+        ),
+      );
+      return;
+    }
+
+    // Create a combined list of all learning material types
+    final allLearningItems = [
+      ...flashcardDecks.map((deck) => {'type': 'flashcard', 'item': deck}),
+      ...quizzes.map((quiz) => {'type': 'quiz', 'item': quiz}),
+    ];
+
+    // Randomly select an item
+    final random = Random();
+    final randomItem =
+        allLearningItems[random.nextInt(allLearningItems.length)];
+
+    // Navigate to the appropriate view based on the item type
+    if (randomItem['type'] == 'flashcard') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) =>
+                  FlashcardDeckView(deck: randomItem['item'] as FlashcardDeck),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => QuizDeckView(quizDeck: randomItem['item'] as Quiz),
+        ),
+      );
+    }
   }
 
   @override
@@ -69,6 +129,21 @@ class _CategoryContentViewState extends State<CategoryContentView>
             categoryTextColor: widget.category.textColor,
           ),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 24.0),
+        child: FloatingActionButton.extended(
+          onPressed: () => _openRandomLearningMaterial(context),
+          backgroundColor: widget.category.textColor,
+          foregroundColor: widget.category.color,
+          label: const Text(
+            'LEARN',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          icon: const Icon(Symbols.play_arrow),
+          heroTag: 'categoryLearnButton',
+        ),
       ),
     );
   }
@@ -260,8 +335,6 @@ class QuizzesTabView extends StatelessWidget {
   }
 
   Widget _buildQuizCard(BuildContext context, Quiz quiz) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
