@@ -693,6 +693,18 @@ Sprint 2:
   <img src="images/vertical prototype/sprint3/create_category.gif" alt="delete quiz and flashcard" width="32%" />
 </div>
 
+---
+Sprint 3:
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/vertical prototype/sprint3/home_page.gif" alt="edit flashcard deck" width="49%" />
+  <img src="images/vertical prototype/sprint3/category_display.gif" alt="delete quiz and flashcard" width="49%" />
+</div>
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/vertical prototype/sprint3/edit_category_quiz.gif" alt="edit quiz" width="32%" />
+  <img src="images/vertical prototype/sprint3/edit_category_flashcard.gif" alt="edit flashcard deck" width="32%" />
+  <img src="images/vertical prototype/sprint3/create_category.gif" alt="delete quiz and flashcard" width="32%" />
+</div>
+
 
 ## Project management
 <!--
