@@ -190,20 +190,41 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton.filled(
-                    icon: Icon(Icons.arrow_back, color: colorScheme.onPrimary),
+                    icon: Icon(Icons.arrow_back),
                     onPressed: _currentCardIndex > 0 ? _previousCard : null,
-                    disabledColor: colorScheme.tertiary,
+                    style: IconButton.styleFrom(
+                      // Enabled state colors
+                      backgroundColor:
+                          colorScheme.primary, // Background color when enabled
+                      foregroundColor:
+                          colorScheme.onPrimary, // Icon color when enabled
+                      // Disabled state colors
+                      disabledBackgroundColor:
+                          colorScheme
+                              .surfaceContainer, // Background color when disabled
+                      disabledForegroundColor:
+                          Colors.grey[600], // Icon color when disabled
+                    ),
                   ),
                   IconButton.filled(
-                    icon: Icon(
-                      Icons.arrow_forward,
-                      color: colorScheme.onPrimary,
-                    ),
+                    icon: Icon(Icons.arrow_forward),
                     onPressed:
                         _currentCardIndex < _cards.length - 1
                             ? _nextCard
                             : null,
-                    disabledColor: colorScheme.tertiary,
+                    style: IconButton.styleFrom(
+                      // Enabled state colors
+                      backgroundColor:
+                          colorScheme.primary, // Background color when enabled
+                      foregroundColor:
+                          colorScheme.onPrimary, // Icon color when enabled
+                      // Disabled state colors
+                      disabledBackgroundColor:
+                          colorScheme
+                              .surfaceContainer, // Background color when disabled
+                      disabledForegroundColor:
+                          Colors.grey[600], // Icon color when disabled
+                    ),
                   ),
                 ],
               ),
