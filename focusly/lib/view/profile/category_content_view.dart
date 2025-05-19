@@ -149,6 +149,79 @@ class _CategoryContentViewState extends State<CategoryContentView>
   }
 }
 
+Widget _buildCard<T>({
+  required BuildContext context,
+  required T item,
+  required String title,
+  required int itemCount,
+  required Color cardColor,
+  required Color textColor,
+  required IconData icon,
+  required Color iconColor,
+  required Function(BuildContext, T) onTap,
+}) {
+  return Card(
+    elevation: 3,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    color: cardColor,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => onTap(context, item),
+      child: Stack(
+        children: [
+          // Main content - centered title
+          Positioned.fill(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ),
+
+          // Bottom right - count and icon
+          Positioned(
+            bottom: 12,
+            right: 12,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: cardColor.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$itemCount',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: iconColor,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Icon(icon, color: iconColor, size: 18),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 class FlashcardsTabView extends StatelessWidget {
   final String categoryId;
   final Color categoryColor;
@@ -197,84 +270,25 @@ class FlashcardsTabView extends StatelessWidget {
         itemCount: flashcardDecks.length,
         itemBuilder: (context, index) {
           final deck = flashcardDecks[index];
-          return _buildFlashcardDeckCard(context, deck);
-        },
-      ),
-    );
-  }
-
-  Widget _buildFlashcardDeckCard(BuildContext context, FlashcardDeck deck) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: categoryColor,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FlashcardDeckView(deck: deck),
-            ),
+          return _buildCard<FlashcardDeck>(
+            context: context,
+            item: deck,
+            title: deck.title,
+            itemCount: deck.flashcards.length,
+            cardColor: categoryColor,
+            textColor: categoryTextColor,
+            icon: Symbols.library_books,
+            iconColor: Theme.of(context).colorScheme.primary,
+            onTap: (context, deck) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FlashcardDeckView(deck: deck),
+                ),
+              );
+            },
           );
         },
-        child: Stack(
-          children: [
-            // Main content - centered title
-            Positioned.fill(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    deck.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: categoryTextColor,
-                    ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ),
-
-            // Bottom right - count and icon
-            Positioned(
-              bottom: 12,
-              right: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: categoryColor.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${deck.flashcards.length}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Icon(
-                      Symbols.library_books,
-                      color: colorScheme.primary,
-                      size: 18,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -328,78 +342,25 @@ class QuizzesTabView extends StatelessWidget {
         itemCount: quizzes.length,
         itemBuilder: (context, index) {
           final quiz = quizzes[index];
-          return _buildQuizCard(context, quiz);
-        },
-      ),
-    );
-  }
-
-  Widget _buildQuizCard(BuildContext context, Quiz quiz) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: categoryColor,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuizDeckView(quizDeck: quiz),
-            ),
+          return _buildCard<Quiz>(
+            context: context,
+            item: quiz,
+            title: quiz.title,
+            itemCount: quiz.questions.length,
+            cardColor: categoryColor,
+            textColor: categoryTextColor,
+            icon: Symbols.quiz,
+            iconColor: categoryTextColor,
+            onTap: (context, quiz) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizDeckView(quizDeck: quiz),
+                ),
+              );
+            },
           );
         },
-        child: Stack(
-          children: [
-            // Main content - centered title
-            Positioned.fill(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    quiz.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: categoryTextColor,
-                    ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ),
-
-            // Bottom right - count and icon
-            Positioned(
-              bottom: 12,
-              right: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: categoryColor.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${quiz.questions.length}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: categoryTextColor,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Icon(Symbols.quiz, color: categoryTextColor, size: 18),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
