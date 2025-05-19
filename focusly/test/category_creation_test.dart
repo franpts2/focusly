@@ -356,4 +356,298 @@ void main() {
       expect(defaultCategory.icon, Icons.public);
     });
   });
+
+  group('Category Update and Delete Tests', () {
+    test('updateCategory should correctly modify a category', () {
+      // Create a list to simulate the categories collection
+      final List<Category> testCategories = [
+        Category(
+          id: 'id1',
+          title: 'Math',
+          color: Colors.blue,
+          icon: Icons.calculate,
+        ),
+        Category(
+          id: 'id2',
+          title: 'Science',
+          color: Colors.green,
+          icon: Icons.science,
+        ),
+      ];
+
+      // Create a function that mimics the updateCategory method
+      void updateCategory(Category updatedCategory) {
+        final index = testCategories.indexWhere(
+          (c) => c.id == updatedCategory.id,
+        );
+        if (index >= 0) {
+          testCategories[index] = updatedCategory;
+        }
+      }
+
+      // Update the Math category
+      final updatedCategory = Category(
+        id: 'id1',
+        title: 'Mathematics',
+        color: Colors.purple,
+        icon: Icons.functions,
+      );
+
+      updateCategory(updatedCategory);
+
+      // Verify the category was updated
+      expect(
+        testCategories.length,
+        2,
+      ); // Number of categories should remain the same
+
+      final mathCategory = testCategories.firstWhere((c) => c.id == 'id1');
+      expect(mathCategory.title, 'Mathematics');
+      expect(mathCategory.color, Colors.purple);
+      expect(mathCategory.icon, Icons.functions);
+
+      // Other categories should remain unchanged
+      final scienceCategory = testCategories.firstWhere((c) => c.id == 'id2');
+      expect(scienceCategory.title, 'Science');
+      expect(scienceCategory.color, Colors.green);
+      expect(scienceCategory.icon, Icons.science);
+    });
+
+    test('updateCategory should handle non-existent categories gracefully', () {
+      // Create a list to simulate the categories collection
+      final List<Category> testCategories = [
+        Category(
+          id: 'id1',
+          title: 'Math',
+          color: Colors.blue,
+          icon: Icons.calculate,
+        ),
+      ];
+
+      // Create a function that mimics the updateCategory method
+      bool updateCategory(Category updatedCategory) {
+        final index = testCategories.indexWhere(
+          (c) => c.id == updatedCategory.id,
+        );
+        if (index >= 0) {
+          testCategories[index] = updatedCategory;
+          return true;
+        }
+        return false;
+      }
+
+      // Try to update a non-existent category
+      final updatedCategory = Category(
+        id: 'non-existent-id',
+        title: 'History',
+        color: Colors.brown,
+        icon: Icons.history,
+      );
+
+      final updateResult = updateCategory(updatedCategory);
+
+      // Verify that the update failed and categories remain unchanged
+      expect(updateResult, false);
+      expect(testCategories.length, 1);
+      expect(testCategories[0].id, 'id1');
+      expect(testCategories[0].title, 'Math');
+    });
+
+    test('deleteCategory should remove a category by ID', () {
+      // Create a list to simulate the categories collection
+      final List<Category> testCategories = [
+        Category(
+          id: 'id1',
+          title: 'Math',
+          color: Colors.blue,
+          icon: Icons.calculate,
+        ),
+        Category(
+          id: 'id2',
+          title: 'Science',
+          color: Colors.green,
+          icon: Icons.science,
+        ),
+        Category(
+          id: 'id3',
+          title: 'History',
+          color: Colors.brown,
+          icon: Icons.history,
+        ),
+      ];
+
+      // Create a function that mimics the deleteCategory method
+      bool deleteCategory(String categoryId) {
+        final initialLength = testCategories.length;
+        testCategories.removeWhere((category) => category.id == categoryId);
+        return testCategories.length < initialLength;
+      }
+
+      // Delete the Science category
+      final deleteResult = deleteCategory('id2');
+
+      // Verify the category was deleted
+      expect(deleteResult, true);
+      expect(testCategories.length, 2);
+
+      // Check that the correct category was removed
+      expect(testCategories.any((c) => c.id == 'id2'), false);
+
+      // Other categories should still exist
+      expect(testCategories.any((c) => c.id == 'id1'), true);
+      expect(testCategories.any((c) => c.id == 'id3'), true);
+    });
+
+    test('deleteCategory should handle non-existent category IDs', () {
+      // Create a list to simulate the categories collection
+      final List<Category> testCategories = [
+        Category(
+          id: 'id1',
+          title: 'Math',
+          color: Colors.blue,
+          icon: Icons.calculate,
+        ),
+      ];
+
+      // Create a function that mimics the deleteCategory method
+      bool deleteCategory(String categoryId) {
+        final initialLength = testCategories.length;
+        testCategories.removeWhere((category) => category.id == categoryId);
+        return testCategories.length < initialLength;
+      }
+
+      // Try to delete a non-existent category
+      final deleteResult = deleteCategory('non-existent-id');
+
+      // Verify that nothing was deleted
+      expect(deleteResult, false);
+      expect(testCategories.length, 1);
+      expect(testCategories[0].id, 'id1');
+    });
+
+    test(
+      'after deleting a category, getCategoryById should return the default category',
+      () {
+        // Create a list to simulate the categories collection
+        final List<Category> testCategories = [
+          Category(
+            id: 'id1',
+            title: 'Math',
+            color: Colors.blue,
+            icon: Icons.calculate,
+          ),
+        ];
+
+        // Create a function that mimics the deleteCategory method
+        void deleteCategory(String categoryId) {
+          testCategories.removeWhere((category) => category.id == categoryId);
+        }
+
+        // Create a function that mimics the getCategoryById method
+        Category getCategoryById(String? categoryId) {
+          return testCategories.firstWhere(
+            (category) => category.id == categoryId,
+            orElse:
+                () => Category(
+                  id: null,
+                  title: 'General',
+                  color: Colors.grey.shade600,
+                  icon: Icons.public,
+                ),
+          );
+        }
+
+        // Delete the Math category
+        deleteCategory('id1');
+
+        // Try to get the deleted category
+        final result = getCategoryById('id1');
+
+        // Should return the default category
+        expect(result.id, null);
+        expect(result.title, 'General');
+        expect(result.icon, Icons.public);
+      },
+    );
+  });
+
+  group('Category Dialog Logic Tests', () {
+    test('updating a category should preserve its ID', () {
+      // Original category
+      final originalCategory = Category(
+        id: 'original-id',
+        title: 'Original Title',
+        color: Colors.blue,
+        icon: Icons.book,
+      );
+
+      // Simulate updating fields in CategoryDialog
+      final updatedCategory = originalCategory.copyWith(
+        title: 'Updated Title',
+        color: Colors.green,
+        icon: Icons.edit,
+      );
+
+      // ID should be preserved during update
+      expect(updatedCategory.id, 'original-id');
+
+      // Other properties should be updated
+      expect(updatedCategory.title, 'Updated Title');
+      expect(updatedCategory.color, Colors.green);
+      expect(updatedCategory.icon, Icons.edit);
+    });
+
+    test('creating a new category should have null ID', () {
+      // Simulating category creation
+      final newCategory = Category(
+        title: 'New Category',
+        color: Colors.amber,
+        icon: Icons.star,
+      );
+
+      // New categories should have null ID (will be generated by Firebase)
+      expect(newCategory.id, null);
+      expect(newCategory.title, 'New Category');
+    });
+
+    test('duplicate category titles should be detected', () {
+      // List of existing categories
+      final existingCategories = [
+        Category(
+          id: 'id1',
+          title: 'Math',
+          color: Colors.blue,
+          icon: Icons.calculate,
+        ),
+        Category(
+          id: 'id2',
+          title: 'Science',
+          color: Colors.green,
+          icon: Icons.science,
+        ),
+      ];
+
+      // Function to check for duplicates (simulating CategoryViewModel.categoryTitleExists)
+      bool hasDuplicateTitle(String title, [String? excludeId]) {
+        return existingCategories.any(
+          (c) =>
+              c.title.toLowerCase() == title.toLowerCase() && c.id != excludeId,
+        );
+      }
+
+      // Test with exact duplicate
+      expect(hasDuplicateTitle('Math'), true);
+
+      // Test with case-insensitive duplicate
+      expect(hasDuplicateTitle('MATH'), true);
+      expect(hasDuplicateTitle('math'), true);
+
+      // Test with non-duplicate
+      expect(hasDuplicateTitle('History'), false);
+
+      // Test excluding the category's own ID
+      expect(hasDuplicateTitle('Math', 'id1'), false);
+      expect(hasDuplicateTitle('Science', 'id1'), true);
+    });
+  });
 }
