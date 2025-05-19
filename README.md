@@ -684,13 +684,15 @@ Sprint 2:
 ---
 Sprint 3:
 <div style="display: flex; justify-content: space-between;">
-  <img src="images/vertical prototype/sprint3/home_page.gif" alt="quiz and flashcards displayed in home page with corresponding category color" width="49%" />
-  <img src="images/vertical prototype/sprint3/category_display.gif" alt="quizzes and flashcards of a specific category" width="49%" />
-</div>
-<div style="display: flex; justify-content: space-between;">
   <img src="images/vertical prototype/sprint3/edit_category_quiz.gif" alt="edit quiz's category" width="32%" />
   <img src="images/vertical prototype/sprint3/edit_category_flashcard.gif" alt="edit flashcard's category" width="32%" />
   <img src="images/vertical prototype/sprint3/create_category.gif" alt="create new category" width="32%" />
+</div>
+<div style="display: flex; justify-content: space-between;">
+  <img src="images/vertical prototype/sprint3/home_page.gif" alt="quiz and flashcards displayed in home page with corresponding category color" width="24%" />
+  <img src="images/vertical prototype/sprint3/category_display.gif" alt="quizzes and flashcards of a specific category" width="24%" />
+  <img src="images/vertical prototype/sprint3/auth_dark.gif" alt="authentication dark mode" width="24%" />
+  <img src="images/vertical prototype/sprint3/dark_mode.gif" alt="app dark mode" width="24%" />
 </div>
 
 
@@ -865,12 +867,12 @@ _Each row in the table corresponds to an individual's evaluations, with the pers
 
 **Did well**: Strong teamwork and clear task division enabled on-time delivery of major features.
 
-**Do differently**: 
+**Do differently**: Prioritize documentation updates concurrently with feature development
 
-**Puzzles**: 
+**Puzzles**: Color adaptation for dark mode
 
-Improvements to implement next Sprint:
-- 
+Improvements to implement next Sprint: 
+- Define the tasks to be done before work allocation
 
 
 **happiness meters**
