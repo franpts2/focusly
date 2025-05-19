@@ -278,7 +278,7 @@ class FlashcardsTabView extends StatelessWidget {
             cardColor: categoryColor,
             textColor: categoryTextColor,
             icon: Symbols.library_books,
-            iconColor: Theme.of(context).colorScheme.primary,
+            iconColor: categoryTextColor,
             onTap: (context, deck) {
               Navigator.push(
                 context,
