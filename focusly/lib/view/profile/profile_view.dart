@@ -6,8 +6,15 @@ import 'package:focusly/view/profile/category_content_view.dart';
 import 'package:focusly/viewmodel/category_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  bool _isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +24,22 @@ class ProfileView extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Profile"), centerTitle: true),
+      appBar: AppBar(
+        title: Text("Profile"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(_isDarkMode ? Icons.wb_sunny : Icons.dark_mode),
+            onPressed: () {
+              setState(() {
+                _isDarkMode = !_isDarkMode;
+              });
+            },
+            tooltip:
+                _isDarkMode ? 'Switch to light mode' : 'Switch to dark mode',
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.only(right: 16.0, left: 16.0),
         child: SingleChildScrollView(
