@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:focusly/firebase_options.dart';
+import 'package:focusly/services/theme_service.dart';
 import 'package:focusly/view/navigation/navigation_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:focusly/viewmodel/category_viewmodel.dart';
@@ -16,6 +17,9 @@ import 'package:focusly/view/auth/initial_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await ThemeManager.preloadTheme();
+
   runApp(
     MultiProvider(
       providers: [
@@ -25,6 +29,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ForumQuestionViewModel()),
         ChangeNotifierProvider(create: (_) => ForumAnswerViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
+        ChangeNotifierProvider(create: (_) => ThemeService()),
       ],
       child: const MainApp(),
     ),
@@ -36,7 +41,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeService = Provider.of<ThemeService>(context);
+
     return MaterialApp(
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: themeService.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       routes: {
         '/initial': (context) => const InitialPageView(),
         '/splash': (context) => const SplashView(),

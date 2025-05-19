@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:focusly/model/category_model.dart';
 import 'package:focusly/services/authentication_service.dart';
+import 'package:focusly/services/theme_service.dart';
 import 'package:focusly/view/profile/category_content_view.dart';
 import 'package:focusly/viewmodel/category_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -14,14 +15,15 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  bool _isDarkMode = false;
-
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthenticationService>(context);
     final categoryViewModel = Provider.of<CategoryViewModel>(context);
     final user = FirebaseAuth.instance.currentUser;
     final theme = Theme.of(context);
+    final themeService = Provider.of<ThemeService>(context);
+
+    final _isDarkMode = themeService.isDarkMode;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,9 +33,7 @@ class _ProfileViewState extends State<ProfileView> {
           IconButton(
             icon: Icon(_isDarkMode ? Icons.wb_sunny : Icons.dark_mode),
             onPressed: () {
-              setState(() {
-                _isDarkMode = !_isDarkMode;
-              });
+              themeService.setDarkMode(!_isDarkMode);
             },
             tooltip:
                 _isDarkMode ? 'Switch to light mode' : 'Switch to dark mode',
@@ -55,7 +55,10 @@ class _ProfileViewState extends State<ProfileView> {
                       height: 120,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: theme.primaryColor, width: 3),
+                        border: Border.all(
+                          color: theme.colorScheme.primary,
+                          width: 3,
+                        ),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(60),
@@ -100,7 +103,7 @@ class _ProfileViewState extends State<ProfileView> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: theme.primaryColor,
+                      color: theme.colorScheme.onSurface,
                     ),
                   );
                 },
@@ -247,8 +250,8 @@ class _ProfileViewState extends State<ProfileView> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
-                  foregroundColor: Colors.white,
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 12,

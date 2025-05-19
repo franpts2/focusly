@@ -35,7 +35,10 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildContinueLearningSection(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildContinueLearningSection(
+    BuildContext context,
+    ColorScheme colorScheme,
+  ) {
     final flashcardDecks = context.watch<FlashcardDeckViewModel>().decks;
     final quizzes = context.watch<QuizViewModel>().quizzes;
 
@@ -53,55 +56,65 @@ class HomeView extends StatelessWidget {
 
     return _buildSectionWithContent(
       title: 'Continue Learning...',
-      color: colorScheme.primaryContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       icon: Symbols.menu_book,
       textColor: colorScheme.onPrimaryContainer,
-      content: items.isEmpty
-          ? const Center(child: Text('No recent activity'))
-          : ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final item = items[index];
-          if (item['type'] == 'flashcard') {
-            final deck = item['item'] as FlashcardDeck;
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FlashcardDeckView(deck: deck),
-                  ),
-                );
-              },
-              child: _buildCard(
-                deck.title,
-                '${deck.flashcards.length} flashcards',
-                context,
-                category: context.read<CategoryViewModel>().getCategoryById(deck.category), // Ensure this fetches the updated category
+      content:
+          items.isEmpty
+              ? const Center(child: Text('No recent activity'))
+              : ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  if (item['type'] == 'flashcard') {
+                    final deck = item['item'] as FlashcardDeck;
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FlashcardDeckView(deck: deck),
+                          ),
+                        );
+                      },
+                      child: _buildCard(
+                        deck.title,
+                        '${deck.flashcards.length} flashcards',
+                        context,
+                        category: context
+                            .read<CategoryViewModel>()
+                            .getCategoryById(
+                              deck.category,
+                            ), // Ensure this fetches the updated category
+                      ),
+                    );
+                  } else {
+                    final quiz = item['item'] as Quiz;
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuizDeckView(quizDeck: quiz),
+                          ),
+                        );
+                      },
+                      child: _buildCard(
+                        quiz.title,
+                        '${quiz.questions.length} questions',
+                        context,
+                        category: context
+                            .read<CategoryViewModel>()
+                            .getCategoryById(quiz.category),
+                      ),
+                    );
+                  }
+                },
               ),
-            );
-          } else {
-            final quiz = item['item'] as Quiz;
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => QuizDeckView(quizDeck: quiz),
-                  ),
-                );
-              },
-              child: _buildCard(
-                quiz.title,
-                '${quiz.questions.length} questions',
-                context,
-                category: context.read<CategoryViewModel>().getCategoryById(quiz.category),
-              ),
-            );
-          }
-        },
-      ),
     );
   }
 
@@ -110,70 +123,86 @@ class HomeView extends StatelessWidget {
 
     return _buildSectionWithContent(
       title: 'Quizzes',
-      color: colorScheme.primaryContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       icon: Symbols.quiz,
       textColor: colorScheme.onPrimaryContainer,
-      content: quizzes.isEmpty
-          ? const Center(child: Text('No quizzes available'))
-          : ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: quizzes.length,
-        itemBuilder: (context, index) {
-          final quizDeck = quizzes[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => QuizDeckView(quizDeck: quizDeck),
-                ),
-              );
-            },
-            child: _buildCard(
-              quizDeck.title,
-              '${quizDeck.questions.length} questions',
-              context,
-              category: context.read<CategoryViewModel>().getCategoryById(quizDeck.category),
-            ),
-          );
-        },
-      ),
+      content:
+          quizzes.isEmpty
+              ? const Center(child: Text('No quizzes available'))
+              : ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: quizzes.length,
+                itemBuilder: (context, index) {
+                  final quizDeck = quizzes[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => QuizDeckView(quizDeck: quizDeck),
+                        ),
+                      );
+                    },
+                    child: _buildCard(
+                      quizDeck.title,
+                      '${quizDeck.questions.length} questions',
+                      context,
+                      category: context
+                          .read<CategoryViewModel>()
+                          .getCategoryById(quizDeck.category),
+                    ),
+                  );
+                },
+              ),
     );
   }
 
-  Widget _buildFlashcardsSection(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildFlashcardsSection(
+    BuildContext context,
+    ColorScheme colorScheme,
+  ) {
     final flashcardDecks = context.watch<FlashcardDeckViewModel>().decks;
 
     return _buildSectionWithContent(
       title: 'Flashcards',
-      color: colorScheme.primaryContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       icon: Symbols.library_add,
       textColor: colorScheme.onPrimaryContainer,
-      content: flashcardDecks.isEmpty
-          ? const Center(child: Text('No flashcards available'))
-          : ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: flashcardDecks.length,
-        itemBuilder: (context, index) {
-          final deck = flashcardDecks[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FlashcardDeckView(deck: deck),
-                ),
-              );
-            },
-            child: _buildCard(
-              deck.title,
-              '${deck.flashcards.length} flashcards',
-              context,
-              category: context.read<CategoryViewModel>().getCategoryById(deck.category),
-            ),
-          );
-        },
-      ),
+      content:
+          flashcardDecks.isEmpty
+              ? const Center(child: Text('No flashcards available'))
+              : ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: flashcardDecks.length,
+                itemBuilder: (context, index) {
+                  final deck = flashcardDecks[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlashcardDeckView(deck: deck),
+                        ),
+                      );
+                    },
+                    child: _buildCard(
+                      deck.title,
+                      '${deck.flashcards.length} flashcards',
+                      context,
+                      category: context
+                          .read<CategoryViewModel>()
+                          .getCategoryById(deck.category),
+                    ),
+                  );
+                },
+              ),
     );
   }
 
@@ -199,10 +228,7 @@ class HomeView extends StatelessWidget {
                 children: [
                   Icon(icon, size: 24, color: textColor),
                   const SizedBox(width: 8),
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 18, color: textColor),
-                  ),
+                  Text(title, style: TextStyle(fontSize: 18, color: textColor)),
                 ],
               ),
               const SizedBox(height: 12),
@@ -233,10 +259,7 @@ class HomeView extends StatelessWidget {
             children: [
               Icon(icon, size: 24, color: textColor),
               const SizedBox(width: 8),
-              Text(
-                title,
-                style: TextStyle(fontSize: 18, color: textColor),
-              ),
+              Text(title, style: TextStyle(fontSize: 18, color: textColor)),
             ],
           ),
         ),
@@ -244,22 +267,27 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(String title, String subtitle, BuildContext context, {Category? category}) {
-    final cardColor = category?.id == null
-        ? Colors.grey.shade300
-        : category?.color ?? Colors.grey.shade300;
-    final textColor = category?.id == null
-        ? Colors.grey.shade600
-        : category?.textColor ?? Colors.black;
+  Widget _buildCard(
+    String title,
+    String subtitle,
+    BuildContext context, {
+    Category? category,
+  }) {
+    final cardColor =
+        category?.id == null
+            ? Colors.grey.shade300
+            : category?.color ?? Colors.grey.shade300;
+    final textColor =
+        category?.id == null
+            ? Colors.grey.shade600
+            : category?.textColor ?? Colors.black;
 
     return Container(
       width: 140,
       margin: const EdgeInsets.only(right: 12),
       child: Card(
         color: cardColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -280,10 +308,7 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.black),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -297,10 +322,7 @@ class HomeView extends StatelessWidget {
                     Expanded(
                       child: Text(
                         category.title,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: textColor,
-                        ),
+                        style: TextStyle(fontSize: 12, color: textColor),
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -315,4 +337,3 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-
