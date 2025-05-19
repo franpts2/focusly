@@ -109,18 +109,14 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
       listen: false,
     );
 
-    final modelFlashcards =
-        _flashcards.map((flashcard) {
-          return Flashcard(front: flashcard.front, back: flashcard.back);
-        }).toList();
+    final modelFlashcards = _flashcards.map((flashcard) {
+      return Flashcard(front: flashcard.front, back: flashcard.back);
+    }).toList();
 
     final updatedDeck = FlashcardDeck(
       id: widget.deck.id,
       title: _titleController.text,
-      category:
-          _categoryController.text.isEmpty
-              ? 'General'
-              : _categoryController.text,
+      category: _selectedCategoryId ?? 'General',
       flashcards: modelFlashcards,
     );
 
