@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Sprint 3] - May 19, 2025
+### Added
+- Categories: users can create, delete, and update categories, which are used to organize quizzes and flashcards
+- Dark mode: users can switch between light and dark themes for improved accessibility and user experience
+
+### Notes
+- Categories are now available as an option when creating or editing quizzes and flashcards
+- All Sprint 3 PBIs have been completed
+
 ## [Sprint 2] - April 28, 2025
 ### Added
 - Forum: users can post questions, answer existing ones, and search through questions
