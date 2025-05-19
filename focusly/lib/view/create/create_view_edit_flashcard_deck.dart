@@ -109,9 +109,10 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
       listen: false,
     );
 
-    final modelFlashcards = _flashcards.map((flashcard) {
-      return Flashcard(front: flashcard.front, back: flashcard.back);
-    }).toList();
+    final modelFlashcards =
+        _flashcards.map((flashcard) {
+          return Flashcard(front: flashcard.front, back: flashcard.back);
+        }).toList();
 
     final updatedDeck = FlashcardDeck(
       id: widget.deck.id,
@@ -215,10 +216,7 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
-                  flex: 1,
-                  child: _buildCategoryButton(context),
-                ),
+                Expanded(flex: 1, child: _buildCategoryButton(context)),
               ],
             ),
             const SizedBox(height: 24),
@@ -300,17 +298,17 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
       padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
-        color: colorScheme.primaryContainer,
+        color:
+            Theme.of(context).brightness == Brightness.light
+                ? colorScheme.primaryContainer
+                : colorScheme.secondaryContainer,
         child: Stack(
           children: [
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: GestureDetector(
                 onTap: () {
-                  _showFlashcardDialog(
-                    flashcard: flashcard,
-                    isNew: false,
-                  );  
+                  _showFlashcardDialog(flashcard: flashcard, isNew: false);
                 },
                 child: Card(
                   child: Stack(
@@ -369,9 +367,12 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
   }
 
   Widget _buildCategoryButton(BuildContext context) {
-    final category = _selectedCategoryId != null
-        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
-        : null;
+    final category =
+        _selectedCategoryId != null
+            ? context.read<CategoryViewModel>().getCategoryById(
+              _selectedCategoryId!,
+            )
+            : null;
 
     return Container(
       decoration: BoxDecoration(
@@ -393,10 +394,7 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
                   _selectedCategoryId == null ? 'Choose' : 'Change',
                   style: const TextStyle(fontSize: 14),
                 ),
-                const Text(
-                  'Category',
-                  style: TextStyle(fontSize: 14),
-                ),
+                const Text('Category', style: TextStyle(fontSize: 14)),
               ],
             ),
           ],
@@ -408,14 +406,15 @@ class _CreateViewEditFlashcardState extends State<CreateViewEditFlashcardDeck> {
   void _selectCategory() {
     showDialog(
       context: context,
-      builder: (context) => CategorySelectionDialog(
-        selectedCategoryId: _selectedCategoryId,
-        onCategorySelected: (categoryId) {
-          setState(() {
-            _selectedCategoryId = categoryId;
-          });
-        },
-      ),
+      builder:
+          (context) => CategorySelectionDialog(
+            selectedCategoryId: _selectedCategoryId,
+            onCategorySelected: (categoryId) {
+              setState(() {
+                _selectedCategoryId = categoryId;
+              });
+            },
+          ),
     );
   }
 }
@@ -458,7 +457,10 @@ class _FlashcardEditDialogState extends State<FlashcardEditDialog> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      backgroundColor: colorScheme.primaryContainer,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

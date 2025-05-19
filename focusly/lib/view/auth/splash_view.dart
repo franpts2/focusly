@@ -78,7 +78,7 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
     }
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Color(0xFF65558F),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

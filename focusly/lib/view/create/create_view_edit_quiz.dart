@@ -25,11 +25,15 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
     super.initState();
     _titleController = TextEditingController(text: widget.quiz.title);
     _selectedCategoryId = widget.quiz.category; // Prepopulate category
-    _questions.addAll(widget.quiz.questions.map((q) => QuizQuestion(
-      question: q.questionText,
-      options: List<String>.from(q.options),
-      correctIndex: q.options.indexOf(q.correctAnswer),
-    )));
+    _questions.addAll(
+      widget.quiz.questions.map(
+        (q) => QuizQuestion(
+          question: q.questionText,
+          options: List<String>.from(q.options),
+          correctIndex: q.options.indexOf(q.correctAnswer),
+        ),
+      ),
+    );
   }
 
   @override
@@ -77,7 +81,8 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
 
     final updatedQuiz = widget.quiz.copyWith(
       title: _titleController.text,
-      category: _selectedCategoryId ?? widget.quiz.category, // Save updated category
+      category:
+          _selectedCategoryId ?? widget.quiz.category, // Save updated category
       questions: updatedQuestions,
     );
 
@@ -88,9 +93,9 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
       );
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating quiz: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error updating quiz: $e')));
     }
   }
 
@@ -106,7 +111,6 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
         context,
       ).showSnackBar(SnackBar(content: Text('Error deleting quiz: $e')));
     }
-
   }
 
   void _showQuestionDialog({
@@ -115,43 +119,46 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
   }) {
     showDialog(
       context: context,
-      builder: (context) => QuestionEditDialog(
-        question: question,
-        onSave: (updatedQuestion) {
-          if (_hasDuplicateOptions(updatedQuestion.options)) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Options cannot have the same value')),
-            );
-            return;
-          }
-          setState(() {
-            if (isNew) {
-              _questions.add(updatedQuestion);
-            } else {
-              final index = _questions.indexWhere(
-                    (q) => q.question == question.question,
-              );
-              if (index != -1) {
-                _questions[index] = updatedQuestion;
+      builder:
+          (context) => QuestionEditDialog(
+            question: question,
+            onSave: (updatedQuestion) {
+              if (_hasDuplicateOptions(updatedQuestion.options)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Options cannot have the same value'),
+                  ),
+                );
+                return;
               }
-            }
-          });
-        },
-        onDelete: isNew
-            ? null
-            : () {
-          setState(() {
-            _questions.removeWhere(
-                  (q) => q.question == question.question,
-            );
-            if (_questions.isEmpty) {
-              _showDeleteConfirmationDialog();
-            }
-          });
-          Navigator.pop(context);
-        },
-      ),
+              setState(() {
+                if (isNew) {
+                  _questions.add(updatedQuestion);
+                } else {
+                  final index = _questions.indexWhere(
+                    (q) => q.question == question.question,
+                  );
+                  if (index != -1) {
+                    _questions[index] = updatedQuestion;
+                  }
+                }
+              });
+            },
+            onDelete:
+                isNew
+                    ? null
+                    : () {
+                      setState(() {
+                        _questions.removeWhere(
+                          (q) => q.question == question.question,
+                        );
+                        if (_questions.isEmpty) {
+                          _showDeleteConfirmationDialog();
+                        }
+                      });
+                      Navigator.pop(context);
+                    },
+          ),
     );
   }
 
@@ -161,7 +168,9 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Delete Quiz?'),
-          content: const Text('All questions have been removed. Do you want to delete this quiz?'),
+          content: const Text(
+            'All questions have been removed. Do you want to delete this quiz?',
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -171,8 +180,10 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
             ),
             TextButton(
               onPressed: () {
-                final quizViewModel =
-                Provider.of<QuizViewModel>(context, listen: false);
+                final quizViewModel = Provider.of<QuizViewModel>(
+                  context,
+                  listen: false,
+                );
                 _deleteQuiz(quizViewModel);
                 Navigator.of(context).pop();
               },
@@ -200,7 +211,10 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      color: colorScheme.primaryContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -263,9 +277,12 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
   }
 
   Widget _buildCategoryButton(BuildContext context) {
-    final category = _selectedCategoryId != null
-        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
-        : null;
+    final category =
+        _selectedCategoryId != null
+            ? context.read<CategoryViewModel>().getCategoryById(
+              _selectedCategoryId!,
+            )
+            : null;
 
     return Container(
       decoration: BoxDecoration(
@@ -287,10 +304,7 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
                   _selectedCategoryId == null ? 'Choose' : 'Change',
                   style: const TextStyle(fontSize: 14),
                 ),
-                const Text(
-                  'Category',
-                  style: TextStyle(fontSize: 14),
-                ),
+                const Text('Category', style: TextStyle(fontSize: 14)),
               ],
             ),
           ],
@@ -302,19 +316,22 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
   void _selectCategory() {
     showDialog(
       context: context,
-      builder: (context) => CategorySelectionDialog(
-        selectedCategoryId: _selectedCategoryId,
-        onCategorySelected: (categoryId) {
-          setState(() {
-            _selectedCategoryId = categoryId;
-          });
-        },
-      ),
+      builder:
+          (context) => CategorySelectionDialog(
+            selectedCategoryId: _selectedCategoryId,
+            onCategorySelected: (categoryId) {
+              setState(() {
+                _selectedCategoryId = categoryId;
+              });
+            },
+          ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Quiz'), centerTitle: true),
       body: Padding(
@@ -336,10 +353,7 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
-                  flex: 1,
-                  child: _buildCategoryButton(context),
-                ),
+                Expanded(flex: 1, child: _buildCategoryButton(context)),
               ],
             ),
             const SizedBox(height: 24),
@@ -374,12 +388,15 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
                 child: ElevatedButton(
                   onPressed: _saveQuiz,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Done',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                      color: colorScheme.onPrimary,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
@@ -436,7 +453,10 @@ class _QuestionEditDialogState extends State<QuestionEditDialog> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      backgroundColor: colorScheme.primaryContainer,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

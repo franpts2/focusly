@@ -25,8 +25,13 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
     // Initialize with the deck's flashcards
     _cards = widget.deck.flashcards;
     // Update the lastOpened timestamp
-    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(context, listen: false);
-    flashcardViewModel.updateDeck(widget.deck.copyWith(lastOpened: DateTime.now()));
+    final flashcardViewModel = Provider.of<FlashcardDeckViewModel>(
+      context,
+      listen: false,
+    );
+    flashcardViewModel.updateDeck(
+      widget.deck.copyWith(lastOpened: DateTime.now()),
+    );
   }
 
   void _flipCard() {
@@ -62,11 +67,12 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
         final isUnder = (ValueKey(_isFront) != widget?.key);
         var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
         tilt *= isUnder ? -1.0 : 1.0;
-        final value = isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
-      
+        final value =
+            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+
         // Only show the widget when it's mostly facing the viewer
-        final shouldShow = value.abs() < pi/2;
-      
+        final shouldShow = value.abs() < pi / 2;
+
         return Transform(
           transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
           alignment: Alignment.center,
@@ -82,7 +88,10 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
       key: const ValueKey<bool>(true), // Unique key for the front
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      color: colorScheme.surfaceContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.surfaceContainer
+              : colorScheme.secondaryContainer,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -102,13 +111,22 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
       key: const ValueKey<bool>(false), // Unique key for the back
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      color: colorScheme.surfaceContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.surfaceContainer
+              : colorScheme.secondaryContainer,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
             text,
-            style: TextStyle(fontSize: 24, color: Colors.grey[600]),
+            style: TextStyle(
+              fontSize: 24,
+              color:
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey[600]
+                      : colorScheme.onPrimaryContainer,
+            ),
             textAlign: TextAlign.center,
           ),
         ),
@@ -146,7 +164,7 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                 height: cardHeight,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 700),
-                  switchInCurve: Curves.easeIn,  // Add this line
+                  switchInCurve: Curves.easeIn, // Add this line
                   transitionBuilder: _transitionBuilder,
                   layoutBuilder: (currentChild, previousChildren) {
                     return Stack(
@@ -156,9 +174,10 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                       ],
                     );
                   },
-                child: _isFront
-                  ? _buildFront(context, currentCard.front)
-                  : _buildBack(context, currentCard.back),
+                  child:
+                      _isFront
+                          ? _buildFront(context, currentCard.front)
+                          : _buildBack(context, currentCard.back),
                 ),
               ),
             ),
@@ -171,20 +190,41 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton.filled(
-                    icon: Icon(Icons.arrow_back, color: colorScheme.onPrimary),
+                    icon: Icon(Icons.arrow_back),
                     onPressed: _currentCardIndex > 0 ? _previousCard : null,
-                    disabledColor: colorScheme.tertiary,
+                    style: IconButton.styleFrom(
+                      // Enabled state colors
+                      backgroundColor:
+                          colorScheme.primary, // Background color when enabled
+                      foregroundColor:
+                          colorScheme.onPrimary, // Icon color when enabled
+                      // Disabled state colors
+                      disabledBackgroundColor:
+                          colorScheme
+                              .surfaceContainer, // Background color when disabled
+                      disabledForegroundColor:
+                          Colors.grey[600], // Icon color when disabled
+                    ),
                   ),
                   IconButton.filled(
-                    icon: Icon(
-                      Icons.arrow_forward,
-                      color: colorScheme.onPrimary,
-                    ),
+                    icon: Icon(Icons.arrow_forward),
                     onPressed:
                         _currentCardIndex < _cards.length - 1
                             ? _nextCard
                             : null,
-                    disabledColor: colorScheme.tertiary,
+                    style: IconButton.styleFrom(
+                      // Enabled state colors
+                      backgroundColor:
+                          colorScheme.primary, // Background color when enabled
+                      foregroundColor:
+                          colorScheme.onPrimary, // Icon color when enabled
+                      // Disabled state colors
+                      disabledBackgroundColor:
+                          colorScheme
+                              .surfaceContainer, // Background color when disabled
+                      disabledForegroundColor:
+                          Colors.grey[600], // Icon color when disabled
+                    ),
                   ),
                 ],
               ),

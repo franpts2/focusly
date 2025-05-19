@@ -26,6 +26,7 @@ class _SignInViewState extends State<SignInView> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthenticationService>(context);
 
+    final colorScheme = Theme.of(context).colorScheme;
     final primaryColor = Theme.of(context).primaryColor;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
     final tertiaryColor = Theme.of(context).colorScheme.tertiary;
@@ -42,7 +43,7 @@ class _SignInViewState extends State<SignInView> {
                 width: 250,
                 height: 250,
                 decoration: BoxDecoration(
-                  color: primaryColor,
+                  color: colorScheme.primary,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -87,7 +88,7 @@ class _SignInViewState extends State<SignInView> {
                           style: TextStyle(
                             fontSize: 57,
                             fontWeight: FontWeight.w400,
-                            color: primaryColor,
+                            color: colorScheme.primary,
                           ),
                         ),
                         TextSpan(
@@ -95,7 +96,7 @@ class _SignInViewState extends State<SignInView> {
                           style: TextStyle(
                             fontSize: 57,
                             fontWeight: FontWeight.w400,
-                            color: primaryColor,
+                            color: colorScheme.primary,
                           ),
                         ),
                       ],
@@ -156,7 +157,7 @@ class _SignInViewState extends State<SignInView> {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryColor,
+                              backgroundColor: colorScheme.primary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -184,11 +185,11 @@ class _SignInViewState extends State<SignInView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
+                            Text(
                               "Don't have an account? ",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black87,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                             GestureDetector(

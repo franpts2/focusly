@@ -41,13 +41,19 @@ class CreateView extends StatelessWidget {
                     icon: Symbols.library_add,
                     title: 'Flashcards',
                     description: 'Boost your memory with cards',
-                    color: colorScheme.primaryContainer,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateViewAddFlashcardDeck(),
-                      ),
-                    ),
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? colorScheme.primaryContainer
+                            : colorScheme.secondaryContainer,
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => const CreateViewAddFlashcardDeck(),
+                          ),
+                        ),
+                    context: context,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -56,13 +62,18 @@ class CreateView extends StatelessWidget {
                     icon: Symbols.quiz,
                     title: 'Quiz',
                     description: 'Test your knowledge',
-                    color: colorScheme.primaryContainer,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateViewAddQuiz(),
-                      ),
-                    ),
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? colorScheme.primaryContainer
+                            : colorScheme.secondaryContainer,
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CreateViewAddQuiz(),
+                          ),
+                        ),
+                    context: context,
                   ),
                 ),
               ],
@@ -80,7 +91,6 @@ class CreateView extends StatelessWidget {
 
             _buildFlashcardsSection(context, colorScheme),
             const SizedBox(height: 16),
-
             _buildQuizzesSection(context, colorScheme),
           ],
         ),
@@ -94,6 +104,7 @@ class CreateView extends StatelessWidget {
     required String description,
     required Color color,
     required VoidCallback onTap,
+    required BuildContext context,
   }) {
     return SizedBox(
       height: 170, // Fixed height for consistency
@@ -101,7 +112,9 @@ class CreateView extends StatelessWidget {
         onTap: onTap,
         child: Card(
           color: color,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -127,7 +140,10 @@ class CreateView extends StatelessWidget {
                     description,
                     maxLines: 2,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black54, fontSize: 14,),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 14,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -144,7 +160,8 @@ class CreateView extends StatelessWidget {
     required double height,
     required Color color,
     required List<dynamic> items, // Accepts either flashcards or quizzes
-    required Widget Function(dynamic item) builder, // Builder for rendering items
+    required Widget Function(dynamic item)
+    builder, // Builder for rendering items
   }) {
     return SizedBox(
       width: double.infinity,
@@ -160,9 +177,7 @@ class CreateView extends StatelessWidget {
               Text(title, style: const TextStyle(fontSize: 18)),
               const SizedBox(height: 12),
               if (items.isEmpty)
-                const Expanded(
-                  child: Center(child: Text('No items available')),
-                )
+                const Expanded(child: Center(child: Text('No items available')))
               else
                 Expanded(
                   child: ListView.builder(
@@ -180,16 +195,24 @@ class CreateView extends StatelessWidget {
     );
   }
 
-  Widget _buildFlashcardsSection(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildFlashcardsSection(
+    BuildContext context,
+    ColorScheme colorScheme,
+  ) {
     final flashcardDecks = context.watch<FlashcardDeckViewModel>().decks;
 
     return _buildEditableItem(
       title: 'My Flashcards',
       height: 190,
-      color: colorScheme.primaryContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       items: flashcardDecks,
       builder: (deck) {
-        final category = context.read<CategoryViewModel>().getCategoryById(deck.category);
+        final category = context.read<CategoryViewModel>().getCategoryById(
+          deck.category,
+        );
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -216,10 +239,15 @@ class CreateView extends StatelessWidget {
     return _buildEditableItem(
       title: 'My Quizzes',
       height: 190,
-      color: colorScheme.primaryContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       items: quizzes,
       builder: (quiz) {
-        final category = context.read<CategoryViewModel>().getCategoryById(quiz.category);
+        final category = context.read<CategoryViewModel>().getCategoryById(
+          quiz.category,
+        );
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -240,8 +268,14 @@ class CreateView extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(String title, String subtitle, BuildContext context, {Category? category}) {
-    final cardColor = category?.color ?? Colors.grey.shade300; // Default to light gray
+  Widget _buildCategoryCard(
+    String title,
+    String subtitle,
+    BuildContext context, {
+    Category? category,
+  }) {
+    final cardColor =
+        category?.color ?? Colors.grey.shade300; // Default to light gray
     final textColor = category?.textColor ?? Colors.black; // Default to black
 
     return Container(
@@ -249,14 +283,13 @@ class CreateView extends StatelessWidget {
       margin: const EdgeInsets.only(right: 12),
       child: Card(
         color: cardColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(10.0), // Compact padding
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center, // Center title and count
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Center title and count
             children: [
               // Title
               Text(
@@ -288,15 +321,15 @@ class CreateView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(category.icon, size: 16, color: textColor),
-                    const SizedBox(width: 4), // Closer spacing between icon and text
+                    const SizedBox(
+                      width: 4,
+                    ), // Closer spacing between icon and text
                     Expanded(
                       child: Text(
                         category.title,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: textColor,
-                        ),
-                        textAlign: TextAlign.start, // Align category name to the left
+                        style: TextStyle(fontSize: 12, color: textColor),
+                        textAlign:
+                            TextAlign.start, // Align category name to the left
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

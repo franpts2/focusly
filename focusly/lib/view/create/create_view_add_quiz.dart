@@ -39,14 +39,15 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
   void _selectCategory() {
     showDialog(
       context: context,
-      builder: (context) => CategorySelectionDialog(
-        selectedCategoryId: _selectedCategoryId,
-        onCategorySelected: (categoryId) {
-          setState(() {
-            _selectedCategoryId = categoryId;
-          });
-        },
-      ),
+      builder:
+          (context) => CategorySelectionDialog(
+            selectedCategoryId: _selectedCategoryId,
+            onCategorySelected: (categoryId) {
+              setState(() {
+                _selectedCategoryId = categoryId;
+              });
+            },
+          ),
     );
   }
 
@@ -75,9 +76,9 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
     }
 
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }
 
@@ -85,7 +86,7 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
 
     // Convert UI questions to database model questions
     final List<Question> modelQuestions =
-    _questions.map(_convertToQuestion).toList();
+        _questions.map(_convertToQuestion).toList();
 
     // Create Quiz object
     final quiz = Quiz(
@@ -118,40 +119,42 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
       context: context,
       builder:
           (context) => QuestionEditDialog(
-        question: question,
-        onSave: (updatedQuestion) {
-          if (_hasDuplicateOptions(updatedQuestion.options)) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Options cannot have the same value')),
-            );
-            return;
-          }
-          setState(() {
-            if (isNew) {
-              _questions.add(updatedQuestion);
-            } else {
-              // Find and update the existing question
-              final index = _questions.indexWhere(
-                    (q) => q.question == question.question,
-              );
-              if (index != -1) {
-                _questions[index] = updatedQuestion;
+            question: question,
+            onSave: (updatedQuestion) {
+              if (_hasDuplicateOptions(updatedQuestion.options)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Options cannot have the same value'),
+                  ),
+                );
+                return;
               }
-            }
-          });
-        },
-        onDelete:
-        isNew
-            ? null // No delete for new questions
-            : () {
-          setState(() {
-            _questions.removeWhere(
-                  (q) => q.question == question.question,
-            );
-          });
-          Navigator.pop(context);
-        },
-      ),
+              setState(() {
+                if (isNew) {
+                  _questions.add(updatedQuestion);
+                } else {
+                  // Find and update the existing question
+                  final index = _questions.indexWhere(
+                    (q) => q.question == question.question,
+                  );
+                  if (index != -1) {
+                    _questions[index] = updatedQuestion;
+                  }
+                }
+              });
+            },
+            onDelete:
+                isNew
+                    ? null // No delete for new questions
+                    : () {
+                      setState(() {
+                        _questions.removeWhere(
+                          (q) => q.question == question.question,
+                        );
+                      });
+                      Navigator.pop(context);
+                    },
+          ),
     );
   }
 
@@ -167,9 +170,12 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
   }
 
   Widget _buildCategoryButton(BuildContext context) {
-    final category = _selectedCategoryId != null
-        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
-        : null;
+    final category =
+        _selectedCategoryId != null
+            ? context.read<CategoryViewModel>().getCategoryById(
+              _selectedCategoryId!,
+            )
+            : null;
 
     return Container(
       decoration: BoxDecoration(
@@ -209,6 +215,8 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Add Quiz'), centerTitle: true),
       body: Padding(
@@ -230,10 +238,7 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
-                  flex: 1,
-                  child: _buildCategoryButton(context),
-                ),
+                Expanded(flex: 1, child: _buildCategoryButton(context)),
               ],
             ),
             const SizedBox(height: 24),
@@ -268,12 +273,15 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
                 child: ElevatedButton(
                   onPressed: _saveQuiz,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Done',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                      color: colorScheme.onPrimary,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
@@ -288,7 +296,10 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      color: colorScheme.primaryContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -387,7 +398,10 @@ class _QuestionEditDialogState extends State<QuestionEditDialog> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      backgroundColor: colorScheme.primaryContainer,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

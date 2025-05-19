@@ -8,6 +8,7 @@ class InitialPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final primaryColor =
         Theme.of(context).primaryColor; // Primary color from the theme
     final tertiaryColor =
@@ -18,7 +19,7 @@ class InitialPageView extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           // Welcome text
@@ -33,16 +34,16 @@ class InitialPageView extends StatelessWidget {
                 SizedBox(height: screenHeight * 0.1),
                 Text(
                   "Start organizing\nyour study now",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 45,
                     fontWeight: FontWeight.w400,
-                    color: Colors.black87,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ],
             ),
           ),
-          // Sign In button 
+          // Sign In button
           Positioned(
             top:
                 screenHeight *
@@ -57,7 +58,7 @@ class InitialPageView extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
+                backgroundColor: colorScheme.primary,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.horizontal(
                     right: Radius.circular(60),
@@ -73,21 +74,20 @@ class InitialPageView extends StatelessWidget {
                 ),
                 alignment: Alignment.centerLeft, // Align text to the left
               ),
-              child: const Text(
+              child: Text(
                 "Sign In",
                 style: TextStyle(
                   fontSize: 36,
-                  color: Colors.white,
+                  color: colorScheme.onPrimary,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
           ),
 
-          // Sign Up button 
+          // Sign Up button
           Positioned(
-            top:
-                screenHeight * 0.70,
+            top: screenHeight * 0.70,
             right: 0, // Partially cut by the screen
             child: ElevatedButton(
               onPressed: () {
@@ -113,11 +113,11 @@ class InitialPageView extends StatelessWidget {
                 ),
                 alignment: Alignment.centerRight, // Align text to the right
               ),
-              child: const Text(
+              child: Text(
                 "Sign Up",
                 style: TextStyle(
                   fontSize: 36,
-                  color: Colors.white,
+                  color: colorScheme.onTertiary,
                   fontWeight: FontWeight.w400,
                 ),
               ),

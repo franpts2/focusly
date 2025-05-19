@@ -28,6 +28,7 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthenticationService>(context);
 
+    final colorScheme = Theme.of(context).colorScheme;
     final primaryColor = Theme.of(context).primaryColor;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
     final tertiaryColor = Theme.of(context).colorScheme.tertiary;
@@ -50,7 +51,7 @@ class _SignUpViewState extends State<SignUpView> {
                 width: 250,
                 height: 250,
                 decoration: BoxDecoration(
-                  color: primaryColor,
+                  color: colorScheme.primary,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -223,11 +224,11 @@ class _SignUpViewState extends State<SignUpView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
+                            Text(
                               "Already have an account? ",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black87,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                             GestureDetector(
@@ -244,7 +245,7 @@ class _SignUpViewState extends State<SignUpView> {
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: primaryColor,
+                                  color: colorScheme.primary,
                                 ),
                               ),
                             ),

@@ -22,7 +22,9 @@ class _QuizDeckViewState extends State<QuizDeckView> {
     _selectedAnswers = List.filled(widget.quizDeck.questions.length, null);
     // Update the lastOpened timestamp
     final quizViewModel = Provider.of<QuizViewModel>(context, listen: false);
-    quizViewModel.updateQuiz(widget.quizDeck.copyWith(lastOpened: DateTime.now()));
+    quizViewModel.updateQuiz(
+      widget.quizDeck.copyWith(lastOpened: DateTime.now()),
+    );
   }
 
   void _restartQuiz() {
@@ -32,9 +34,10 @@ class _QuizDeckViewState extends State<QuizDeckView> {
     Navigator.pop(context);
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.quizDeck.title),
@@ -60,10 +63,13 @@ class _QuizDeckViewState extends State<QuizDeckView> {
                 child: ElevatedButton(
                   onPressed: _submitQuiz,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: colorScheme.primary,
                     padding: const EdgeInsets.all(16),
                   ),
-                  child: const Text('Submit', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                 ),
               ),
             ],
@@ -117,13 +123,23 @@ class _QuizDeckViewState extends State<QuizDeckView> {
           scoreBackgroundColor = Colors.red.shade100;
         }
         return AlertDialog(
-          title: const Text('Quiz Completed!', textAlign: TextAlign.center,),
+          title: const Text(
+            'Quiz Completed!',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black),
+          ),
           backgroundColor: scoreBackgroundColor,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(_getScoreMessage(score, widget.quizDeck.questions.length)),
-              Text('Your score: $score / ${widget.quizDeck.questions.length}'),
+              Text(
+                _getScoreMessage(score, widget.quizDeck.questions.length),
+                style: TextStyle(color: Colors.black),
+              ),
+              Text(
+                'Your score: $score / ${widget.quizDeck.questions.length}',
+                style: TextStyle(color: Colors.black),
+              ),
             ],
           ),
           actions: [
@@ -132,11 +148,14 @@ class _QuizDeckViewState extends State<QuizDeckView> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: const Text('OK'),
+              child: const Text('OK', style: TextStyle(color: Colors.black)),
             ),
             TextButton(
               onPressed: _restartQuiz,
-              child: const Text('Restart'),
+              child: const Text(
+                'Restart',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -174,4 +193,3 @@ class _QuizDeckViewState extends State<QuizDeckView> {
     return false;
   }
 }
-

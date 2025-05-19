@@ -27,7 +27,10 @@ class PomodoroViewState extends State<PomodoroView> {
           height: 230,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: colorScheme.primaryContainer,
+            color:
+                Theme.of(context).brightness == Brightness.light
+                    ? colorScheme.primaryContainer
+                    : colorScheme.secondaryContainer,
           ),
           padding: EdgeInsets.symmetric(horizontal: 3, vertical: 12),
           child: Column(
@@ -41,9 +44,16 @@ class PomodoroViewState extends State<PomodoroView> {
                   Flexible(child: _buildModeButton("Long Break")),
                 ],
               ),
-              if (selectedMode == 'Pomodoro') PomodoroNormalView(skipNotifications: widget.skipNotifications,),
-              if (selectedMode == 'Short Break') PomodoroShortbreakView(skipNotifications: widget.skipNotifications,),
-              if (selectedMode == 'Long Break') PomodoroLongbreakView(skipNotifications: widget.skipNotifications,),
+              if (selectedMode == 'Pomodoro')
+                PomodoroNormalView(skipNotifications: widget.skipNotifications),
+              if (selectedMode == 'Short Break')
+                PomodoroShortbreakView(
+                  skipNotifications: widget.skipNotifications,
+                ),
+              if (selectedMode == 'Long Break')
+                PomodoroLongbreakView(
+                  skipNotifications: widget.skipNotifications,
+                ),
             ],
           ),
         ),
