@@ -47,30 +47,37 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
   void _showQuestionEditDialog(context) {
     showDialog(
       context: context,
-      builder: (context) => ForumQuestionEditDialog(
-        question: _question,
-        onSave: (updatedQuestion) {
-          setState(() {
-            _question = updatedQuestion;
-          });
-          Provider.of<ForumQuestionViewModel>(context, listen: false)
-              .updateQuestion(updatedQuestion);
-          Navigator.of(context).pop();
-        },
-        onDelete: () {
-          Provider.of<ForumQuestionViewModel>(context, listen: false)
-              .deleteQuestion(_question.id!);
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-      ),
+      builder:
+          (context) => ForumQuestionEditDialog(
+            question: _question,
+            onSave: (updatedQuestion) {
+              setState(() {
+                _question = updatedQuestion;
+              });
+              Provider.of<ForumQuestionViewModel>(
+                context,
+                listen: false,
+              ).updateQuestion(updatedQuestion);
+              Navigator.of(context).pop();
+            },
+            onDelete: () {
+              Provider.of<ForumQuestionViewModel>(
+                context,
+                listen: false,
+              ).deleteQuestion(_question.id!);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+          ),
     );
   }
 
   void _deleteQuestion(BuildContext context) async {
     try {
-      await Provider.of<ForumQuestionViewModel>(context, listen: false)
-          .deleteQuestion(widget.question.id!);
+      await Provider.of<ForumQuestionViewModel>(
+        context,
+        listen: false,
+      ).deleteQuestion(widget.question.id!);
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -88,8 +95,10 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
 
   void _deleteAnswer(BuildContext context, answer) async {
     try {
-      await Provider.of<ForumAnswerViewModel>(context, listen: false)
-          .deleteAnswer(widget.question.id!, answer.id, context: context);
+      await Provider.of<ForumAnswerViewModel>(
+        context,
+        listen: false,
+      ).deleteAnswer(widget.question.id!, answer.id, context: context);
       if (mounted) {
         //Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -111,13 +120,11 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
     final currentUser = FirebaseAuth.instance.currentUser;
     final answerViewModel = context.watch<ForumAnswerViewModel>();
     final answers = answerViewModel.getAnswersForQuestion(widget.question.id!);
-    final isCurrentUserQuestion = widget.question.userName == currentUser?.displayName;
+    final isCurrentUserQuestion =
+        widget.question.userName == currentUser?.displayName;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Question Detail"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Question Detail"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -134,26 +141,31 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                     children: [
                       CircleAvatar(
                         radius: 24,
-                        backgroundImage: widget.question.userPhotoUrl != null && 
-                            widget.question.userPhotoUrl!.isNotEmpty
-                            ? NetworkImage(widget.question.userPhotoUrl!)
-                            : null,
+                        backgroundImage:
+                            widget.question.userPhotoUrl != null &&
+                                    widget.question.userPhotoUrl!.isNotEmpty
+                                ? NetworkImage(widget.question.userPhotoUrl!)
+                                : null,
                         backgroundColor: colorScheme.primaryContainer,
-                        child: (widget.question.userPhotoUrl == null || 
-                            widget.question.userPhotoUrl!.isEmpty)
-                            ? const Icon(Icons.person, color: Colors.white)
-                            : null,
+                        child:
+                            (widget.question.userPhotoUrl == null ||
+                                    widget.question.userPhotoUrl!.isEmpty)
+                                ? Icon(
+                                  Icons.person,
+                                  color: colorScheme.onPrimary,
+                                )
+                                : null,
                       ),
                       SizedBox(height: 8),
                       Text(
-                          widget.question.userName ?? "Anonymous",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12, 
-                            color: colorScheme.tertiary,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        widget.question.userName ?? "Anonymous",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorScheme.tertiary,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
                     ],
                   ),
                 ),
@@ -189,19 +201,19 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                   IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () => _deleteQuestion(context),
-                  )
-                ],
+                  ),
+              ],
             ),
             const SizedBox(height: 16),
             const Divider(thickness: 1),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "${answers.length} answers",
                   style: TextStyle(
-                    fontSize: 15, 
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: colorScheme.tertiary,
                   ),
@@ -212,165 +224,203 @@ class _ForumQuestionDetailState extends State<ForumQuestionDetail> {
                       context: context,
                       barrierColor: Colors.black.withOpacity(0.4),
                       barrierDismissible: false,
-                      builder: (context) => ForumViewAddAnswer(
-                        onAnswerSubmitted: (answerText) async {
-                          final answer = ForumAnswer(
-                            description: answerText,
-                            createdAt: DateTime.now(),
-                            userName: currentUser?.displayName ?? 'Anonymous',
-                            userPhotoUrl: currentUser?.photoURL,
-                            questionID: widget.question.id!,
-                          );
-
-                          try {
-                            await answerViewModel.addAnswer(widget.question.id!, answer);
-                            context.read<ForumQuestionViewModel>().incrementAnswerCount(widget.question.id!);
-
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Answer added successfully!')),
+                      builder:
+                          (context) => ForumViewAddAnswer(
+                            onAnswerSubmitted: (answerText) async {
+                              final answer = ForumAnswer(
+                                description: answerText,
+                                createdAt: DateTime.now(),
+                                userName:
+                                    currentUser?.displayName ?? 'Anonymous',
+                                userPhotoUrl: currentUser?.photoURL,
+                                questionID: widget.question.id!,
                               );
-                              Navigator.pop(context); // Close the dialog
-                            }
-                          } catch (error) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Failed to add answer: $error')),
-                              );
-                            }
-                          }
-                        },
-                      ),
+
+                              try {
+                                await answerViewModel.addAnswer(
+                                  widget.question.id!,
+                                  answer,
+                                );
+                                context
+                                    .read<ForumQuestionViewModel>()
+                                    .incrementAnswerCount(widget.question.id!);
+
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Answer added successfully!',
+                                      ),
+                                    ),
+                                  );
+                                  Navigator.pop(context); // Close the dialog
+                                }
+                              } catch (error) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to add answer: $error',
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
                     );
                   },
-                  icon: const Icon(
-                    Icons.mode_comment_outlined, 
-                    color: Colors.white
+                  icon: Icon(
+                    Icons.mode_comment_outlined,
+                    color: colorScheme.onPrimary,
                   ),
-                  label: const Text(
-                    "Answer", 
-                    style: TextStyle(color: Colors.white)
+                  label: Text(
+                    "Answer",
+                    style: TextStyle(color: colorScheme.onPrimary),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12, 
-                      vertical: 8
+                      horizontal: 12,
+                      vertical: 8,
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Answers List
             Expanded(
-              child: answers.isEmpty
-                  ? const Center(
-                      child: Text("No answers yet."),
-                    )
-                  : ListView.builder(
-                      itemCount: answers.length,
-                      itemBuilder: (context, index) {
-                        final answer = answers[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12.0), 
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: colorScheme.primary,
-                                    width: 1.0, 
+              child:
+                  answers.isEmpty
+                      ? const Center(child: Text("No answers yet."))
+                      : ListView.builder(
+                        itemCount: answers.length,
+                        itemBuilder: (context, index) {
+                          final answer = answers[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(12.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: colorScheme.primary,
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0), 
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 60,
-                                      child: Column(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundImage: answer.userPhotoUrl != null && 
-                                                answer.userPhotoUrl!.isNotEmpty
-                                                ? NetworkImage(answer.userPhotoUrl!)
-                                                : null,
-                                            backgroundColor: colorScheme.primaryContainer,
-                                            child: (answer.userPhotoUrl == null || 
-                                                answer.userPhotoUrl!.isEmpty)
-                                                ? const Icon(
-                                                    Icons.person, 
-                                                    size: 20, 
-                                                    color: Colors.white
-                                                  )
-                                                : null,
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            answer.userName,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 11, 
-                                              color: colorScheme.tertiary,
-                                              fontWeight: FontWeight.bold,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 60,
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundImage:
+                                                  answer.userPhotoUrl != null &&
+                                                          answer
+                                                              .userPhotoUrl!
+                                                              .isNotEmpty
+                                                      ? NetworkImage(
+                                                        answer.userPhotoUrl!,
+                                                      )
+                                                      : null,
+                                              backgroundColor:
+                                                  colorScheme.primaryContainer,
+                                              child:
+                                                  (answer.userPhotoUrl ==
+                                                              null ||
+                                                          answer
+                                                              .userPhotoUrl!
+                                                              .isEmpty)
+                                                      ? const Icon(
+                                                        Icons.person,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      )
+                                                      : null,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Text(
-                                              answer.description,
-                                              style: const TextStyle(fontSize: 14),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              answer.userName,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: colorScheme.tertiary,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    if (answer.userName == currentUser?.displayName)
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        iconSize: 17,
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return ForumEditAnswer(
-                                                answer: answer,
-                                                questionId: widget.question.id!,
-                                              );
-                                            },
-                                          );
-                                        },
+                                      const SizedBox(width: 20),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(
+                                                5.0,
+                                              ),
+                                              child: Text(
+                                                answer.description,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    if (answer.userName == currentUser?.displayName)
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        iconSize: 17,
-                                        onPressed: () => _deleteAnswer(context, answer),
-                                      )
-                                  ],
+                                      if (answer.userName ==
+                                          currentUser?.displayName)
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          iconSize: 17,
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return ForumEditAnswer(
+                                                  answer: answer,
+                                                  questionId:
+                                                      widget.question.id!,
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      if (answer.userName ==
+                                          currentUser?.displayName)
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          iconSize: 17,
+                                          onPressed:
+                                              () => _deleteAnswer(
+                                                context,
+                                                answer,
+                                              ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
             ),
           ],
         ),
@@ -407,10 +457,12 @@ class _ForumQuestionEditDialogState extends State<ForumQuestionEditDialog> {
   @override
   void initState() {
     super.initState();
-    _questionTitleController =
-        TextEditingController(text: widget.question.title);
+    _questionTitleController = TextEditingController(
+      text: widget.question.title,
+    );
     _questionDescriptionController = TextEditingController(
-        text: widget.question.description);
+      text: widget.question.description,
+    );
   }
 
   @override
@@ -429,8 +481,10 @@ class _ForumQuestionEditDialogState extends State<ForumQuestionEditDialog> {
       description: updatedDescription,
     );
     try {
-      await Provider.of<ForumQuestionViewModel>(context, listen: false)
-          .updateQuestion(updatedQuestion);
+      await Provider.of<ForumQuestionViewModel>(
+        context,
+        listen: false,
+      ).updateQuestion(updatedQuestion);
       if (mounted) {
         //Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -484,13 +538,13 @@ class _ForumQuestionEditDialogState extends State<ForumQuestionEditDialog> {
         ElevatedButton(
           onPressed: () {
             final updatedQuestion = ForumQuestion(
-            id: widget.question.id,
-            title: _questionTitleController.text,
-            description: _questionDescriptionController.text,
-            createdAt: widget.question.createdAt,
-            userName: widget.question.userName,
-            userPhotoUrl: widget.question.userPhotoUrl,
-            answerCount: widget.question.answerCount,
+              id: widget.question.id,
+              title: _questionTitleController.text,
+              description: _questionDescriptionController.text,
+              createdAt: widget.question.createdAt,
+              userName: widget.question.userName,
+              userPhotoUrl: widget.question.userPhotoUrl,
+              answerCount: widget.question.answerCount,
             );
             widget.onSave(updatedQuestion);
             _saveChanges(context);

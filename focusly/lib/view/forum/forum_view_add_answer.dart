@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class ForumViewAddAnswer extends StatefulWidget {
   final Function(String) onAnswerSubmitted;
 
-  const ForumViewAddAnswer({
-    super.key,
-    required this.onAnswerSubmitted,
-  });
+  const ForumViewAddAnswer({super.key, required this.onAnswerSubmitted});
 
   @override
   State<ForumViewAddAnswer> createState() => _ForumViewAddAnswerState();
@@ -79,11 +76,14 @@ class _ForumViewAddAnswerState extends State<ForumViewAddAnswer> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       child: Text(
                         'Publish',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: colorScheme.onPrimary),
                       ),
                     ),
                   ),

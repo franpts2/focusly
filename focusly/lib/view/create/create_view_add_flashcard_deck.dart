@@ -43,51 +43,52 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
       context: context,
       builder:
           (context) => FlashcardEditDialog(
-        flashcard: flashcard,
-        onSave: (updatedFlashcard) {
-          setState(() {
-            if (isNew) {
-              _flashcards.add(updatedFlashcard);
-            } else {
-              // Update existing flashcard
-              final index = _flashcards.indexWhere(
+            flashcard: flashcard,
+            onSave: (updatedFlashcard) {
+              setState(() {
+                if (isNew) {
+                  _flashcards.add(updatedFlashcard);
+                } else {
+                  // Update existing flashcard
+                  final index = _flashcards.indexWhere(
                     (f) =>
-                f.front == flashcard.front && f.back == flashcard.back,
-              );
-              if (index != -1) {
-                _flashcards[index] = updatedFlashcard;
-              }
-            }
-          });
-        },
-        onDelete:
-        isNew
-            ? null // No delete for new flashcards
-            : () {
-          setState(() {
-            _flashcards.removeWhere(
-                  (f) =>
-              f.front == flashcard.front &&
-                  f.back == flashcard.back,
-            );
-          });
-          Navigator.pop(context);
-        },
-      ),
+                        f.front == flashcard.front && f.back == flashcard.back,
+                  );
+                  if (index != -1) {
+                    _flashcards[index] = updatedFlashcard;
+                  }
+                }
+              });
+            },
+            onDelete:
+                isNew
+                    ? null // No delete for new flashcards
+                    : () {
+                      setState(() {
+                        _flashcards.removeWhere(
+                          (f) =>
+                              f.front == flashcard.front &&
+                              f.back == flashcard.back,
+                        );
+                      });
+                      Navigator.pop(context);
+                    },
+          ),
     );
   }
 
   void _selectCategory() {
     showDialog(
       context: context,
-      builder: (context) => CategorySelectionDialog(
-        selectedCategoryId: _selectedCategoryId,
-        onCategorySelected: (categoryId) {
-          setState(() {
-            _selectedCategoryId = categoryId;
-          });
-        },
-      ),
+      builder:
+          (context) => CategorySelectionDialog(
+            selectedCategoryId: _selectedCategoryId,
+            onCategorySelected: (categoryId) {
+              setState(() {
+                _selectedCategoryId = categoryId;
+              });
+            },
+          ),
     );
   }
 
@@ -107,9 +108,9 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
     }
 
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }
 
@@ -120,9 +121,9 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
 
     // Convert FlashcardUI to Flashcard
     final modelFlashcards =
-    _flashcards.map((flashcard) {
-      return Flashcard(front: flashcard.front, back: flashcard.back);
-    }).toList();
+        _flashcards.map((flashcard) {
+          return Flashcard(front: flashcard.front, back: flashcard.back);
+        }).toList();
 
     // Create Deck object
     final deck = FlashcardDeck(
@@ -171,10 +172,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
-                  flex: 1,
-                  child: _buildCategoryButton(context),
-                ),
+                Expanded(flex: 1, child: _buildCategoryButton(context)),
               ],
             ),
             const SizedBox(height: 24),
@@ -212,9 +210,12 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                     backgroundColor: colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Done',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                      color: colorScheme.onPrimary,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
@@ -231,7 +232,10 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
       padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 16.0),
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
-        color: colorScheme.primaryContainer,
+        color:
+            Theme.of(context).brightness == Brightness.light
+                ? colorScheme.primaryContainer
+                : colorScheme.secondaryContainer,
         child: Stack(
           children: [
             Padding(
@@ -247,10 +251,10 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           mainAxisSize:
-                          MainAxisSize.min, // Important for centering
+                              MainAxisSize.min, // Important for centering
                           crossAxisAlignment:
-                          CrossAxisAlignment
-                              .stretch, // Stretch to take full width
+                              CrossAxisAlignment
+                                  .stretch, // Stretch to take full width
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -283,7 +287,7 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
             Positioned(
               top: 15.0, // Adjust position relative to the outer card's padding
               right:
-              15.0, // Adjust position relative to the outer card's padding
+                  15.0, // Adjust position relative to the outer card's padding
               child: IconButton.filled(
                 icon: Icon(Symbols.delete, size: 20),
                 color: colorScheme.onPrimary,
@@ -301,9 +305,12 @@ class _CreateViewAddFlashcardState extends State<CreateViewAddFlashcardDeck> {
   }
 
   Widget _buildCategoryButton(BuildContext context) {
-    final category = _selectedCategoryId != null
-        ? context.read<CategoryViewModel>().getCategoryById(_selectedCategoryId!)
-        : null;
+    final category =
+        _selectedCategoryId != null
+            ? context.read<CategoryViewModel>().getCategoryById(
+              _selectedCategoryId!,
+            )
+            : null;
 
     return Container(
       decoration: BoxDecoration(
@@ -380,7 +387,10 @@ class _FlashcardEditDialogState extends State<FlashcardEditDialog> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      backgroundColor: colorScheme.primaryContainer,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
