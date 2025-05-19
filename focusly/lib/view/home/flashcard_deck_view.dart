@@ -88,7 +88,10 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
       key: const ValueKey<bool>(true), // Unique key for the front
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      color: colorScheme.surfaceContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.surfaceContainer
+              : colorScheme.secondaryContainer,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -108,13 +111,22 @@ class _FlashcardDeckViewState extends State<FlashcardDeckView> {
       key: const ValueKey<bool>(false), // Unique key for the back
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      color: colorScheme.surfaceContainer,
+      color:
+          Theme.of(context).brightness == Brightness.light
+              ? colorScheme.surfaceContainer
+              : colorScheme.secondaryContainer,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
             text,
-            style: TextStyle(fontSize: 24, color: Colors.grey[600]),
+            style: TextStyle(
+              fontSize: 24,
+              color:
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey[600]
+                      : colorScheme.onPrimaryContainer,
+            ),
             textAlign: TextAlign.center,
           ),
         ),
