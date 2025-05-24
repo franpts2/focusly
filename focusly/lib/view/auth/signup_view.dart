@@ -29,7 +29,6 @@ class _SignUpViewState extends State<SignUpView> {
     final authService = Provider.of<AuthenticationService>(context);
 
     final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor = Theme.of(context).primaryColor;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
     final tertiaryColor = Theme.of(context).colorScheme.tertiary;
 
@@ -37,12 +36,6 @@ class _SignUpViewState extends State<SignUpView> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // Container to ensure Stack has size
-            // Container(
-            //   height: MediaQuery.of(context).size.height,
-            //   width: MediaQuery.of(context).size.width,
-            // ),
-
             // Ellipses
             Positioned(
               top: -80,

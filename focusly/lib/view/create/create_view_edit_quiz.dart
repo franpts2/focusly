@@ -9,7 +9,7 @@ import '../../viewmodel/category_viewmodel.dart';
 
 class CreateViewEditQuiz extends StatefulWidget {
   final Quiz quiz;
-  CreateViewEditQuiz({super.key, required this.quiz});
+  const CreateViewEditQuiz({super.key, required this.quiz});
 
   @override
   State<CreateViewEditQuiz> createState() => _CreateEditQuizState();

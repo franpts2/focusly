@@ -27,7 +27,6 @@ class _SignInViewState extends State<SignInView> {
     final authService = Provider.of<AuthenticationService>(context);
 
     final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor = Theme.of(context).primaryColor;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
     final tertiaryColor = Theme.of(context).colorScheme.tertiary;
 

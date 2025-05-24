@@ -9,10 +9,6 @@ class InitialPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor =
-        Theme.of(context).primaryColor; // Primary color from the theme
-    final tertiaryColor =
-        Theme.of(context).colorScheme.tertiary; // Tertiary color from the theme
 
     // Get screen dimensions for responsive layout
     final screenHeight = MediaQuery.of(context).size.height;
@@ -28,7 +24,8 @@ class InitialPageView extends StatelessWidget {
               horizontal: screenWidth * 0.08,
               vertical: screenHeight * 0.15,
             ),
-            child: Center( // Center the welcome text horizontally
+            child: Center(
+              // Center the welcome text horizontally
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -37,7 +34,7 @@ class InitialPageView extends StatelessWidget {
                     "Start organizing\nyour study now",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 45,
+                      fontSize: 40,
                       fontWeight: FontWeight.w400,
                       color: colorScheme.onSurface,
                     ),
@@ -60,7 +57,9 @@ class InitialPageView extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignInView()),
+                        MaterialPageRoute(
+                          builder: (context) => const SignInView(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -105,11 +104,13 @@ class InitialPageView extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignUpView()),
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpView(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: tertiaryColor,
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.horizontal(
                           left: Radius.circular(60),
