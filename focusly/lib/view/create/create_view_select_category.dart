@@ -28,23 +28,30 @@ class CategorySelectionDialog extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                final isSelected = category.id == selectedCategoryId;
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6, // 60% of screen height
+                maxWidth: double.infinity,
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  final isSelected = category.id == selectedCategoryId;
 
-                return ListTile(
-                  leading: Icon(category.icon, color: category.textColor),
-                  title: Text(category.title),
-                  tileColor: isSelected ? Colors.grey[200] : null,
-                  onTap: () {
-                    onCategorySelected(category.id!);
-                    Navigator.pop(context);
-                  },
-                );
-              },
+                  return ListTile(
+                    leading: Icon(category.icon, color: category.textColor),
+                    title: Text(category.title),
+                    tileColor: isSelected ? Colors.grey[200] : null,
+                    onTap: () {
+                      onCategorySelected(category.id!);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
