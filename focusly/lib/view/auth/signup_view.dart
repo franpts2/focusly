@@ -15,6 +15,7 @@ class _SignUpViewState extends State<SignUpView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -164,8 +165,20 @@ class _SignUpViewState extends State<SignUpView> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
                           ),
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a password';
