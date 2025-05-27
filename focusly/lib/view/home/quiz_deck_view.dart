@@ -85,7 +85,7 @@ class _QuizDeckViewState extends State<QuizDeckView> {
       children: [
         Text(
           '${questionIndex + 1}. ${question.questionText}',
-          style: const TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         ...List.generate(question.options.length, (optionIndex) {

@@ -9,10 +9,6 @@ class InitialPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor =
-        Theme.of(context).primaryColor; // Primary color from the theme
-    final tertiaryColor =
-        Theme.of(context).colorScheme.tertiary; // Tertiary color from the theme
 
     // Get screen dimensions for responsive layout
     final screenHeight = MediaQuery.of(context).size.height;
@@ -28,99 +24,117 @@ class InitialPageView extends StatelessWidget {
               horizontal: screenWidth * 0.08,
               vertical: screenHeight * 0.15,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Center(
+              // Center the welcome text horizontally
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: screenHeight * 0.1),
+                  Text(
+                    "Start organizing\nyour study now",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w400,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Sign In button
+          Positioned(
+            top: screenHeight * 0.55,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: screenHeight * 0.1),
-                Text(
-                  "Start organizing\nyour study now",
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontWeight: FontWeight.w400,
-                    color: colorScheme.onSurface,
+                SizedBox(
+                  width: screenWidth * 0.6,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignInView(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.horizontal(
+                          right: Radius.circular(60),
+                        ),
+                      ),
+                      padding: EdgeInsets.fromLTRB(
+                        screenWidth * 0.06, // left
+                        screenHeight * 0.035, // top
+                        screenWidth * 0.02, // right
+                        screenHeight * 0.035, // bottom
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                    child: Text(
+                      "Sign In",
+                      style: TextStyle(
+                        fontSize: 36,
+                        color: colorScheme.onPrimary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          // Sign In button
-          Positioned(
-            top:
-                screenHeight *
-                0.55, // Relative positioning (55% of screen height)
-            left: 0, // Partially cut by the screen
-            child: ElevatedButton(
-              onPressed: () {
-                // Using pushReplacement instead of push
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignInView()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorScheme.primary,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.horizontal(
-                    right: Radius.circular(60),
-                  ),
-                ),
-                padding: EdgeInsets.only(
-                  left:
-                      screenWidth *
-                      0.10, // Less padding on left to move text left
-                  right: screenWidth * 0.22, // More padding on right
-                  top: screenHeight * 0.035,
-                  bottom: screenHeight * 0.035,
-                ),
-                alignment: Alignment.centerLeft, // Align text to the left
-              ),
-              child: Text(
-                "Sign In",
-                style: TextStyle(
-                  fontSize: 36,
-                  color: colorScheme.onPrimary,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
-
           // Sign Up button
           Positioned(
             top: screenHeight * 0.70,
-            right: 0, // Partially cut by the screen
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignUpView()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: tertiaryColor,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.horizontal(
-                    left: Radius.circular(60),
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: screenWidth * 0.6,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpView(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(60),
+                        ),
+                      ),
+                      padding: EdgeInsets.fromLTRB(
+                        screenWidth * 0.02, // left
+                        screenHeight * 0.035, // top
+                        screenWidth * 0.06, // right
+                        screenHeight * 0.035, // bottom
+                      ),
+                      alignment: Alignment.centerRight,
+                    ),
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontSize: 36,
+                        color: colorScheme.onTertiary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
                 ),
-                padding: EdgeInsets.only(
-                  left: screenWidth * 0.22, // More padding on left
-                  right:
-                      screenWidth *
-                      0.10, // Less padding on right to move text right
-                  top: screenHeight * 0.035,
-                  bottom: screenHeight * 0.035,
-                ),
-                alignment: Alignment.centerRight, // Align text to the right
-              ),
-              child: Text(
-                "Sign Up",
-                style: TextStyle(
-                  fontSize: 36,
-                  color: colorScheme.onTertiary,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              ],
             ),
           ),
         ],

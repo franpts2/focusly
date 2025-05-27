@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Final Release] - May 26, 2025
+### Fixed
+- Fixed minor visual bugs in the app
+
 ## [Sprint 3] - May 19, 2025
 ### Added
 - Categories: users can create, delete, and update categories, which are used to organize quizzes and flashcards

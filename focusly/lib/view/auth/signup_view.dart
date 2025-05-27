@@ -15,6 +15,7 @@ class _SignUpViewState extends State<SignUpView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -29,7 +30,6 @@ class _SignUpViewState extends State<SignUpView> {
     final authService = Provider.of<AuthenticationService>(context);
 
     final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor = Theme.of(context).primaryColor;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
     final tertiaryColor = Theme.of(context).colorScheme.tertiary;
 
@@ -37,12 +37,6 @@ class _SignUpViewState extends State<SignUpView> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // Container to ensure Stack has size
-            // Container(
-            //   height: MediaQuery.of(context).size.height,
-            //   width: MediaQuery.of(context).size.width,
-            // ),
-
             // Ellipses
             Positioned(
               top: -80,
@@ -171,8 +165,20 @@ class _SignUpViewState extends State<SignUpView> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
                           ),
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a password';

@@ -917,8 +917,52 @@ Improvements to implement next Sprint:
 
 _Each row in the table corresponds to an individual's evaluations, with the person's name indicating the evaluator and the subsequent cells detailing their assessments of each peer._
 
-### Sprint 4
-
 ### Final Release
+-> Fixed minor bugs
 
+**Did well**: Successfully polished the application with thorough bug fixing and quality assurance, ensuring a stable and reliable product for release.
+
+**Do differently**: Implement more comprehensive automated testing earlier in development to catch edge case bugs before the final release phase.
+
+**happiness meters**
+
+<table border="1" cellspacing="0" cellpadding="10">
+  <tr>
+    <th></th>
+    <th>Francisca</th>
+    <th>Gabriela</th>
+    <th>Maria Luiza</th>
+    <th>Sara</th>
+  </tr>
+  <tr>
+    <th>Francisca</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Gabriela</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Maria Luiza</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Sara</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+</table>
+
+_Each row in the table corresponds to an individual's evaluations, with the person's name indicating the evaluator and the subsequent cells detailing their assessments of each peer._
 

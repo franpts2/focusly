@@ -197,12 +197,12 @@ class _CreateAddQuizState extends State<CreateViewAddQuiz> {
               children: [
                 Text(
                   _selectedCategoryId == null ? 'Choose' : 'Change',
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   'Category',
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
               ],

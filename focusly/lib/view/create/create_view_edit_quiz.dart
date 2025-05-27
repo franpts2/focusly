@@ -9,7 +9,7 @@ import '../../viewmodel/category_viewmodel.dart';
 
 class CreateViewEditQuiz extends StatefulWidget {
   final Quiz quiz;
-  CreateViewEditQuiz({super.key, required this.quiz});
+  const CreateViewEditQuiz({super.key, required this.quiz});
 
   @override
   State<CreateViewEditQuiz> createState() => _CreateEditQuizState();
@@ -302,9 +302,9 @@ class _CreateEditQuizState extends State<CreateViewEditQuiz> {
               children: [
                 Text(
                   _selectedCategoryId == null ? 'Choose' : 'Change',
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 12),
                 ),
-                const Text('Category', style: TextStyle(fontSize: 14)),
+                const Text('Category', style: TextStyle(fontSize: 12)),
               ],
             ),
           ],
