@@ -183,9 +183,37 @@ class _SignUpViewState extends State<SignUpView> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a password';
                             }
+
+                            // list of missing requirements
+                            List<String> missing = [];
+
+                            // Check password length
                             if (value.length < 8) {
-                              return 'Password must be at least 8 characters';
+                              missing.add("at least 8 characters");
                             }
+
+                            // Check for uppercase letter
+                            if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                              missing.add("one uppercase letter");
+                            }
+
+                            // Check for lowercase letter
+                            if (!RegExp(r'[a-z]').hasMatch(value)) {
+                              missing.add("one lowercase letter");
+                            }
+
+                            // Check for special character
+                            if (!RegExp(
+                              r'[!@#$%^&*(),.?":{}|<>]',
+                            ).hasMatch(value)) {
+                              missing.add("one special symbol");
+                            }
+
+                            // Return appropriate error message if requirements are missing
+                            if (missing.isNotEmpty) {
+                              return 'Password must contain ${missing.join(", ")}';
+                            }
+
                             return null;
                           },
                         ),
