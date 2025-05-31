@@ -211,7 +211,7 @@ class _SignUpViewState extends State<SignUpView> {
 
                             // Return appropriate error message if requirements are missing
                             if (missing.isNotEmpty) {
-                              return 'Password must contain ${missing.join(", ")}';
+                              return 'Password must contain:\n• ${missing.join("\n• ")}';
                             }
 
                             return null;
